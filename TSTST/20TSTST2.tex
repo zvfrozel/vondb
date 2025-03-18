@@ -1,0 +1,157 @@
+desc: Incenter of $GQM$
+hardness: 25
+source: TSTST 2020/2
+tags: [2020-11, config, inversion, harmonic, good, gimel]
+author: Zack Chroman, Daniel Liu
+url: https://aops.com/community/p18933557
+
+---
+
+Let $ABC$ be a scalene triangle with incenter $I$.
+The incircle of $ABC$ touches $\ol{BC}$, $\ol{CA}$, $\ol{AB}$
+at points $D$, $E$, $F$, respectively.
+Let $P$ be the foot of the altitude from $D$ to $\ol{EF}$,
+and let $M$ be the midpoint of $\ol{BC}$.
+The rays $AP$ and $IP$ intersect the circumcircle
+of triangle $ABC$ again at points $G$ and $Q$, respectively.
+Show that the incenter of triangle $GQM$ coincides with $D$.
+
+---
+
+Refer to the figure below.
+\begin{center}
+\begin{asy}
+pair A = dir(130);
+pair B = dir(210);
+pair C = dir(330);
+pair I = incenter(A, B, C);
+pair D = foot(I, B, C);
+pair E = foot(I, C, A);
+pair F = foot(I, A, B);
+pair P = foot(D, E, F);
+pair Y = dir(270);
+pair Q = extension(Y, D, I, P);
+draw(A--B--C--cycle, lightblue);
+pair T = extension(E, F, B, C);
+filldraw(unitcircle, opacity(0.1)+lightcyan, blue);
+draw(D--E--F--cycle, blue);
+draw(circumcircle(A, E, F), deepgreen);
+pair M = midpoint(B--C);
+pair X = dir(90);
+pair G = extension(T, Y, X, D);
+draw(A--G, dotted);
+draw(D--P, deepgreen);
+// Q--Y red
+// G--X red
+// circumcircle Q P T 0.1 lightred / orange
+// F--T--B lightblue
+// X--Y dotted blue
+filldraw(G--Q--M--cycle, opacity(0.1)+lightred, red);
+draw(I--Q, deepgreen);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$I$", I, dir(270));
+dot("$D$", D, dir(315));
+dot("$E$", E, dir(20));
+dot("$F$", F, dir(200));
+dot("$P$", P, dir(60));
+dot("$Q$", Q, dir(140));
+dot("$M$", M, dir(300));
+dot("$G$", G, dir(G));
+
+/* TSQ Source:
+
+A = dir 130
+B = dir 210
+C = dir 330
+I = incenter A B C R270
+D = foot I B C R315
+E = foot I C A R20
+F = foot I A B R200
+P = foot D E F R60
+Y := dir 270
+Q = extension Y D I P R140
+A--B--C--cycle lightblue
+T := extension E F B C
+unitcircle 0.1 lightcyan / blue
+D--E--F--cycle blue
+circumcircle A E F deepgreen
+M = midpoint B--C R300
+X := dir 90
+G = extension T Y X D
+A--G dotted
+D--P deepgreen
+// Q--Y red
+// G--X red
+// circumcircle Q P T 0.1 lightred / orange
+// F--T--B lightblue
+// X--Y dotted blue
+G--Q--M--cycle 0.1 lightred / red
+I--Q deepgreen
+
+*/
+\end{asy}
+\end{center}
+
+\begin{claim*}
+  The point $Q$ is the Miquel point of $BFEC$.
+  Also, $\ol{QD}$ bisects $\angle BQC$.
+\end{claim*}
+\begin{proof}
+  Inversion around the incircle maps line $EF$ to $(AIEF)$
+  and the nine-point circle of $\triangle DEF$
+  to the circumcircle of $\triangle ABC$
+  (as the midpoint of $\ol{EF}$ maps to $A$, etc.).
+  This implies $P$ maps to $Q$; that is, $Q$ coincides with
+  the second intersection of $(AFIE)$ with $(ABC)$.
+  This is the claimed Miquel point.
+
+  The spiral similarity mentioned then gives
+  $\frac{QB}{BF} = \frac{QC}{CE}$, so $\ol{QD}$ bisects $\angle BQC$.
+\end{proof}
+
+\begin{remark*}
+  The point $Q$ and its properties mentioned in the first claim
+  have appeared in other references.
+  See for example Canada 2007/5, ELMO 2010/6,
+  HMMT 2016 T-10, USA TST 2017/2, USA TST 2019/6 for a few examples.
+\end{remark*}
+
+\begin{claim*}
+  We have $(QG;BC) = -1$, so in particular $\ol{GD}$ bisects $\angle BGC$.
+\end{claim*}
+\begin{proof}
+  Note that
+  \[ -1 = (AI;EF) \overset{Q}{=} (\ol{AQ} \cap \ol{EF}, P; E, F)
+    \overset{A}{=} (QG;BC). \]
+  The last statement follows from Apollonian circle,
+  or more bluntly $\frac{GB}{GC} = \frac{QB}{QC} = \frac{BD}{DC}$.
+\end{proof}
+
+Hence $\ol{QD}$ and $\ol{GD}$ are angle bisectors of $\angle BQC$ and $\angle BGC$.
+However, $\ol{QM}$ and $\ol{QG}$ are isogonal in $\angle BQC$
+(as median and symmedian), and similarly for $\angle BGC$, as desired.
+
+---
+
+\begin{remark*}
+  [Alternate proof of claim avoiding harmonic bundles]
+  Redefine $G'$ to be the other point on $(ABC)$
+  satisfying $\frac{GB}{GC} = \frac{BD}{DC}$,
+  so that $G'$ lies on line $DX$.
+  In other words $G'$ is the other intersection
+  of the Apollonian circle with $(ABC)$.
+  Then \[ \dang DG'P = \dang DTP
+    = \dang \left( \ol{BC}, \ol{EF} \right)
+    = \dang \left( \ol{XY}, \ol{AIY} \right)
+    = \dang XYA = \dang XG'A = \dang DG'A \]
+  meaning $A$, $P$, $G'$ collinear, so $G' = G$.
+\end{remark*}
+
+To finish, since $QDMX$ and $GDMY$ are cyclic, we have
+\begin{align*}
+  \dang GQD &= \dang GQY = \dang GXY = \dang DXM = \dang DQM \\
+  \dang MGD &= \dang MYD = \dang XYQ = \dang XGQ = \dang DGQ.
+\end{align*}

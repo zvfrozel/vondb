@@ -1,0 +1,321 @@
+author: Merlijn Staps
+desc: Centroid angle chase
+hardness: 10
+source: TSTST 2023/1
+url: https://aops.com/community/p28015679
+tags: [2023-06, good, anglechase, pop, complex]
+
+---
+
+Let $ABC$ be a triangle with centroid $G$.
+Points $R$ and $S$ are chosen on rays $GB$ and $GC$, respectively, such that
+\[ \angle ABS = \angle ACR = 180^\circ - \angle BGC. \]
+Prove that $\angle RAS + \angle BAC = \angle BGC$.
+
+---
+
+In all the following solutions,
+let $M$ and $N$ denote the midpoints of $\ol{AC}$ and $\ol{AB}$, respectively.
+
+\begin{center}
+\begin{asy}
+size(12cm);
+
+pair A = dir(97);
+pair B = dir(190);
+pair C = dir(350);
+pair M = midpoint(A--C);
+pair N = midpoint(A--B);
+pair G = extension(B, M, C, N);
+draw(A--G, blue);
+pair Y = A*dir((C-G)/(B-G))**2;
+
+pair X = A*dir((B-G)/(C-G))**2;
+
+pair S = extension(B, Y, C, G);
+pair R = extension(C, X, B, G);
+filldraw(A--B--C--cycle, opacity(0.1)+lightblue, blue);
+draw(B--M, blue);
+draw(C--N, blue);
+draw(R--A--S, lightred);
+draw(C--R, deepgreen);
+draw(B--S, deepgreen);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$M$", M, dir(M));
+dot("$N$", N, dir(N));
+dot("$G$", G, dir(280));
+dot("$S$", S, dir(270));
+dot("$R$", R, dir(150));
+
+/* -----------------------------------------------------------------+
+|                 TSQX: by CJ Quines and Evan Chen                  |
+| https://github.com/vEnhance/dotfiles/blob/main/py-scripts/tsqx.py |
++-------------------------------------------------------------------+
+!size(12cm);
+A = dir 97
+B = dir 190
+C = dir 350
+M = midpoint A--C
+N = midpoint A--B
+G 280 = extension B M C N
+A--G blue
+!pair Y = A*dir((C-G)/(B-G))**2;
+!pair X = A*dir((B-G)/(C-G))**2;
+S 270 = extension B Y C G
+R 150 = extension C X B G
+A--B--C--cycle / 0.1 lightblue / blue
+B--M blue
+C--N blue
+R--A--S lightred
+C--R deepgreen
+B--S deepgreen
+*/
+
+\end{asy}
+\end{center}
+
+\paragraph{Solution 1 using power of a point.}
+From the given condition that $\dang ACR = \dang CGM$, we get that
+\[ MA^2 = MC^2 = MG \cdot MR \implies \dang RAC = \dang MGA. \]
+Analogously,
+\[ \dang BAS = \dang AGN. \]
+Hence,
+\[
+  \dang RAS + \dang BAC
+  = \dang RAC + \dang BAS
+  = \dang MGA + \dang AGN = \dang MGN = \dang BGC.
+\]
+
+\paragraph{Solution 2 using similar triangles.}
+As before, $\triangle MGC \sim \triangle MCR$ and $\triangle NGB \sim \triangle NBS$.
+We obtain
+\[
+  \frac{|AC|}{|CR|} = \frac{2|MC|}{|CR|} = \frac{2|MG|}{|GC|}
+  = \frac{|GB|}{2|NG|} = \frac{|BS|}{2|BN|} = \frac{|BS|}{|AB|}
+\]
+which together with $\angle ACR = \angle ABS$ yields
+\[ \triangle ACR \sim \triangle SBA \implies \dang BAS = \dang CRA. \]
+Hence
+\[
+  \dang RAS + \dang BAC = \dang RAC + \dang BAS
+  = \dang RAC + \dang CRA = - \dang ACR = \dang BGC,
+\]
+which proves the statement.
+
+\paragraph{Solution 3 using parallelograms.}
+Let $M$ and $N$ be defined as above.
+Let $P$ be the reflection of $G$ in $M$
+and let $Q$ the reflection of $G$ in $N$.
+Then $AGCP$ and $AGBQ$ are parallelograms.
+\begin{center}
+\begin{asy}
+size(12cm);
+
+pair A = dir(97);
+pair B = dir(190);
+pair C = dir(350);
+pair M = midpoint(A--C);
+pair N = midpoint(A--B);
+pair G = extension(B, M, C, N);
+draw(A--G, blue);
+pair Y = A*dir((C-G)/(B-G))**2;
+
+pair X = A*dir((B-G)/(C-G))**2;
+
+pair S = extension(B, Y, C, G);
+pair R = extension(C, X, B, G);
+filldraw(A--B--C--cycle, opacity(0.1)+lightblue, blue);
+draw(B--M, blue);
+draw(C--N, blue);
+draw(R--A--S, lightred);
+draw(C--R, deepgreen);
+draw(B--S, deepgreen);
+
+pair P = A+C-G;
+pair Q = A+B-G;
+draw(A--P--C, heavycyan);
+draw(P--M, heavycyan);
+draw(A--Q--B, heavycyan);
+draw(Q--N, heavycyan);
+
+draw(circumcircle(A, C, R), dotted+deepcyan);
+draw(circumcircle(A, B, S), dotted+deepcyan);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$M$", M, dir(70));
+dot("$N$", N, dir(100));
+dot("$G$", G, dir(280));
+dot("$S$", S, dir(270));
+dot("$R$", R, dir(150));
+dot("$P$", P, dir(P));
+dot("$Q$", Q, dir(Q));
+
+/* -----------------------------------------------------------------+
+|                 TSQX: by CJ Quines and Evan Chen                  |
+| https://github.com/vEnhance/dotfiles/blob/main/py-scripts/tsqx.py |
++-------------------------------------------------------------------+
+!size(12cm);
+A = dir 97
+B = dir 190
+C = dir 350
+M 70 = midpoint A--C
+N 100 = midpoint A--B
+G 280 = extension B M C N
+A--G blue
+!pair Y = A*dir((C-G)/(B-G))**2;
+!pair X = A*dir((B-G)/(C-G))**2;
+S 270 = extension B Y C G
+R 150 = extension C X B G
+A--B--C--cycle / 0.1 lightblue / blue
+B--M blue
+C--N blue
+R--A--S lightred
+C--R deepgreen
+B--S deepgreen
+P = A+C-G
+Q = A+B-G
+A--P--C heavycyan
+P--M heavycyan
+A--Q--B heavycyan
+Q--N heavycyan
+circumcircle A C R / dotted deepcyan
+circumcircle A B S / dotted deepcyan
+*/
+\end{asy}
+\end{center}
+
+\begin{claim*}
+  Quadrilaterals $APCR$ and $AQBS$ are concyclic.
+\end{claim*}
+\begin{proof}
+  Because $\dang APR = \dang APG = \dang CGP = -\dang BGC = \dang ACR$.
+\end{proof}
+Thus from $\ol{PC} \parallel \ol{GA}$ we get
+\[ \dang RAC = \dang RPC = \dang GPC = \dang PGA \]
+and similarly
+\[ \dang BAS = \dang BQS = \dang BQG = \dang AGQ. \]
+We conclude that
+\[
+  \dang RAS + \dang BAC = \dang RAC + \dang BAS
+  = \dang PGA + \dang AGQ = \dang PGQ = \dang BGC.
+\]
+
+\paragraph{Solution 4 also using parallelograms, by Ankan Bhattacharya.}
+Construct parallelograms $ARCK$ and $ASBL$. Since
+\[ \dang CAK = \dang ACR = \dang CGB = \dang CGK, \]
+it follows that $AGCK$ is cyclic. Similarly, $AGBL$ is also cyclic.
+\begin{center}
+  \begin{asy}
+    size(12cm);
+    pair A = dir(95), B = dir(190), C = dir(350);
+    pair G = (A+B+C)/3;
+    pair K = 2*foot(circumcenter(A, G, C), B, G) - G;
+    pair L = 2*foot(circumcenter(A, G, B), C, G) - G;
+    pair R = A+C-K, S = A+B-L;
+
+    draw(A--G);
+    draw(B--K^^C--L);
+    draw(A--R--C--K--cycle, heavycyan);
+    draw(A--S--B--L--cycle, heavymagenta);
+    draw(A--B--C--cycle);
+    draw(circumcircle(A, G, C), heavycyan+dashed);
+    draw(circumcircle(A, G, B), heavymagenta+dashed);
+
+    dot("$A$", A, dir(A));
+    dot("$B$", B, dir(B));
+    dot("$C$", C, dir(C));
+    dot("$G$", G, dir(dir(B-G)+dir(C-G)));
+    dot("$K$", K, dir(dir(K-A)+dir(K-C)));
+    dot("$L$", L, dir(dir(L-A)+dir(L-B)));
+    dot("$R$", R, dir(dir(A-R)+dir(B-R)));
+    dot("$S$", S, dir(dir(A-S)+dir(C-S)));
+  \end{asy}
+\end{center}
+Finally, observe that
+\begin{align*}
+  \angle RAS + \angle BAC
+  & = \dang BAS + \dang RAC\\
+  & = \dang ABL + \dang KCA\\
+  & = \dang AGL + \dang KGA\\
+  & = \dang KGL\\
+  & = \angle BGC
+\end{align*}
+as requested.
+
+\paragraph{Solution 5 using complex numbers, by Milan Haiman.}
+Note that $\angle RAS + \angle BAC=\angle BAS+\angle RAC$.
+We compute $\angle BAS$ in complex numbers;
+then $\angle RAC$ will then be known by symmetry.
+
+Let $a$, $b$, $c$ be points on the unit circle representing $A$, $B$, $C$ respectively.
+Let $g=\frac{1}{3}(a+b+c)$ represent the centroid $G$,
+and let $s$ represent $S$.
+
+\begin{claim*}
+  We have
+  \[ \frac{s-a}{b-a} = \frac{ab-2bc+ca}{2ab-bc-ca}. \]
+\end{claim*}
+\begin{proof}
+Since $S$ is on line $CG$, which passes through the midpoint of segment $AB$, we
+have that \[ s=\frac{a+b}{2}+t(c-g) \] for some $t\in\RR$.
+
+By the given angle condition, we have that
+\[ \frac{(s-b)/(b-a)}{(c-g)/(g-b)}\in\RR. \]
+Note that \[ \frac{s-b}{b-a}=t\frac{c-g}{b-a}-\frac{1}{2}. \]
+So, \[ t\frac{g-b}{b-a}-\frac{g-b}{2(c-g)}\in \RR. \]
+Thus
+\[
+  t = \frac{\opname{Im} \left(\frac{g-b}{2(c-g)}\right)}
+  {\opname{Im} \left(\frac{g-b}{b-a}\right)}
+  = \frac{1}{2} \cdot \frac
+    {\left(\frac{g-b}{c-g}\right)-\ol{\left(\frac{g-b}{c-g}\right)}}
+    {\left(\frac{g-b}{b-a}\right)-\ol{\left(\frac{g-b}{b-a}\right)}}.
+\]
+Let $N$ and $D$ be the numerator and denominator of the second factor above.
+
+We want to compute
+\[ \frac{s-a}{b-a}
+   = \frac{1}{2}+t\frac{c-g}{b-a}
+   = \frac{(b-a)+2t(c-g)}{2(b-a)}
+   = \frac{(b-a)D+(c-g)N}{2(b-a)D}. \]
+
+We have
+\begin{align*}
+    (c-g)N &= g-b-(c-g)\ol{\left(\frac{g-b}{c-g}\right)} \\
+    &= \frac{a+b+c}{3}-b-\left(c-\frac{a+b+c}{3}\right)\frac{\frac{1}{a}+\frac{1}{b}+\frac{1}{c}-\frac{3}{b}}{\frac{3}{c}-\frac{1}{a}-\frac{1}{b}-\frac{1}{c}}\\
+    &= \frac{(a+c-2b)(2ab-bc-ca)-(2c-a-b)(ab+bc-2ca)}{3(2ab-bc-ca)}\\
+    &= \frac{3(a^2b+b^2c+c^2a-ab^2-bc^2-ca^2)}{3(2ab-bc-ca)}\\
+    &= \frac{(a-b)(b-c)(a-c)}{2ab-bc-ca}
+\end{align*}
+
+We also compute \begin{align*}
+    (b-a)D&=g-b-(b-a)\ol{\left(\frac{g-b}{b-a}\right)} \\
+    &=\frac{a+b+c}{3}-b-\left(b-a\right)\frac{\frac{1}{a}+\frac{1}{b}+\frac{1}{c}-\frac{3}{b}}{\frac{3}{b}-\frac{3}{a}}\\
+    &=\frac{(a+c-2b)c+(ab+bc-2ca)}{3c}\\
+    &=\frac{ab-bc-ca+c^2}{3c}\\
+    &=\frac{(a-c)(b-c)}{3c}
+\end{align*}
+
+So, we obtain
+\[
+  \frac{s-a}{b-a}
+  = \frac{\frac{1}{3c}+\frac{a-b}{2ab-bc-ca}}{\frac{2}{3c}}
+  = \frac{2ab-bc-ca+3c(a-b)}{2(2ab-bc-ca)}=\frac{ab-2bc+ca}{2ab-bc-ca}.
+\]
+\end{proof}
+
+By symmetry,
+\[ \frac{r-a}{c-a}=\frac{ab-2bc+ca}{2ca-ab-bc}. \]
+Hence their ratio
+\[ \frac{s-a}{b-a} \div \frac{r-a}{c-a} = \frac{2ab-bc-ca}{2ca-ab-bc} \]
+has argument $\angle RAC +\angle BAS$.
+
+We also have that $\angle BGC$ is the argument of
+\[ \frac{b-g}{c-g}=\frac{2b-a-c}{2c-a-b}. \]
+Note that these two complex numbers are inverse-conjugates,
+and thus have the same argument. So we're done.

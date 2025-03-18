@@ -1,0 +1,54 @@
+desc:  Bulldozer bouncing of walls
+author: Linus Hamilton, Cynthia Stoner
+source:  TSTST 2016/5
+tags:  [instructive, local, thinkbig, criticalclaim, extreme, nice, 2016-07, well, gimel]
+hardness: 25
+url: https://aops.com/community/p6580545
+
+---
+
+In the coordinate plane are finitely many \emph{walls},
+which are disjoint line segments, none of which are parallel to either axis.
+A bulldozer starts at an arbitrary point and moves in the $+x$ direction.
+Every time it hits a wall, it turns at a right angle to its path,
+away from the wall, and continues moving.
+(Thus the bulldozer always moves parallel to the axes.)
+
+Prove that it is impossible for the bulldozer
+to hit both sides of every wall.
+
+---
+
+We say a wall $v$ is \emph{above} another wall $w$ if some point on
+$v$ is directly above a point on $w$.
+(This relation is anti-symmetric, as walls do not intersect).
+
+The critical claim is as follows:
+\begin{claim*}
+  There exists a lowest wall,
+  i.e.\ a wall not above any other walls.
+\end{claim*}
+\begin{proof}
+  Assume not.
+  Then we get a directed cycle of some length $n \ge 3$:
+  it's possible to construct a series of points $P_i$, $Q_i$,
+  for $i = 1, \dots, n$ (indices modulo $n$), such that
+  the point $Q_i$ is directly above $P_{i+1}$ for each $i$,
+  the segment $\ol{Q_i P_{i+1}}$ does not intersect any wall in its interior,
+  and finally each segment $\ol{P_i Q_i}$ is contained inside a wall.
+  This gives us a broken line on $2n$ vertices which is not self-intersecting.
+
+  Now consider the leftmost vertical segment $\ol{Q_i P_{i+1}}$
+  and the rightmost vertical segment $\ol{Q_j P_{j+1}}$.
+  The broken line gives a path from $P_{i+1}$ to $Q_j$,
+  as well as a path from $P_{j+1}$ to $Q_i$.
+  These clearly must intersect, contradiction.
+\end{proof}
+\begin{remark*}
+  This claim is Iran TST 2010.
+\end{remark*}
+
+Thus if the bulldozer eventually moves upwards indefinitely,
+it may never hit the bottom side of the lowest wall.
+Similarly, if the bulldozer eventually moves downwards indefinitely,
+it may never hit the upper side of the highest wall.

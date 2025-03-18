@@ -1,0 +1,190 @@
+desc: Radical axis trivia
+author: Ray Li
+source: TSTST 2017/1
+tags: [2017-06, pop, bary, complex, rich, aleph]
+hardness: 10
+url: https://aops.com/community/p8526098
+
+---
+
+Let $ABC$ be a triangle with circumcircle $\Gamma$,
+circumcenter $O$, and orthocenter $H$.
+Assume that $AB \neq AC$ and $\angle A \neq 90\dg$.
+Let $M$ and $N$ be the midpoints of $\ol{AB}$ and $\ol{AC}$,
+respectively, and let $E$ and $F$ be the feet of the altitudes
+from $B$ and $C$ in $\triangle ABC$, respectively.
+Let $P$ be the intersection point of line $MN$
+with the tangent line to $\Gamma$ at $A$.
+Let $Q$ be the intersection point,
+other than $A$, of $\Gamma$ with the circumcircle of $\triangle AEF$.
+Let $R$ be the intersection point of lines $AQ$ and $EF$.
+Prove that $\ol{PR} \perp \ol{OH}$.
+
+---
+
+\paragraph{First solution (power of a point).}
+Let $\gamma$ denote the nine-point circle of $ABC$.
+\begin{center}
+\begin{asy}
+pair A = dir(125);
+pair B = dir(210);
+pair C = dir(330);
+pair M = midpoint(A--B);
+pair N = midpoint(A--C);
+pair O = origin;
+pair H = A+B+C;
+
+draw(A--B--C--cycle, blue);
+pair E = foot(B, A, C);
+pair F = foot(C, A, B);
+draw(B--E, lightblue);
+draw(C--F, lightblue);
+pair R = extension(E, F, B, C);
+pair Q = -A+2*foot(O, A, R);
+
+filldraw(unitcircle, opacity(0.1)+lightcyan, blue);
+draw(A--R--E, heavygreen);
+pair P = extension(M, N, A, A+dir(90)*A);
+draw(A--P--N, red);
+filldraw(circumcircle(A, M, N), opacity(0.1)+lightred, red);
+filldraw(circumcircle(A, E, F), opacity(0.1)+lightgreen, heavygreen);
+
+filldraw(circumcircle(M, N, E), opacity(0.1)+lightcyan, heavycyan);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$M$", M, dir(145));
+dot("$N$", N, dir(20));
+dot("$O$", O, dir(315));
+dot("$H$", H, dir(H));
+dot("$E$", E, dir(40));
+dot("$F$", F, dir(F));
+dot("$R$", R, dir(R));
+dot("$Q$", Q, dir(Q));
+dot("$P$", P, dir(P));
+
+/* TSQ Source:
+
+A = dir 125
+B = dir 210
+C = dir 330
+M = midpoint A--B R145
+N = midpoint A--C R20
+O = origin R315
+H = A+B+C
+
+A--B--C--cycle blue
+E = foot B A C R40
+F = foot C A B
+B--E lightblue
+C--F lightblue
+R = extension E F B C
+Q = -A+2*foot O A R
+
+unitcircle 0.1 lightcyan / blue
+A--R--E heavygreen
+P = extension M N A A+dir(90)*A
+A--P--N red
+circumcircle A M N 0.1 lightred / red
+circumcircle A E F 0.1 lightgreen / heavygreen
+
+circumcircle M N E 0.1 lightcyan / heavycyan
+
+*/
+\end{asy}
+\end{center}
+Note that
+\begin{itemize}
+  \ii $PA^2 = PM \cdot PN$,
+  so $P$ lies on the radical axis of $\Gamma$ and $\gamma$.
+  \ii $RA \cdot RQ = RE \cdot RF$,
+  so $R$ lies on the radical axis of $\Gamma$ and $\gamma$.
+\end{itemize}
+Thus $\ol{PR}$ is the radical axis of $\Gamma$ and $\gamma$,
+which is evidently perpendicular to $\ol{OH}$.
+
+\begin{remark*}
+  In fact, by power of a point one may also observe
+  that $R$ lies on $\ol{BC}$,
+  since it is on the radical axis of $(AQFHE)$, $(BFEC)$, $(ABC)$.
+  Ironically, this fact is not used in the solution.
+\end{remark*}
+
+\paragraph{Second solution (barycentric coordinates).}
+Again note first $R \in \ol{BC}$ (although this can be avoided too).
+We compute the points in much the same way as before.
+Since $\ol{AP} \cap \ol{BC} = (0 : b^2 : -c^2)$
+we have \[ P = \left( b^2-c^2 : b^2 : -c^2  \right) \]
+(since $x=y+z$ is the equation of line $\ol{MN}$).
+Now in Conway notation we have
+\[ R = \ol{EF} \cap \ol{BC} = (0 : S_C : -S_B)
+  =\left( 0 : a^2+b^2-c^2 : -a^2+b^2-c^2 \right). \]
+Hence
+\[ \overrightarrow{PR}
+  = \frac{1}{2(b^2-c^2)} \left( b^2-c^2 , c^2-a^2 , a^2-b^2 \right).  \]
+On the other hand, we have
+$\overrightarrow{OH} = \vec A + \vec B + \vec C$.
+So it suffices to check that
+\[ \sum_{\text{cyc}} a^2\left( (a^2-b^2) + (c^2-a^2) \right) = 0 \]
+which is immediate.
+
+\paragraph{Third solution (complex numbers).}
+Let $ABC$ be the unit circle.
+We first compute $P$ as the midpoint of $A$ and $\ol{AA} \cap \ol{BC}$:
+\begin{align*}
+  p &= \half \left( a + \frac{a^2(b+c)-bc\cdot2a}{a^2-bc} \right) \\
+  &= \frac{a(a^2-bc)+a^2(b+c)-2abc}{2(a^2-bc)}.
+\end{align*}
+Using the remark above, $R$ is the inverse of $D$ with
+respect to the circle with diameter $\ol{BC}$,
+which has radius $\left\lvert \half(b-c) \right\rvert$.
+Thus
+\begin{align*}
+  r - \frac{b+c}{2}
+  &= \frac{\frac14(b-c)\left( \frac1b-\frac1c \right)}%
+  {\ol{\half\left( a-\frac{bc}{a} \right)}} \\
+  r &= \frac{b+c}{2}
+  + \frac{-\half \frac{(b-c)^2}{bc}}{\frac1a-\frac{a}{bc}} \\
+  &= \frac{b+c}{2} + \frac{a(b-c)^2}{2(a^2-bc)} \\
+  &= \frac{a(b-c)^2+(b+c)(a^2-bc)}{2(a^2-bc)}.
+\end{align*}
+Expanding and subtracting gives
+\[ p-r = \frac{a^3-abc-ab^2-ac^2+b^2c+bc^2}{2(a^2-bc)}
+  = \frac{(a+b+c)(a-b)(a-c)}{2(a^2-bc)} \]
+which is visibly equal to the negation of its conjugate
+once the factor of $a+b+c$ is deleted.
+
+(Actually, one can guess this factorization ahead of time
+by noting that if $A=B$, then $P=B=R$, so $a-b$ must be a factor;
+analogously $a-c$ must be as well.)
+
+---
+
+We present a barycentric solution in this walkthrough.
+(Complex numbers, and fairly simple synthetic arguments,
+are also canonical routes.)
+Although there is a low-hanging synthetic observations
+that can be made to simplify the calculation,
+we'll pretend we didn't notice them.
+\begin{walk}
+  \ii Show that the tangent to $A$ meets $BC$ at $(0 : b^2 : -c^2)$.
+  (Hint for projective lovers: harmonic conjugate of symmedian foot.)
+  \ii Find the coordinates of $P$,
+  using the fact it lies on the midline $x = y+z$.
+  \ii We don't like the point $Q$ because it's annoying to calculate.
+  Thankfully we don't need it:
+  find the radical axis of $(AEF)$ and $(ABC)$.
+  Then conclude that the line $AQ$ consists
+  of the points of the form $({\ast} : S_C : -S_B)$.
+  \ii Use (c) together with collinearity of $\ol{EF}$
+  to find the coordinates of $R$.
+  (If you find $R$ correctly, you might be a bit surprised
+  until you realize the low-hanging synthetic observation
+  that I was talking about.)
+  \ii Show that
+  \[ \overrightarrow{PR} = \frac{(b^2-c^2) \vec A
+    + (c^2-a^2) \vec B + (a^2-b^2) \vec C}{2(b^2-c^2)}. \]
+  \ii Use the strong perpendicularity criterion
+  to show it is perpendicular to $\overrightarrow{OH}$.
+\end{walk}

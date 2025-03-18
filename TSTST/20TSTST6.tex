@@ -1,0 +1,196 @@
+author: Andrew Gu
+desc: Not the orthocenter
+hardness: 25
+source: TSTST 2020/6
+tags: [2020-12, anglechase, length, bet]
+url: https://aops.com/community/p19444197
+
+---
+
+Let $A$, $B$, $C$, $D$ be four points
+such that no three are collinear
+and $D$ is not the orthocenter of triangle $ABC$.
+Let $P$, $Q$, $R$ be the orthocenters of
+$\triangle BCD$, $\triangle CAD$, $\triangle ABD$, respectively.
+Suppose that lines $AP$, $BQ$, $CR$ are pairwise distinct
+and are concurrent.
+Show that the four points $A$, $B$, $C$, $D$ lie on a circle.
+
+---
+
+Let $T$ be the concurrency point,
+and let $H$ be the orthocenter of $\triangle ABC$.
+\begin{center}
+\begin{asy}
+pair A = dir(130);
+pair B = dir(210);
+pair C = dir(330);
+pair D = dir(97);
+pair P = B+C+D;
+pair Q = C+A+D;
+pair R = A+B+D;
+
+filldraw(R--B--D--cycle, opacity(0.1)+lightcyan, palecyan);
+filldraw(Q--A--C--cycle, opacity(0.1)+lightred, palered);
+filldraw(C--B--D--cycle, opacity(0.1)+lightgreen, palegreen);
+
+draw(R--foot(R,B,D), lightgrey+dashed);
+draw(B--foot(B,D,R), lightgrey+dashed);
+draw(D--foot(D,R,B), lightgrey+dashed);
+
+draw(A--foot(A,C,Q), lightgrey+dashed);
+draw(C--foot(C,Q,A), lightgrey+dashed);
+draw(Q--foot(Q,A,C), lightgrey+dashed);
+
+draw(C--foot(C,B,D), lightgrey+dashed);
+draw(B--foot(B,D,C), lightgrey+dashed);
+draw(D--foot(D,C,B), lightgrey+dashed);
+
+draw(A--foot(A,B,C), lightgrey+dashed);
+draw(B--foot(B,C,A), lightgrey+dashed);
+draw(C--foot(C,A,B), lightgrey+dashed);
+
+pair T = midpoint(A--P);
+pair S = (A+B+C+D)/4;
+pair O = 2*S-T;
+/*
+A' = foot A B C R270
+T' = foot T B C R270
+D' = foot D B C R300
+O' = foot O B C R300
+S' = foot S B C R270
+T--Tp lightgrey dashed
+S--Sp lightgrey dashed
+O--Op lightgrey dashed
+*/
+
+draw(T--O, lightblue);
+
+filldraw(A--B--C--cycle, opacity(0.1)+yellow, lightgrey);
+draw(A--C, palered);
+
+draw(A--Q, red+1);
+draw(B--P, red+1);
+
+draw(A--P, blue);
+draw(B--Q, blue);
+draw(C--R, blue);
+pair H = A+B+C;
+draw(D--H, lightblue);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$D$", D, dir(80));
+dot("$P$", P, dir(285));
+dot("$Q$", Q, dir(Q));
+dot("$R$", R, dir(R));
+dot("$T$", T, 1.8*dir(90));
+dot("$S$", S, 1.8*dir(75));
+dot("$O$", O, dir(315));
+dot("$H$", H, dir(45));
+
+/* TSQ Source:
+
+A = dir 130
+B = dir 210
+C = dir 330
+D = dir 97 R80
+P = B+C+D R285
+Q = C+A+D
+R = A+B+D
+
+R--B--D--cycle 0.1 lightcyan / palecyan
+Q--A--C--cycle 0.1 lightred / palered
+C--B--D--cycle 0.1 lightgreen / palegreen
+
+R--foot(R,B,D) lightgrey dashed
+B--foot(B,D,R) lightgrey dashed
+D--foot(D,R,B) lightgrey dashed
+
+A--foot(A,C,Q) lightgrey dashed
+C--foot(C,Q,A) lightgrey dashed
+Q--foot(Q,A,C) lightgrey dashed
+
+C--foot(C,B,D) lightgrey dashed
+B--foot(B,D,C) lightgrey dashed
+D--foot(D,C,B) lightgrey dashed
+
+A--foot(A,B,C) lightgrey dashed
+B--foot(B,C,A) lightgrey dashed
+C--foot(C,A,B) lightgrey dashed
+
+T = midpoint A--P 1.8R90
+S = (A+B+C+D)/4 1.8R75
+O = 2*S-T R315
+
+T--O lightblue
+
+A--B--C--cycle 0.1 yellow / lightgrey
+A--C palered
+
+A--Q red+1
+B--P red+1
+
+A--P blue
+B--Q blue
+C--R blue
+H = A+B+C R45
+D--H lightblue
+
+*/
+\end{asy}
+\end{center}
+
+\begin{claim*}[Key claim]
+  $T$ is the midpoint of $\ol{AP}$, $\ol{BQ}$, $\ol{CR}$, $\ol{DH}$,
+  and $D$ is the orthocenter of $\triangle PQR$.
+\end{claim*}
+\begin{proof}
+  Note that $\ol{AQ} \parallel \ol{BP}$,
+  as both are perpendicular to $\ol{CD}$.
+  Since lines $AP$ and $BQ$ are distinct,
+  lines $AQ$ and $BP$ are distinct.
+
+  By symmetric reasoning, we get that $AQCPBR$
+  is a hexagon with \emph{opposite sides parallel}
+  and \emph{concurrent diagonals} as $\ol{AP}$, $\ol{BQ}$, $\ol{CR}$ meet at $T$.
+  This implies that the \emph{hexagon is centrally symmetric} about $T$;
+  indeed \[ \frac{AT}{TP} = \frac{TQ}{BT} = \frac{CT}{TR} = \frac{TP}{AT} \]
+  so all the ratios are equal to $+1$.
+
+  % Thus, there exists a homothety $\Psi$ with center $T$ satisfying
+  % $\psi(A) = P$ and $\psi(Q) = B$.
+  % By repeating this with $\ol{BR}\parallel\ol{CQ}$
+  % and $\ol{CP}\parallel\ol{AR}$,
+  % we get $\psi(C) = R$ and $\psi(P) = A$.
+
+  % As $A \neq P$, it follows that $\psi$ is reflection about $T$.
+  Next, $\ol{PD} \perp \ol{BC} \parallel \ol{QR}$,
+  so by symmetry we get $D$ is the orthocenter of $\triangle PQR$.
+  This means that $T$ is the midpoint of $\ol{DH}$ as well.
+\end{proof}
+\begin{corollary*}
+  The configuration is now symmetric:
+  we have four points $A$, $B$, $C$, $D$,
+  and their reflections in $T$ are
+  four orthocenters $P$, $Q$, $R$, $H$.
+\end{corollary*}
+
+Let $S$ be the centroid of $\{A, B, C, D\}$,
+and let $O$ be the reflection of $T$ in $S$.
+We are ready to conclude:
+\begin{claim*}
+  $A$, $B$, $C$, $D$ are equidistant from $O$.
+\end{claim*}
+\begin{proof}
+  Let $A'$, $O'$, $S'$, $T'$, $D'$
+  be the projections of $A$, $O$, $S$, $T$, $D$
+  onto line $BC$.
+
+  Then $T'$ is the midpoint of $\ol{A'D'}$,
+  so $S' = \tfrac14(A'+D'+B+C)$
+  gives that $O'$ is the midpoint of $\ol{BC}$.
+
+  Thus $OB = OC$ and we're done.
+\end{proof}

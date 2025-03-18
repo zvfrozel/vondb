@@ -1,0 +1,107 @@
+desc: $\binom{n}{k}$ partition into equal sizes
+source: USA TST 2024/3
+url: https://aops.com/community/p29409068
+tags: [2023-12, genfunc, polynomial, cyclotomic, zayin]
+author: Ankan Bhattacharya
+
+---
+
+Let $n > k \ge 1$ be integers and let $p$ be a prime dividing $\tbinom nk$.
+Prove that the $k$-element subsets of $\{1, \dots, n\}$ can be
+split into $p$ classes of equal size, such that
+any two subsets with the same sum of elements belong to the same class.
+
+---
+
+Let $\sigma(S)$ denote the sum of the elements of $S$, so that
+\[ P(x) \coloneqq \sum_{\substack{S\subseteq \{1, \dots, n\} \\ |S|=k}} x^{\sigma(S)} \]
+is the generating function for the sums of $k$-element subsets of $\{1, \dots, n\}$.
+
+By Legendre's formula,
+\[ \nu_p\left(\binom{n}{k}\right) = \sum_{r=1}^{\infty}
+  \left(\left\lfloor\frac{n}{p^r}\right\rfloor - \left\lfloor\frac{k}{p^r}\right\rfloor
+  - \left\lfloor\frac{n-k}{p^r}\right\rfloor\right) \]
+so there exists a positive integer $r$ with
+\[ \left\lfloor\frac{n}{p^r}\right\rfloor - \left\lfloor\frac{k}{p^r}\right\rfloor
+- \left\lfloor\frac{n-k}{p^r}\right\rfloor > 0. \]
+
+The main claim is the following:
+\begin{claim*}
+  $P(x)$ is divisible by
+  \[
+    \Phi_{p^r}(x) = x^{(p-1)p^{r-1}} + \dots + x^{p^{r-1}} + 1.
+  \]
+\end{claim*}
+
+Before proving this claim, we will show how it solves the problem. It implies
+that there exists a polynomial $Q$ with integer coefficients satisfying
+\begin{align*}
+	P(x) & = \Phi_{p^r}(x) Q(x)\\
+	& = (x^{(p-1)p^{r-1}} + \dots + x^{p^{r-1}} + 1) Q(x).
+\end{align*}
+Let $c_0,\ c_1,\ \dots$ denote the coefficients of $P$, and define
+\[ s_i = \sum_{j \equiv i \pmod{p^r}} c_j. \]
+Then it's easy to see that
+\begin{alignat*}{4}
+	& s_0 && = s_{p^{r-1}} && = \cdots && = s_{(p-1)p^{r-1}}\\
+	& s_1 && = s_{p^{r-1}+1} && = \cdots && = s_{(p-1)p^{r-1}+1}\\
+	&  &&  && \vdots &&\\
+	& s_{p^{r-1}-1} && = s_{2p^{r-1}-1} && = \cdots && = s_{p^r-1}.
+\end{alignat*}
+This means we can construct the $p$ classes by placing a set with sum $z$ in
+class $\left\lfloor\frac{z\mod{p^r}}{p^{r-1}}\right\rfloor$.
+
+Now we present two ways to prove the claim.
+
+\paragraph{First proof of claim.}
+There's a natural bijection between $k$-element subsets of $\{1, \dots, n\}$
+and binary strings consisting of $k$ zeroes and $\ell$ ones:
+the set $\{a_1, \dots, a_k\}$ corresponds to the string
+which has zeroes at positions $a_1,\ \dots,\ a_k$.
+Moreover, the inversion count of this string is simply $(a_1 + \dots + a_k) - \tfrac12k(k+1)$,
+so we only deal with these inversion counts (equivalently, we are factoring
+$x^{\frac{k(k+1)}{2}}$ out of $P$).
+
+Recall that the generating function for these inversion counts is given by the
+$q$-binomial coefficient
+\[
+	P(x) = \frac{(x-1) \cdots (x^{k+\ell}-1)}
+	{\big[(x-1)\cdots(x^k-1)\big] \times \big[(x-1)\cdots(x^\ell-1)\big]}.
+\]
+By choice of $r$, the numerator of $P(x)$ has more factors of $\Phi_{p^r}(x)$
+than the denominator, so $\Phi_{p^r}(x)$ divides $P(x)$.
+
+\begin{remark*}
+  Here is a proof that $P(x)$ is divisible by $\Phi_{p^r}(x)$ for some $r$ using
+  the $q$-binomial formula, without explicitly identifying $r$. We know that
+  $P(x)$ is the product of several cyclotomic polynomials, and that $P(1)$ is a
+  multiple of $p$. Thus there is a factor $\Phi_q(x)$ for which $\Phi_q(1)$ is a
+  multiple of $p$, which is equivalent to $q$ being a power of $p$.
+\end{remark*}
+
+\paragraph{Second proof of claim.}
+Note that $P(x)$ is the coefficient of $y^k$ in the polynomial
+\[ Q(x, y) \coloneqq (1+xy)(1+x^2y)\dotsm(1+x^ny). \]
+
+Let $a$ be the remainder when $n$ is divided by $p^r$, and let $b$ be the
+remainder when $k$ is divided by $p^r$; then we have $a<b$ by the choice of $r$.
+Let $q = \lfloor n/p^r\rfloor$ so $n=p^rq+a$.
+Consider taking $x$ to be a primitive $p^r$th root of unity, say $\omega$. Then
+\[
+  Q(\omega, y) = \left[(1+\omega y)(1+\omega^2y)\cdots (1+\omega^{p^r}y)\right]^q
+  (1+\omega y)(1+\omega^2y)\dots (1+\omega^a y).
+\]
+Now $\omega$, $\omega^2$, \dots, $\omega^{p^r}$ are all the $p^r$th roots of unity,
+each exactly once; then we can see that
+\begin{align*}
+  & (1+\omega y)(1+\omega^2y)\cdots (1+\omega^{p^r}y) \\
+  &= (1-\omega(-y))(1-\omega^2(-y))\cdots (1-\omega^{p^r}(-y)) \\
+  &= 1-(-y)^{p^r},
+\end{align*}
+so
+\[ Q(\omega,y) = (1-(-y)^{p^r})^q (1+\omega y)(1+\omega^2y)\dots (1+\omega^ay). \]
+In particular, for any $m$, if the coefficient of $y^m$ in $Q(w,x)$ is nonzero,
+then $m$ must be congruent to one of $0,1, \dots, a \pmod{p^r}$.
+Therefore the coefficient of $y^k$ in $Q(\omega, y)$ is zero.
+This means that $P(\omega)=0$ whenever $\omega$ is a primitive $p^r$th root
+of unity, which proves the claim.

@@ -1,0 +1,155 @@
+desc: Reading comprehension, sports league, greedy
+author: Po-Shen Loh
+source: USA TST 2017/1
+tags: [2016-12, local, extreme, pitfall, find, bestpossible, troll, algorithm, aleph]
+hardness: 15
+url: https://aops.com/community/p7389115
+
+---
+
+In a sports league, each team uses a set of at most $t$ signature colors.
+A set $S$ of teams is \emph{color-identifiable} if one can assign
+each team in $S$ one of their signature colors,
+such that no team in $S$ is assigned
+\emph{any} signature color of a different team in $S$.
+For all positive integers $n$ and $t$,
+determine the maximum integer $g(n,t)$ such that:
+In any sports league with exactly $n$ distinct colors
+present over all teams, one can always
+find a color-identifiable set of size at least $g(n,t)$.
+
+---
+
+Answer: $\left\lceil n/t \right\rceil$.
+
+To see this is an upper bound, note that one can easily construct
+a sports league with that many teams anyways.
+
+A quick warning:
+\begin{remark*}
+  [Misreading the problem]
+  It is common to misread the problem by ignoring the word ``any''.
+  Here is an illustration.
+
+  Suppose we have two teams, MIT and Harvard;
+  the colors of MIT are red/grey/black, and
+  the colors of Harvard are red/white.
+  (Thus $n=4$ and $t=3$.)
+  The assignment of MIT to grey and Harvard to red
+  is \emph{not} acceptable because red is a
+  signature color of MIT, even though not the one assigned.
+\end{remark*}
+
+We present two proofs of the lower bound.
+
+\paragraph{Approach by deleting teams (Gopal Goel).}
+Initially, place all teams in a set $S$.
+Then we repeat the following algorithm:
+\begin{quote}
+If there is a team all of whose signature colors
+are shared by some other team in $S$ already,
+then we delete that team.
+\end{quote}
+(If there is more than one such team, we pick arbitrarily.)
+
+At the end of the process,
+all $n$ colors are still present at least once,
+so at least $\left\lceil n/t \right\rceil$ teams remain.
+Moreover, since the algorithm is no longer possible,
+the remaining set $S$ is already color-identifiable.
+
+\begin{remark*}
+  [Gopal Goel]
+  It might seem counter-intuitive
+  that we are \emph{deleting} teams from the full set
+  when the original problem is trying to get a large set $S$.
+
+  This is less strange when one thinks
+  of it instead as ``safely deleting useless teams''.
+  Basically, if one deletes such a team,
+  the problem statement implies that the task must still be possible,
+  since $g(n,t)$ does not depend on the number of teams:
+  $n$ is the number of colors present,
+  and deleting a useless team does not change this.
+  It turns out that this optimization is already enough to solve the problem.
+\end{remark*}
+
+\paragraph{Approach by adding colors.}
+For a constructive algorithmic approach,
+the idea is to greedy pick by color (rather than by team),
+taking at each step the least used color.
+Select the color $C_1$ with the \emph{fewest} teams using it,
+and a team $T_1$ using it.
+Then delete all colors $T_1$ uses, and all teams which use $C_1$.
+Note that
+\begin{itemize}
+  \ii By problem condition,
+  this deletes at most $t$ teams total.
+  \ii Any remaining color $C$ still has at least one user.
+  Indeed, if not, then $C$ had the same set of teams
+  as $C_1$ did (by minimality of $C$),
+  but then it should have deleted as a color of $T_1$.
+\end{itemize}
+
+Now repeat this algorithm with $C_2$ and $T_2$, and so on.
+This operations uses at most $t$ colors each time,
+so we select at least $\left\lceil n/t \right\rceil$ colors.
+
+\begin{remark*}
+  A greedy approach by team \emph{does not work}.
+  For example, suppose we try to ``grab teams until no more can be added''.
+
+  As before, assume our league has teams, MIT and Harvard;
+  the colors of MIT are red/grey/black, and
+  the colors of Harvard are red/white.
+  (Thus $n=4$ and $t=3$.)
+  If we start by selecting MIT and red, then
+  it is impossible to select any more teams; but $g(n,t) = 2$.
+\end{remark*}
+
+---
+
+A quick warning:
+It is common to misread the problem by ignoring the word ``any''.
+Here is an illustration.
+
+Suppose we have two teams, MIT and Harvard;
+the colors of MIT are red/grey/black, and
+the colors of Harvard are red/white.
+(Thus $n=4$ and $t=3$.)
+The assignment of MIT to grey and Harvard to red
+is \emph{not} acceptable because red is a
+signature color of MIT, even though not the one assigned.
+
+With that comment, let's focus on the problem.
+
+\begin{walk}
+  \ii Figure out what the answer should be
+  and give a construction.
+
+  \ii Consider the following greedy algorithm:
+  \begin{itemize}
+    \ii Take any team which one can still add;
+    \ii Pick any color for that team;
+    \ii Repeat until stuck.
+  \end{itemize}
+  Give an example to show this algorithm
+  does \emph{not} work.
+\end{walk}
+However, maybe surprisingly, the quantity $g(n,t)$
+apparently does not depend on the number of teams.
+So, consider the following idea:
+we call a team \emph{useless} if every signature color
+of the team is shared by some other existing team.
+\begin{walk}[resume]
+  \ii Give an argument that one can delete useless teams
+  without worry, hence justifying the name ``useless''.
+  \ii Following the repeat-until-stuck (RUST) philosophy,
+  continue doing this until no more deletions are possible.
+  What property does the remaining set have?
+  \ii Show that all $n$ colors are still present.
+  \ii Conclude.
+\end{walk}
+Part (c) is related to the concept of ``circular optimization'',
+described in the hyperlink
+\url{https://usamo.wordpress.com/2020/04/15/circular-optimization/}.

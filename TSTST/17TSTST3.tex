@@ -1,0 +1,134 @@
+desc: $x^2-cx+1 = f/g$ with nonnegative, trig
+author: Calvin Deng, Linus Hamilton
+source: TSTST 2017/3
+tags: [2017-06, polynomial, adhoc, instructive, intuitive, manip, trig, find, bestpossible,
+  hardanswer, smallcases, equalitycase, rushdown, reliable, gimel]
+hardness: 25
+url: https://aops.com/community/p8526130
+
+---
+
+Consider solutions to the equation
+\[ x^2 - cx + 1 = \frac{f(x)}{g(x)} \]
+where $f$ and $g$ are nonzero polynomials with nonnegative real coefficients.
+For each $c > 0$, determine the minimum possible degree of $f$, or show
+that no such $f$, $g$ exist.
+
+---
+
+First, if $c \ge 2$ then we claim no such $f$ and $g$ exist.
+Indeed, one simply takes $x=1$ to get $f(1)/g(1) \le 0$, impossible.
+
+For $c < 2$, let $c = 2 \cos \theta$, where $0 < \theta < \pi$.
+We claim that $f$ exists and has minimum degree equal to $n$,
+where $n$ is defined as the smallest integer
+satisfying $\sin n\theta \le 0$.
+In other words
+\[ n = \left\lceil \frac{\pi}{\arccos(c/2)} \right\rceil. \]
+
+First we show that this is necessary.
+To see it, write explicitly
+\[ g(x) = a_0 + a_1 x + a_2 x^2 + \dots + a_{n-2} x^{n-2} \]
+with each $a_i \ge 0$, and $a_{n-2} \neq 0$.
+Assume that $n$ is such that $\sin(k\theta) \ge 0$ for $k=1,\dots,n-1$.
+Then, we have the following system of inequalities:
+\begin{align*}
+  a_1 &\ge 2 \cos \theta \cdot a_0 \\
+  a_0 + a_2 &\ge 2 \cos \theta \cdot a_1 \\
+  a_1 + a_3 &\ge 2 \cos \theta \cdot a_2 \\
+  &\vdots \\
+  a_{n-5} + a_{n-3} &\ge 2 \cos \theta \cdot a_{n-4} \\
+  a_{n-4} + a_{n-2} &\ge 2 \cos \theta \cdot a_{n-3} \\
+  a_{n-3} &\ge 2 \cos \theta \cdot a_{n-2}.
+\end{align*}
+Now, multiply the first equation by $\sin\theta$,
+the second equation by $\sin2\theta$, et cetera,
+up to $\sin\left( (n-1)\theta \right)$.
+This choice of weights is selected since we have
+\[ \sin \left( k\theta \right) + \sin\left( (k+2)\theta \right)
+  = 2 \sin\left( (k+1)\theta \right) \cos \theta \]
+so that summing the entire expression
+cancels nearly all terms and leaves only
+\[ \sin\left( (n-2)\theta \right) a_{n-2}
+  \ge \sin\left( (n-1)\theta  \right) \cdot 2\cos\theta \cdot a_{n-2} \]
+and so by dividing by $a_{n-2}$ and using the same identity
+gives us $\sin(n\theta) \le 0$, as claimed.
+
+This bound is best possible, because the example
+\[ a_k = \sin\left( (k+1)\theta \right) \ge 0 \]
+makes all inequalities above sharp, hence giving
+a working pair $(f,g)$.
+
+\begin{remark*}
+Calvin Deng points out that a cleaner proof of the lower bound
+is to take $\alpha = \cos \theta + i \sin \theta$.
+Then $f(\alpha) = 0$, but by condition the imaginary part of $f(\alpha)$
+is apparently strictly positive, contradiction.
+\end{remark*}
+
+
+\begin{remark*}
+  Guessing that $c < 2$ works at all (and realizing $c \ge 2$ fails)
+  is the first part of the problem.
+
+  The introduction of trigonometry into the solution may seem magical,
+  but is motivated in one of two ways:
+  \begin{itemize}
+    \ii Calvin Deng points out that it's possible to
+    guess the answer from small cases:
+    For $c \le 1$ we have $n = 3$, tight at $\frac{x^3+1}{x+1} = x^2-x+1$,
+    and essentially the ``sharpest $n=3$ example''.
+    A similar example exists at $n = 4$ with
+    $\frac{x^4+1}{x^2+\sqrt 2 x+1} = x^2-\sqrt2x+1$
+    by the Sophie-Germain identity.
+    In general, one can do long division to extract
+    an optimal value of $c$ for any given $n$,
+    although $c$ will be the root of some polynomial.
+
+    The thresholds $c \le 1$ for $n = 3$, $c \le \sqrt 2$ for $n = 4$,
+    $c \le \frac{1+\sqrt5}{2}$ for $n = 5$,
+    and $c \le 2$ for $n < \infty$ suggest the unusual form of the
+    answer via trigonometry.
+
+    \ii One may imagine trying to construct a polynomial
+    recursively / greedily by making all inequalities above hold
+    (again the ``sharpest situation'' in which $f$ has few coefficients).
+    If one sets $c = 2t$, then we have
+    \[ a_0 = 1, \quad a_1 = 2t, \quad a_2 = 4t^2-1, \quad
+      a_3 = 8t^3-4t, \quad \dots \]
+    which are the Chebyshev polynomials of the second type.
+    This means that trigonometry is essentially mandatory.
+    (One may also run into this when by using standard linear recursion techniques,
+    and noting that the characteristic polynomial
+    has two conjugate complex roots.)
+  \end{itemize}
+\end{remark*}
+
+\begin{remark*}
+  Mitchell Lee notes that an IMO longlist problem from 1997 shows that
+  if $P(x)$ is any polynomial satisfying $P(x) > 0$ for $x > 0$,
+  then $(x+1)^n P(x)$ has nonnegative coefficients
+  for large enough $n$.
+  This show that $f$ and $g$ at least exist for $c \le 2$,
+  but provides no way of finding the best possible $\deg f$.
+
+  Meghal Gupta also points out that showing $f$ and $g$ exist
+  is possible in the following way:
+  \[ \left( x^2-1.99x+1 \right) \left( x^2+1.99x+1 \right)
+    = \left( x^4 - 1.9601x^2 + 1 \right) \]
+  and so on, repeatedly multiplying by the ``conjugate''
+  until all coefficients become positive.
+  To my best knowledge, this also does not give any way
+  of actually minimizing $\deg f$,
+  although Ankan Bhattacharya points out that this construction
+  is actually optimal in the case where $n$ is a power of $2$.
+\end{remark*}
+
+\begin{remark*}
+  It's pointed out that Matematicheskoe Prosveshchenie, issue 1, 1997, page 194
+  contains a nearly analogous result,
+  available at \url{https://mccme.ru/free-books/matpros/pdf/mp-01.pdf}
+  with solutions presented in \url{https://mccme.ru/free-books/matpros/pdf/mp-05.pdf},
+  pages 221--223;
+  and \url{https://mccme.ru/free-books/matpros/pdf/mp-10.pdf}, page 274.
+\end{remark*}

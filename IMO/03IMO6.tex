@@ -1,0 +1,80 @@
+desc:  $n^p-p$ not divisible by $q$
+source: IMO 2003/6
+tags:  [fermat, divis, construct, primes, mods, order, instructive, good, zayin]
+hardness: 35
+url: https://aops.com/community/p266
+author: Johan Yebbou (FRA)
+
+---
+
+Let $p$ be a prime number.
+Prove that there exists a prime number $q$ such that for every integer $n$,
+the number $n^p-p$ is not divisible by $q$.
+
+---
+
+By orders, we must have $q=pk+1$ for this to be possible
+(since if $q \not \equiv 1 \pmod p$, then $n^p$ can be any residue modulo $q$).
+Since $p \equiv n^p \pmod q \implies p^k \equiv 1 \pmod q$,
+it suffices to prevent the latter situation from happening.
+
+So we need a prime $q \equiv 1 \pmod p$ such that $p^k \not\equiv 1 \pmod q$.
+To do this, we first recall the following lemma.
+\begin{lemma*}
+  Let $\Phi_p(X) = 1 + X + X^2 + \dots + X^{p-1}$.
+  For any integer $a$, if $q$ is a prime divisor of $\Phi_p(a)$ other than $p$,
+  then $a \pmod q$ has order $p$. (In particular, $q \equiv 1 \pmod p$.)
+\end{lemma*}
+\begin{proof}
+  We have $a^p-1 \equiv 0 \pmod q$, so either the order is $1$ or $p$.
+  If it is $1$, then $a \equiv 1 \pmod q$, so $q \mid \Phi_p(1) = p$, hence $q = p$.
+\end{proof}
+
+% Wishfully we hope the order of $p$ is $p$ and $k \nmid p$.
+Now the idea is to extract a prime factor $q$
+from the cyclotomic polynomial
+\[ \Phi_p(p) = \frac{p^p-1}{p-1} \equiv 1+p \pmod{p^2} \]
+such that $q \not\equiv 1 \pmod{p^2}$;
+hence $k \not\equiv 0 \pmod p$,
+and as $p \pmod q$ has order $p$ we have $p^k \not\equiv 1 \pmod q$.
+
+---
+
+In this case it's possible to narrow down the search
+space right at the beginning.
+\begin{walk}
+  \ii Show that if $q \not\equiv 1 \pmod p$ then this fails.
+  So we will restrict our attention
+  to $q = pk + 1$.
+  \ii Prove that it's sufficient to have
+  $p^k \not\equiv 1 \pmod q$, for the $k$ in (a).
+\end{walk}
+Okay, so that means for our fixed prime $p$,
+we want to find a $q = pk+1$ such that $q \nmid p^k-1$.
+(Funny aside: it would be sufficient that $p$
+is a primitive root modulo $q$, but this is open.)
+
+Dirichlet's theorem at least assures us there
+are infinitely many $q \equiv 1 \pmod p$,
+but where can we find them?
+(Aside: something is fishy here;
+Dirichlet is not an easy theorem to prove,
+so it is very surprising that a contest
+is asking us to prove some related result.
+In fact, even the statement ``there exists \emph{any} prime
+which is $1 \pmod p$'' is not trivial.)
+\begin{walk}[resume]
+  \ii Suppose $X \not\equiv 1 \pmod p$.
+  Prove (if you have not seen it already)
+  that any prime factor $q$ of
+  \[ \Phi(X) = \frac{X^p-1}{X-1} \]
+  is always $1 \pmod p$, and in fact $X \pmod q$ has order $p$.
+  (This is called the $p$th cyclotomic polynomial.)
+
+  \ii Prove that if $q \not\equiv 1 \pmod{p^2}$,
+  then $p \nmid k$.
+
+  \ii Putting together (c) and (d),
+  pick a suitable value of $X$
+  and use it to find a way to pick the desired $q$.
+\end{walk}

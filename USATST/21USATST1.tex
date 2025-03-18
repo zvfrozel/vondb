@@ -1,0 +1,45 @@
+desc: $a+b+c+d \mid abc+bcd+cda+dab$
+source: USA TST 2021/1
+tags: [2021-02, find, manip, divis, size, bet]
+author: Ankan Bhattacharya, Michael Ren
+hardness: 10
+url: https://aops.com/community/p20672573
+
+---
+
+Determine all integers $s \ge 4$
+for which there exist positive integers $a$, $b$, $c$, $d$
+such that $s = a+b+c+d$
+and $s$ divides $abc+abd+acd+bcd$.
+
+---
+
+The answer is $s$ composite.
+
+\paragraph{Composite construction.}
+Write $s = (w+x)(y+z)$,
+where $w$, $x$, $y$, $z$ are positive integers.
+Let $a=wy$, $b=wz$, $c=xy$, $d=xz$.
+Then
+\[ abc+abd+acd+bcd = wxyz(w+x)(y+z) \]
+so this works.
+
+\paragraph{Prime proof.}
+Choose suitable $a$, $b$, $c$, $d$. Then
+\[
+  (a+b)(a+c)(a+d)
+  = (abc+abd+acd+bcd) + a^2(a+b+c+d)
+  \equiv 0 \pmod s.
+\]
+Hence $s$ divides a product of positive integers less than $s$,
+so $s$ is composite.
+
+\begin{remark*}
+  Here is another proof that $s$ is composite.
+
+  Suppose that $s$ is prime.
+  Then the polynomial $(x-a)(x-b)(x-c)(x-d) \in \FF_s[x]$
+  is even, so the roots come in two opposite pairs in $\FF_s$.
+  Thus the sum of each pair is at least $s$,
+  so the sum of all four is at least $2s > s$, contradiction.
+\end{remark*}

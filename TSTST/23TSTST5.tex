@@ -1,0 +1,174 @@
+author: David Altizio
+desc: abc real polynomials
+hardness: 30
+source: TSTST 2023/5
+url: https://aops.com/community/p28015713
+tags: [find, nice, complex, polynomial, instructive, roots, hardanswer, manip, gimel, 2023-06]
+
+---
+
+Suppose $a$, $b$, and $c$ are three complex numbers with product $1$.
+Assume that none of $a$, $b$, and $c$ are real or have absolute value $1$.
+Define
+\[ p = (a+b+c) + \left( \frac1a+\frac1b+\frac1c \right)
+  \qquad\text{and}\qquad
+  q = \frac ab + \frac bc + \frac ca. \]
+Given that both $p$ and $q$ are real numbers,
+find all possible values of the ordered pair $(p,q)$.
+
+---
+
+We show $(p,q) = (-3,3)$ is the only possible ordered pair.
+
+\paragraph{First solution.}
+\subparagraph{Setup for proof}
+Let us denote $a = y/x$, $b = z/y$, $c = x/z$,
+where $x$, $y$, $z$ are nonzero complex numbers.
+Then
+\begin{align*}
+  p + 3 &= 3 + \sum_{\text{cyc}} \left( \frac xy + \frac yx \right)
+  = 3 + \frac{x^2(y+z) + y^2(z+x) + z^2(x+y)}{xyz} \\
+  &= \frac{(x+y+z)(xy+yz+zx)}{xyz}. \\
+  q - 3 &= -3 + \sum_{\text{cyc}} \frac{y^2}{zx}
+  = \frac{x^3+y^3+z^3-3xyz}{xyz} \\
+  &= \frac{(x+y+z)(x^2+y^2+z^2-xy-yz-zx)}{xyz}.
+\end{align*}
+It follows that
+\begin{align*}
+  \RR &\ni 3(p+3) + (q-3) \\
+  &= \frac{(x+y+z)(x^2+y^2+z^2+2(xy+yz+zx))}{xyz} \\
+  &= \frac{(x+y+z)^3}{xyz}.
+\end{align*}
+Now, note that if $x+y+z = 0$, then $p = -3$, $q = 3$ so we are done.
+
+\subparagraph{Main proof}
+We will prove that if $x+y+z \neq 0$
+then we contradict either the hypothesis that $a,b,c \notin \RR$
+or that $a$, $b$, $c$ do not have absolute value $1$.
+
+Scale $x$, $y$, $z$ in such a way that $x+y+z$ is nonzero and real;
+hence so is $xyz$.
+Thus, as $p+3 \in \RR$, we conclude $xy+yz+zx \in \RR$ as well.
+Hence, $x$, $y$, $z$ are the roots of a cubic with real coefficients.
+Thus,
+\begin{itemize}
+  \ii either all three of $\{x,y,z\}$ are real (which implies $a,b,c \in \RR$),
+  \ii or two of $\{x,y,z\}$ are a complex conjugate pair
+  (which implies one of $a$, $b$, $c$ has absolute value $1$).
+\end{itemize}
+Both of these were forbidden by hypothesis.
+
+\subparagraph{Construction}
+As we saw in the setup, $(p,q) = (-3,3)$ will occur as long as $x+y+z = 0$,
+and no two of $x$, $y$, $z$ to share the same magnitude or are collinear with the origin.
+This is easy to do; for example,
+we could choose $(x, y, z) = (3, 4i, -(3+4i))$.
+Hence $a = \frac{3}{4i}$, $b = -\frac{4i}{3+4i}$, $c = -\frac{3+4i}{3}$
+satisfies the hypotheses of the problem statement.
+
+\paragraph{Second solution, found by contestants.}
+The main idea is to make the substitution
+\[ x=a+\frac{1}{c}, \qquad y=b+\frac{1}{a}, \qquad z=c+\frac{1}{b}. \]
+Then we can check that
+\begin{align*}
+  x+y+z &= p \\
+  xy+yz+zx &= p+q+3 \\
+  xyz &= p+2.
+\end{align*}
+Therefore $x$, $y$, $z$ are the roots of a cubic with real coefficients.
+As in the previous solution, we note that this cubic must either
+have all real roots, or a complex conjugate pair of roots.
+We also have the relation $a(y+1)=ab+a+1=x+1$,
+and likewise $b(z+1)=y+1$, $c(x+1)=z+1$.
+This means that if any of $x$, $y$, $z$ are equal to $-1$,
+then all are equal to $-1$.
+
+Assume for the sake of contradiction that none are equal to $-1$.
+In the case where the cubic has three real roots,
+$a=\frac{x+1}{y+1}$ would be real.
+On the other hand, if there is a complex conjugate pair
+(without loss of generality, $x$ and $y$) then $a$ has magnitude $1$.
+Therefore this cannot occur.
+
+We conclude that $x=y=z=-1$, so $p=-3$ and $q=3$.
+The solutions $(a, b, c)$ can then be parameterized
+as $(a, -1-\frac{1}{a}, -\frac{1}{1+a})$.
+To construct a solution, we need to choose a specific value of $a$ such that
+none of the wrong conditions hold;
+when $a=2i$, say, we obtain the solution $(2i, -1+\frac{i}{2}, \frac{-1+2i}{5})$.
+
+\paragraph{Third solution by Luke Robitaille and Daniel Zhu.}
+The answer is $p = -3$ and $q = 3$.
+Let's first prove that no other $(p, q)$ work.
+
+Let $e_1 = a + b + c$ and $e_2 = a\inv + b\inv + c\inv = ab + ac + bc$.
+Also, let $f = e_1e_2$. Note that $p = e_1 + e_2$.
+
+Our main insight is to consider the quantity
+$q' = \frac{b}{a} + \frac{c}{b} + \frac{a}{c}$.
+Note that $f = q + q' + 3$. Also,
+\begin{align*}
+  qq' &= 3 + \frac{a^2}{bc} + \frac{b^2}{ac} + \frac{c^2}{ab}
+    + \frac{bc}{a^2} + \frac{ac}{b^2} + \frac{ab}{c^2} \\
+  &= 3 + a^3 + b^3 + c^3 + a^{-3} + b^{-3} + c^{-3} \\
+  &= 9 + a^3 + b^3 + c^3 - 3abc + a^{-3} + b^{-3} + c^{-3} - 3a\inv b\inv c\inv \\
+  &= 9 + e_1(e_1^2 - 3e_2) + e_2(e_2^2 - 3e_1) \\
+  &= 9 + e_1^3 + e_2^3 - 6e_1e_2 \\
+  &= 9 + p(p^2 - 3f) - 6f \\
+  &= p^3 - (3p + 6)f + 9.
+  \end{align*}
+As a result, the quadratic with roots $q$ and $q'$ is
+$x^2 - (f - 3)x + (p^3 - (3p+6) f + 9)$, which implies that
+\[ q^2 - qf + 3q + p^3 - (3p + 6)f + 9 = 0
+  \iff (3p + q + 6)f = p^3 + q^2 + 3q + 9. \]
+
+At this point, two miracles occur.
+The first is the following claim:
+\begin{claim*}
+  $f$ is not real.
+\end{claim*}
+\begin{proof}
+  Suppose $f$ is real. Since $(x - e_1)(x - e_2) = x^2 - px + f$, there are two cases:
+  \begin{itemize}
+  \item $e_1$ and $e_2$ are real.
+    Then, $a$, $b$, and $c$ are the roots of $x^3 - e_1 x^2 + e_2 x - 1$,
+    and since every cubic with real coefficients has at least one real root,
+    at least one of $a$, $b$, and $c$ is real, contradiction.
+  \item $e_1$ and $e_2$ are conjugates.
+    Then, the polynomial $x^3 - \bar e_2 x^2 + \bar e_1 x - 1$,
+    which has roots $\bar a\inv$, $\bar b \inv$, and $\bar c \inv$,
+    is the same as the polynomial with $a$, $b$, $c$ as roots.
+    We conclude that the multiset $\{a, b, c\}$ is invariant
+    under inversion about the unit circle,
+    so one of $a$, $b$, and $c$ must lie on the unit circle.
+    This is yet another contradiction. \qedhere
+  \end{itemize}
+\end{proof}
+
+As a result, we know that $3p + q + 6 = p^3 + q^2 + 3q + 9 = 0$.
+The second miracle is that substituting $q = -3p-6$ into
+$q^2 + 3q + p^3 + 9 = 0$, we get
+\[ 0 = p^3 + 9p^2 + 27p + 27 = (p + 3)^3, \]
+so $p = -3$.
+Thus $q = 3$.
+
+It remains to construct valid $a$, $b$, and $c$.
+To do this, let's pick some $e_1$, let $e_2 = -3 - e_1$,
+and let $a$, $b$, and $c$ be the roots of $x^3 - e_1x^2 + e_2 x - 1$.
+It is clear that this guarantees $p = -3$.
+By our above calculations, $q$ and $q'$ are the roots of the quadratic
+$x^2 - (f-3)x + (3f - 18)$, so one of $q$ and $q'$ must be $3$;
+by changing the order of $a$, $b$, and $c$ if needed,
+we can guarantee this to be $q$.
+It suffices to show that for some choice of $e_1$,
+none of $a$, $b$, or $c$ are real or lie on the unit circle.
+
+To do this, note that we can rewrite $x^3 - e_1x^2 + (-3-e_1) x - 1 = 0$ as
+\[ e_1 = \frac{x^3 - 3x - 1}{x^2 + x}, \]
+so all we need is a value of $e_1$ that is not
+$\frac{x^3 - 3x - 1}{x^2 + x}$ for any real $x$ or $x$ on the unit circle.
+One way to do this is to choose any nonreal $e_1$ with $|e_1| < 1/2$.
+This clearly rules out any real $x$.
+Also, if $|x| = 1$, by the triangle inequality
+$|x^3 - 3x - 1| \geq |3x| - |x^3| - |1| = 1$
+and $|x^2 + x| \leq 2$, so $\left\lvert \frac{x^3-3x-1}{x^2+x} \right\rvert \geq \half$.

@@ -1,0 +1,216 @@
+desc: Fibonacci sequence partition
+source: TSTST 2017/6
+tags: [2017-06, greedy, justdoit, rigid, free, inefficient, size, analysis, grinding, gimel]
+hardness: 30
+author: Ivan Borsenco
+url: https://aops.com/community/p8526142
+
+---
+
+A sequence of positive integers $(a_{n})_{n \geq 1}$ is of
+\emph{Fibonacci type} if it satisfies the recursive relation
+$a_{n+2}=a_{n+1}+a_{n}$ for all $n \geq 1$.
+Is it possible to partition the set of positive integers
+into an infinite number of Fibonacci type sequences?
+
+---
+
+Yes, it is possible.
+The following solutions were written for me by Kevin Sun and Mark Sellke.
+We let $F_1 = F_2 = 1$, $F_3 = 2$, $F_4 = 3$, $F_5 = 5$, \dots
+denote the Fibonacci numbers.
+
+\paragraph{First solution (Kevin Sun).}
+We are going to appeal to the so-called Zeckendorf theorem:
+\begin{theorem*}
+  [Zeckendorf]
+  Every positive integer can be uniquely expressed
+  as the sum of nonconsecutive Fibonacci numbers.
+\end{theorem*}
+This means every positive integer has a
+Zeckendorf (``Fibonacci-binary'') representation
+where we put $1$ in the $i$th digit from the right
+if $F_{i+1}$ is used.
+The idea is then to take the following so-called \emph{Wythoff array}:
+\begin{itemize}
+  \ii \textbf{Row 1}: $1$, $2$, $3$, $5$, \dots
+  \ii \textbf{Row 101}: $1+3$, $2+5$, $3+8$, \dots
+  \ii \textbf{Row 1001}: $1+5$, $2+8$, $3+13$, \dots
+  \ii \textbf{Row 10001}: $1+8$, $2+13$, $3+21$, \dots
+  \ii \textbf{Row 10101}: $1+3+8$, $2+5+13$, $3+8+21$, \dots
+  \ii \dots et cetera.
+\end{itemize}
+More concretely, the array has the following rows to start:
+\[
+\begin{matrix}
+1&2&3&5&8&13&21&\dotsb\\
+4&7&11&18&29&47&76&\dotsb\\
+6&10&16&26&42&68&110&\dotsb\\
+9&15&24&39&63&102&165&\dotsb\\
+12&20&32&52&84&136&220&\dotsb\\
+14&23&37&60&97&157&254&\dotsb\\
+17&28&45&73&118&191&309&\dotsb\\
+\vdots&\vdots&\vdots&\vdots&\vdots&\vdots&\vdots&\ddots\\
+\end{matrix}.
+\]
+
+Here are the full details.
+
+We begin by outlining a proof of Zeckendorf's theorem,
+which implies the representation above is unique.
+Note that if $F_k$ is the greatest Fibonacci number at most $n$,
+then \[n - F_k < F_{k+1} - F_{k} = F_{k-1}.\]
+In particular, repeatedly subtracting off the largest $F_k$
+from $n$ will produce one such representation with
+no two consecutive Fibonacci numbers.
+On the other hand, this $F_k$ must be used, as
+\[ n \ge F_k > F_{k-1} + F_{k-3} + F_{k-5} + \dotsb \]
+This shows, by a simple inductive argument,
+that such a representation exists and unique.
+
+We write $n = \ol{a_k\dotso a_1}_{\text{Fib}}$
+for the Zeckendorf representation as we described
+(where $a_i = 1$ if $F_{i+1}$ is used).
+Now for each $\ol{a_k\dotso a_1}_{\text{Fib}}$
+with $a_1 = 1$, consider the sequence
+\[ \ol{a_k\dotso a_1}_{\text{Fib}}, \;
+  \ol{a_k\dotso a_1 0}_{\text{Fib}}, \;
+  \ol{a_k\dotso a_1 00}_{\text{Fib}}, \; \dots \]
+These sequences are Fibonacci-type by definition,
+and partition the positive integers since
+each positive integer has exactly one Fibonacci base representation.
+
+\paragraph{Second solution.} Call an infinite set of integers $S$ \textit{sandwiched} if there exist increasing sequences $\{a_i\}_{i=0}^{\infty}, \{b_i\}_{i=0}^{\infty}$ such that the following are true:
+\begin{itemize}
+\item $a_i + a_{i+1} = a_{i+2}$ and $b_i + b_{i+1} = b_{i+2}$.
+\item The intervals $[a_i+1,b_i-1]$ are disjoint and are nondecreasing in length.
+\item $\displaystyle S = \bigcup_{i=0}^{\infty} [a_i+1,b_i-1]$.
+\end{itemize}
+
+We claim that if $S$ is any nonempty sandwiched set, then $S$ can be partitioned into a Fibonacci-type sequence (involving the smallest element of $S$) and two smaller sandwiched sets. If this claim is proven, then we can start with $\NN \setminus \{1,2,3,5,\dots\}$, which is a sandwiched set, and repeatedly perform this partition, which will eventually sort each natural number into a Fibonacci-type sequence.
+
+Let $S$ be a sandwiched set given by $\{a_i\}_{i=0}^{\infty}, \{b_i\}_{i=0}^{\infty}$, so the smallest element in $S$ is $x = a_0 + 1$. Note that $y = a_1+1$ is also in $S$ and $x < y$. Then consider the Fibonacci-type sequence given by $f_0 = x, f_1 = y$, and $f_{k+2} = f_{k+1} + f_k$. We can then see that $f_i \in [a_i+1,b_i-1]$, as the sum of numbers in the intervals $[a_{k}+1,b_{k}-1]$, $[a_{k+1}+1,b_{k+1}-1]$ lies in the interval \[[a_{k} + a_{k+1} + 2,b_k + b_{k+1}-2] = [a_{k+2}+2,b_{k+2}-2] \subset [a_{k+2}+1,b_{k+2}-1].\]
+
+Therefore, this gives a natural partition of $S$ into this sequence and two sets: \begin{align*} S_1 &= \bigcup_{i=0}^{\infty} [a_i+1,f_i-1] \\ \text{and} \,\, S_2 &= \bigcup_{i=0}^{\infty} [f_i+1,b_i-1].\end{align*} (For convenience, $[x,x-1]$ will be treated as the empty set.)
+
+We now show that $S_1$ and $S_2$ are sandwiched. Since $\{a_i\}$, $\{f_i\}$, and $\{b_i\}$ satisfy the Fibonacci recurrence, it is enough to check that the intervals have nondecreasing lengths. For $S_1$, that is equivalent to $f_{k+1} - a_{k+1} \ge f_k - a_k$ for each $k$. Fortunately, for $k \ge 1$, the difference is $f_{k-1} - a_{k-1} \ge 0$, and for $k = 0$, $f_1 - a_1 = 1 = f_0 - a_0$. Similarly for $S_2$, checking $b_{k+1} - f_{k+1} \ge b_k - f_k$ is easy for $k \ge 1$ as $b_{k-1} - f_{k-1} \ge 0$, and \[(b_{1} - f_1) - (b_0 - f_0) = (b_1 - a_1) - (b_0 - a_0),\] which is nonnegative since the lengths of intervals in $S$ are nondecreasing.
+
+Therefore we have shown that $S_1$ and $S_2$ are sandwiched. (Note that some of the $[a_i+1,f_i-1]$ may be empty, which would shift some indices back.) Since this gives us a procedure to take a set $S$ and produce a Fibonacci-type sequence with its smallest element, along which two other sandwiched types, we can partition $\NN$ into an infinite number of Fibonacci-type sequences.
+
+\paragraph{Third solution.} We add Fibonacci-type sequences one-by-one. At each step, let $x$ be the smallest number that has not been used in any previous sequence. We generate a new Fibonacci-type sequence as follows. Set $a_0 = x$ and for $i \ge 1$, set \[a_i = \left \lfloor \varphi a_{i-1} + \frac{1}{2} \right \rfloor.\] Equivalently, $a_{i}$ is the closest integer to $\varphi a_{i-1}$. \\
+It suffices to show that this sequence is Fibonacci-type and that no two sequences generated in this way overlap.
+We first show that for a positive integer $n$, \[\left \lfloor \varphi \left \lfloor \varphi n + \frac{1}{2} \right \rfloor + \frac{1}{2} \right \rfloor = n + \left \lfloor \varphi n + \frac{1}{2} \right \rfloor . \]
+Indeed, \begin{align*} \left \lfloor \varphi \left \lfloor \varphi n + \frac{1}{2} \right \rfloor + \frac{1}{2} \right \rfloor &= \left \lfloor (1 + \varphi^{-1}) \left \lfloor \varphi n + \frac{1}{2} \right \rfloor + \frac{1}{2}\right \rfloor \\
+&= \left \lfloor \varphi n + \frac{1}{2} \right \rfloor + \left \lfloor \varphi^{-1} \left \lfloor \varphi n + \frac{1}{2}\right \rfloor + \frac{1}{2} \right \rfloor.
+\end{align*}
+Note that $\left \lfloor \varphi n + \frac{1}{2} \right \rfloor = \varphi n + c$ for some $|c| \le \frac{1}{2}$; this implies that $\varphi^{-1}\left \lfloor \varphi n + \frac{1}{2} \right \rfloor$ is within $\varphi^{-1}\cdot \frac{1}{2} < \frac{1}{2}$ of $n$, so its closest integer is $n$, proving the claim.
+
+Therefore these sequences are Fibonacci-type. Additionally, if $a \neq b$, then $|\varphi a - \varphi b| \ge \varphi > 1$. Then \[a \neq b \implies \left \lfloor \varphi a + \frac{1}{2} \right \rfloor \neq \left \lfloor \varphi b + \frac{1}{2} \right \rfloor,\]
+and since the first term of each sequence is chosen to not overlap with any previous sequences, these sequences are disjoint.
+
+\begin{remark*}
+  Ankan Bhattacharya points out that the same sequence
+  essentially appears in IMO 1993, Problem 5 --- in other words,
+  a strictly increasing function $f \colon \ZZ_{>0} \to \ZZ_{>0}$ with $f(1) = 2$,
+  and $f(f(n)) = f(n) + n$.
+
+  Nikolai Beluhov sent us an older reference from March 1977,
+  where Martin Gardner wrote in his column about Wythoff's Nim.
+  The relevant excerpt goes:
+  \begin{quote}
+    ``Imagine that we go through the infinite sequence of safe pairs (in
+    the manner of Eratosthenes' sieve for sifting out primes) and cross
+    out the infinite set of all safe pairs that are pairs in the Fibonacci
+    sequence. The smallest pair that is not crossed out is 4/7. We can now
+    cross out a second infinite set of safe pairs, starting with 4/7, that
+    are pairs in the Lucas sequence. An infinite number of safe pairs, of
+    which the lowest is now 6/10, remain. This pair too begins another
+    infinite Fibonacci sequence, all of whose pairs are safe. The process
+    continues forever. Robert Silber, a mathematician at North Carolina
+    State University, calls a safe pair ``primitive'' if it is the first
+    safe pair that generates a Fibonacci sequence.''
+  \end{quote}
+  The relevant article by Robert Silber is
+  \emph{A Fibonacci Property of Wythoff Pairs},
+  from The Fibonacci Quarterly 11/1976.
+\end{remark*}
+
+
+\paragraph{Fourth solution (Mark Sellke).}
+For later reference let \[ f_1=0, f_2=1, f_3=1, \dots \]
+denote the ordinary Fibonacci numbers.
+We will denote the Fibonacci-like sequences by $F^i$ and the elements with subscripts;
+hence $F^2_1$ is the first element of the second sequence.
+Our construction amounts to just iteratively add new sequences;
+hence the following claim is the whole problem.
+
+\begin{lemma*}
+  For any disjoint collection of Fibonacci-like sequences
+  $F^1,\dots,F^k$ and any integer $m$ contained in none of them,
+  there is a new Fibonacci-like sequence $F^{k+1}$ beginning
+  with $F^{k+1}_1=m$ which is disjoint from the previous sequences.
+\end{lemma*}
+
+Observe first that for each sequence $F^j$ there is $c^j\in \RR^n$ such that
+\[ F^j_n=c^j\phi^n+o(1)  \]
+where \[\phi=\frac{1+\sqrt{5}}{2}.\]
+
+Collapse the group $(\RR^+,\times)$ into the half-open interval
+$J = \left\{ x \mid 1 \le x < \phi \right\}$
+by defining $T(x)=y$ for the unique $y\in J$ with $x=y\phi^n$ for some integer $n$.
+
+Fix an interval $I=[a,b]\subseteq [1.2,1.3]$ (the last condition is to
+avoid wrap-around issues) which contains none of the $c^j$, and take
+$\varepsilon<0.001$ to be small enough that in fact each $c^j$ has
+distance at least $10\varepsilon$ from $I$; this means any $c_j$ and
+element of $I$ differ by at least a $(1+10\varepsilon)$ factor. The idea
+will be to take $F^{k+1}_1=m$ and $F^{k+1}_2$ to be a large such that
+the induced values of $F^{k+1}_j$ grow like $k\phi^j$ for $j\in
+T^{-1}(I)$, so that $F^{k+1}_n$ is separated from the $c^j$ after
+applying $T$. What's left to check is the convergence.
+
+Now let \[c=\lim_{n\to\infty} \frac{f_n}{\phi^n}\] and take
+$M$ large enough that for $n>M$ we have
+\[\left|\frac{f_n}{c\phi^n}-1\right|<\varepsilon.\]
+
+Now $\frac{T^{-1}(I)}{c}$ contains arbitrarily large integers,
+so there are infinitely many $N$ with $cN\in T^{-1}(I)$ with $N>\frac{10m}{\varepsilon}$.
+We claim that for any such $N$, the sequence $F^{(N)}$ defined by
+\[F^{(N)}_1=m,F^{(N)}_2=N\] will be very multiplicatively similar to the
+normal Fibonacci numbers up to rescaling;
+indeed for $j=2,j=3$ we have $\frac{F_2^{(N)}}{f_2}=N,\frac{F_3^{(N)}}{f_3}=N+m$
+and so by induction we will have
+\[ \frac{F^{(N)}_j}{f_j} \in [N,N+m] \subseteq [N,N(1+\varepsilon)] \]
+for $j\geq 2$.
+Therefore, up to small multiplicative errors, we have
+\[F_j^{(N)}\approx Nf_j\approx cN\phi^j.\]
+From this we see that for $j>M$ we have
+\[T(F_j^{(N)})\in  T(cN)\cdot [1-2\varepsilon,1+2\varepsilon].\]
+In particular, since $T(cN)\in I$ and $I$ is separated from each $c_j$
+by a factor of $(1+10\varepsilon)$,
+we get that $F_j^{(N)}$ is not in any of $F^1,F^2,\dots,F^k$.
+
+Finishing is easy, since we now have a uniform estimate on how many
+terms we need to check for a new element before the exponential growth
+takes over. We will just use pigeonhole to argue that there are few
+possible collisions among those early terms, so we can easily pick a
+value of $N$ which avoids them all. We write it out below.
+
+For large $L$, the set \[S_L=(I\cdot \phi^L)\cap\ZZ\] contains at
+least $k_I\phi^L$ elements. As $N$ ranges over $S_L$, for each fixed
+$j$, the value of $F^{(N)}_j$ varies by at most a factor of $1.1$
+because we imposed $I\subseteq [1.2,1.3]$ and so this is true for the
+first two terms, hence for all subsequent terms by induction. Now
+suppose $L$ is very large, and consider a fixed pair $(i,j)$ with $i\leq
+k$ and $j\leq M$. We claim there is at most $1$ possible value $k$ such
+that the term $F^i_k$ could equal $F^{(N)}_j$ for some $N\in S_L$;
+indeed, the terms of $F^i$ are growing at exponential rate with factor
+$\phi>1.1$, so at most one will be in a given interval of multiplicative
+width at most $1.1$.
+
+Hence, of these $k_I\phi^L$ values of $N$, at most $kM$ could cause
+problems, one for each pair $(i,j)$. However by monotonicity of
+$F^{(N)}_j$ in $N$, at most $1$ value of $N$ causes a collision for each
+pair $(i,j)$. Hence for large $L$ so that $k_I\phi^L>10kM$ we can find a
+suitable $N\in S_L$ by pigeonhole and the sequence $F^{(N)}$ defined by
+$(m,N,N+m,\dots)$ works.

@@ -1,0 +1,266 @@
+author: Nikolai Beluhov
+desc: Hephaestus and Poseidon; flood vs levee
+hardness: 45
+source: USA TST 2020/3
+tags: [2019-12, bestpossible, find, algorithm, nice, global, grid, process, zayin]
+url: https://aops.com/community/p13654498
+
+---
+
+Let $\alpha \ge 1$ be a real number.
+Hephaestus and Poseidon play a turn-based game
+on an infinite grid of unit squares.
+Before the game starts, Poseidon chooses a finite
+number of cells to be \emph{flooded}.
+Hephaestus is building a \emph{levee},
+which is a subset of unit edges of the grid, called \emph{walls},
+forming a connected, non-self-intersecting path or loop.
+
+The game then begins with Hephaestus moving first.
+On each of Hephaestus's turns, he adds one or more walls
+to the levee, as long as the total length of the levee
+is at most $\alpha n$ after his $n$th turn.
+On each of Poseidon's turns,
+every cell which is adjacent to an already flooded cell
+and with no wall between them becomes flooded as well.
+
+Hephaestus wins if the levee forms a closed loop
+such that all flooded cells are
+contained in the interior of the loop ---
+hence stopping the flood and saving the world.
+For which $\alpha$ can Hephaestus guarantee victory
+in a finite number of turns
+no matter how Poseidon chooses the initial cells to flood?
+
+---
+
+We show that if $\alpha > 2$
+then Hephaestus wins,
+but when $\alpha = 2$ (and hence $\alpha \le 2$)
+Hephaestus cannot contain even a single-cell flood initially.
+
+\bigskip
+
+\textbf{Strategy for $\alpha > 2$}:
+Impose $\ZZ^2$ coordinates on the cells.
+Adding more flooded cells does not make our task easier,
+so let us assume that initially
+the cells $(x,y)$ with $|x|+|y| \le d$ are flooded
+for some $d \ge 2$;
+thus on Hephaestus's $k$th turn,
+the water is contained in $|x|+|y| \le d+k-1$.
+Our goal is to contain the flood with a large rectangle.
+
+We pick large integers $N_1$ and $N_2$ such that
+\begin{align*}
+  \alpha N_1 &> 2N_1 + (2d + 3) \\
+  \alpha (N_1+N_2) &> 2N_2 + (6N_1 + 8d + 4).
+\end{align*}
+Mark the points $X_i$, $Y_i$ as shown
+in the figure for $1 \le i \le 6$.
+The red figures indicate the distance
+between the marked points on the rectangle.
+\begin{center}
+\begin{asy}
+size(10cm);
+transform t = shift(-0.5,-0.5);
+path c(real x, real y) {
+  return t * shift(x,y) * unitsquare ;
+}
+for (int x=-7; x<=7; ++x) {
+  for (int y=-16; y<=2; ++y) {
+    if (abs(x)+abs(y) <= 2) {
+      filldraw(c(x,y), blue, grey);
+    }
+    else if (abs(x)+abs(y) <= 7) {
+      filldraw(c(x,y), mediumcyan, grey);
+    }
+    else if (abs(x)+abs(y) <= 16) {
+      filldraw(c(x,y), paleblue, grey);
+    }
+    else {
+      filldraw(c(x,y), white, grey);
+    }
+  }
+}
+dotfactor *= 1.5;
+dot("$X_1$", (-0.5, 2.5), dir(115));
+dot("$Y_1$", ( 0.5, 2.5), dir(65));
+dot("$X_2$", (-5.5, 2.5), dir(90));
+dot("$Y_2$", ( 5.5, 2.5), dir(90));
+dot("$X_3$", (-7.5, 2.5), dir(135));
+dot("$Y_3$", ( 7.5, 2.5), dir(45));
+dot("$X_4$", (-7.5,-0.5), dir(180));
+dot("$Y_4$", ( 7.5,-0.5), dir(0));
+dot("$X_5$", (-7.5, -9.5), dir(180));
+dot("$Y_5$", ( 7.5, -9.5), dir(0));
+dot("$X_6$", (-7.5,-16.5), dir(180));
+dot("$Y_6$", ( 7.5,-16.5), dir(0));
+draw(box( (-7.5,-16.5), (7.5,2.5) ), black+1.4 );
+
+label("$1$", (0, 2.5), dir(90), red);
+label("$N_1$", (-3, 2.5), dir(90), red);
+label("$N_1$", ( 3, 2.5), dir(90), red);
+label("$d$", (-6.5, 2.5), dir(90), red);
+label("$d$", ( 6.5, 2.5), dir(90), red);
+label("$d+1$", (-7.5, 1), dir(180), red);
+label("$d+1$", ( 7.5, 1), dir(  0), red);
+label("$N_2$", (-7.5, -5), dir(180), red);
+label("$N_2$", ( 7.5, -5), dir(  0), red);
+label("$N_1+d$", (-7.5, -13), dir(180), red);
+label("$N_1+d$", ( 7.5, -13), dir(  0), red);
+\end{asy}
+\end{center}
+We follow the following plan.
+\begin{itemize}
+  \ii Turn $1$: place wall $X_1 Y_1$.
+  This cuts off the flood to the north.
+  \ii Turns $2$ through $N_1+1$: extend
+  the levee to segment $X_2 Y_2$.
+  This prevents further flooding to the north.
+  \ii Turn $N_1+2$:
+  add in broken lines $X_4 X_3 X_2$ and $Y_4 Y_3 Y_2$ all at once.
+  This cuts off the flood west and east.
+  \ii Turns $N_1+2$ to $N_1+N_2+1$:
+  extend the levee along segments $X_4 X_5$ and $Y_4 Y_5$.
+  This prevents further flooding west and east.
+  \ii Turn $N_1 + N_2 + 2$:
+  add in the broken line $X_5 X_6 Y_6 Y_5$ all at once and win.
+\end{itemize}
+
+\bigskip
+
+\textbf{Proof for $\alpha = 2$}:
+Suppose Hephaestus contains the flood
+on his $(n+1)$st turn.
+We prove that $\alpha > 2$ by showing
+that in fact at least $2n+4$ walls have been constructed.
+
+Let $c_0$, $c_1$, \dots, $c_n$ be a path of cells such that
+$c_0$ is the initial cell flooded,
+and in general $c_i$ is flooded on
+Poseidon's $i$th turn from $c_{i-1}$.
+The levee now forms a closed loop enclosing all $c_i$.
+
+\begin{claim*}
+  If $c_i$ and $c_j$ are adjacent
+  then $|i-j|=1$.
+\end{claim*}
+\begin{proof}
+  Assume $c_i$ and $c_j$ are adjacent but $|i-j|>1$.
+  Then the two cells must be separated by a wall.
+  But the levee forms a closed loop,
+  and now $c_i$ and $c_j$ are on opposite sides.
+\end{proof}
+
+Thus the $c_i$ actually form a path.
+We color \emph{green} any edge of the unit grid (wall or not)
+which is an edge of exactly one $c_i$
+(i.e.\ the boundary of the polyomino).
+It is easy to see there are exactly $2n+4$ green edges.
+
+Now, from the center of each cell $c_i$,
+shine a laser towards each green edge of $c_i$
+(hence a total of $2n+4$ lasers are emitted).
+An example below is shown for $n = 6$,
+with the levee marked in brown.
+
+\begin{center}
+\begin{asy}
+  for (int i=0; i<=4; ++i) {
+    for (int j=0; j<=4; ++j) {
+      draw(shift(i,j)*unitsquare, lightgrey);
+    }
+  }
+  draw( (0,0)--(0,2)--(2,2)--(2,3)--(0,3)--(0,5)
+    --(5,5)--(5,2)--(3,2)--(3,0)--cycle, brown+1.5 );
+  filldraw( (0.1,1.1)--(2.9,1.1)--(2.9,4.9)--(1.1,4.9)
+    --(1.1,4.1)--(2.1,4.1)--(2.1,1.9)--(0.1,1.9)--cycle,
+    palecyan, green+1.5);
+  label("$c_0$", (1.5,4.5));
+  label("$c_1$", (2.5,4.5));
+  label("$c_2$", (2.5,3.5));
+  label("$c_3$", (2.5,2.5));
+  label("$c_4$", (2.5,1.5));
+  label("$c_5$", (1.5,1.5));
+  label("$c_6$", (0.5,1.5));
+
+  // Lasers from c_6
+  draw( (0.5,1.5)--(0,1.5), red, EndArrow(TeXHead), Margin(2,1) );
+  draw( (0.5,1.5)--(0.5,2), red, EndArrow(TeXHead), Margin(2,1) );
+  draw( (0.5,1.5)--(0.5,0), red, EndArrow(TeXHead), Margin(2,1) );
+  // Lasers from c_5
+  draw( (1.5,1.5)--(1.5,2), red, EndArrow(TeXHead), Margin(2,1) );
+  draw( (1.5,1.5)--(1.5,0), red, EndArrow(TeXHead), Margin(2,1) );
+  // Lasers from c_4
+  draw( (2.5,1.5)--(3,1.5), red, EndArrow(TeXHead), Margin(2,1) );
+  draw( (2.5,1.5)--(2.5,0), red, EndArrow(TeXHead), Margin(2,1) );
+  // Lasers from c_3
+  draw( (2.5,2.5)--(2,2.5), red, EndArrow(TeXHead), Margin(2,1) );
+  draw( (2.5,2.5)--(5,2.5), red, EndArrow(TeXHead), Margin(2,1) );
+  // Lasers from c_2
+  draw( (2.5,3.5)--(0,3.5), red, EndArrow(TeXHead), Margin(2,1) );
+  draw( (2.5,3.5)--(5,3.5), red, EndArrow(TeXHead), Margin(2,1) );
+  // Lasers from c_1
+  draw( (2.5,4.5)--(2.5,5), red, EndArrow(TeXHead), Margin(2,1) );
+  draw( (2.5,4.5)--(5,4.5), red, EndArrow(TeXHead), Margin(2,1) );
+  // Lasers from c_0
+  draw( (1.5,4.5)--(1.5,5), red, EndArrow(TeXHead), Margin(2,1) );
+  draw( (1.5,4.5)--(0,4.5), red, EndArrow(TeXHead), Margin(2,1) );
+  draw( (1.5,4.5)--(1.5,3), red, EndArrow(TeXHead), Margin(2,1) );
+\end{asy}
+\end{center}
+
+\begin{claim*}
+  No wall is hit by more than one laser.
+\end{claim*}
+\begin{proof}
+  Assume for contradiction that a wall $w$ is hit
+  by lasers from $c_i$ and $c_j$.
+  WLOG that laser is vertical, so
+  $c_i$ and $c_j$ are in the same column
+  (e.g.\ $(i,j) = (0,5)$ in figure).
+
+  We consider two cases on the position of $w$.
+  \begin{itemize}
+    \ii If $w$ is between $c_i$ and $c_j$,
+    then we have found a segment intersecting
+    the levee exactly once.
+    But the endpoints of the segment lie inside the levee.
+    This contradicts the assumption that the levee is a closed loop.
+
+    \ii Suppose $w$ lies above both $c_i$ and $c_j$
+    and assume WLOG $i < j$.
+    Then we have found that there is no levee at all
+    between $c_i$ and $c_j$.
+
+    Let $\rho \ge 1$ be the distance between
+    the centers of $c_i$ and $c_j$.
+    Then $c_j$ is flooded in a straight line from $c_i$
+    within $\rho$ turns, and this is the unique
+    shortest possible path.
+    So this situation can only occur if $j = i+\rho$
+    and $c_i$, \dots, $c_j$ form a column.
+    But then no vertical lasers from $c_i$ and $c_j$
+    may point in the same direction, contradiction.
+  \end{itemize}
+  Since neither case is possible, the proof ends here.
+\end{proof}
+
+This implies the levee has at least $2n+4$ walls
+(the number of lasers) on Hephaestus's $(n+1)$st turn.
+So $\alpha \ge \frac{2n+4}{n+1} > 2$.
+
+\begin{remark*}
+  [Author comments]
+  The author provides the following remarks.
+  \begin{itemize}
+  \item Even though the flood can be stopped when $\alpha = 2 + \eps$, it takes a very long time to do that. Starting from a single flooded cell, the strategy I have outlined requires $\Theta(1 / \eps^2)$ days. Starting from several flooded cells contained within an area of diameter $D$, it takes $\Theta( D / \eps^2)$ days. I do not know any strategies that require fewer days than that.
+  \item There is a gaping chasm between $\alpha \le 2$ and $\alpha > 2$. Since $\alpha \le 2$ does not suffice even when only one cell is flooded in the beginning, there are in fact no initial configurations at all for which it is sufficient. On the other hand, $\alpha > 2$ works for all initial configurations.
+  \item The second half of the solution essentially estimates the perimeter of a polyomino in terms of its diameter (where diameter is measured entirely within the polyomino).
+
+  It appears that this has not been done before, or at least I was unable to find any reference for it. I did find tons of references where the perimeter of a polyomino is estimated in terms of its area, but nothing concerning the diameter.
+
+  My argument is a formalisation of the intuition that if $P$ is any shortest path within some weirdly-shaped polyomino, then the boundary of that polyomino must hug $P$ rather closely so that $P$ cannot be shortened.
+  \end{itemize}
+\end{remark*}

@@ -1,0 +1,168 @@
+author: Hongzhou Lin
+desc: Fixed angle, foot of altitudes
+source: TSTST 2022/2
+url: https://aops.com/community/p25516988
+tags: [2023-08, pop, anglechase, todo]
+
+---
+
+Let $ABC$ be a triangle.
+Let $\theta$ be a fixed angle for which
+\[ \theta < \frac12 \min(\angle A, \angle B, \angle C). \]
+Points $S_A$ and $T_A$ lie on segment $BC$
+such that $\angle BAS_A = \angle T_AAC = \theta$.
+Let $P_A$ and $Q_A$ be the feet from $B$ and $C$
+to $\ol{AS_A}$ and $\ol{AT_A}$ respectively.
+Then $\ell_A$ is defined as the perpendicular bisector of $\ol{P_A Q_A}$.
+
+Define $\ell_B$ and $\ell_C$ analogously by repeating this construction
+two more times (using the same value of $\theta$).
+Prove that $\ell_A$, $\ell_B$, and $\ell_C$ are concurrent or all parallel.
+
+---
+
+We discard the points $S_A$ and $T_A$ since they are only there
+to direct the angles correctly in the problem statement.
+
+\paragraph{First solution, by author.}
+Let $X$ be the projection from $C$ to $AP_A$,
+$Y$ be the projection from $B$ to $AQ_A$.
+\begin{center}
+\begin{asy}
+pair A = dir(110);
+pair B = dir(200);
+pair C = dir(340);
+
+pair Z_1 = dir(215);
+pair Z_2 = B*C/Z_1;
+pair P_A = foot(B, A, Z_1);
+pair Q_A = foot(C, A, Z_2);
+filldraw(A--B--C--cycle, opacity(0.1)+lightcyan, blue);
+draw(A--P_A, red);
+draw(A--Q_A, red);
+pair X = foot(C, A, P_A);
+pair Y = foot(B, A, Q_A);
+
+draw(B--P_A, orange);
+draw(C--Q_A, orange);
+draw(B--Y, orange);
+draw(C--X, orange);
+
+pair M_A = midpoint(B--C);
+pair M_B = midpoint(C--A);
+pair M_C = midpoint(A--B);
+
+draw(M_B--M_A--M_C, blue);
+
+draw(P_A--Q_A, deepgreen);
+draw(P_A--M_A--Q_A, deepgreen);
+
+draw(circumcircle(P_A, X, Y), grey);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$P_A$", P_A, dir(P_A));
+dot("$Q_A$", Q_A, dir(Q_A));
+dot("$X$", X, dir(X));
+dot("$Y$", Y, dir(70));
+dot("$M_A$", M_A, dir(M_A));
+dot("$M_B$", M_B, dir(M_B));
+dot("$M_C$", M_C, dir(M_C));
+
+/* TSQ Source:
+
+A = dir 110
+B = dir 200
+C = dir 340
+
+Z_1 := dir 215
+Z_2 := B*C/Z_1
+P_A = foot B A Z_1
+Q_A = foot C A Z_2
+A--B--C--cycle 0.1 lightcyan / blue
+A--P_A red
+A--Q_A red
+X = foot C A P_A
+Y = foot B A Q_A R70
+
+B--P_A orange
+C--Q_A orange
+B--Y orange
+C--X orange
+
+M_A = midpoint B--C
+M_B = midpoint C--A
+M_C = midpoint A--B
+
+M_B--M_A--M_C blue
+
+P_A--Q_A deepgreen
+P_A--M_A--Q_A deepgreen
+
+circle P_A X Y grey
+
+*/
+\end{asy}
+\end{center}
+
+\begin{claim*}
+  Line $\ell_A$ passes through $M_A$, the midpoint of $BC$.
+  Also, quadrilateral $P_AQ_AYX$ is cyclic with circumcenter $M_A$.
+\end{claim*}
+\begin{proof}
+  Since
+  \[ AP_A\cdot AX = AB\cdot AC\cdot\cos\theta\cos(\angle A - \theta)
+    = AQ_A\cdot AY,\]
+  it follows that $P_A$, $Q_A$, $Y$, $X$
+  are concyclic by power of a point.
+  Moreover, by projection,
+  the perpendicular bisector of $P_AX$ passes through $M_A$,
+  similar for $Q_AY$, implying that $M_A$ is the center of $P_AQ_AYX$.
+  Hence $\ell_A$ passes through $M_A$.
+\end{proof}
+
+\begin{claim*}
+  $\dang (M_AM_C, \ell_A) = \dang YP_AQ_A$.
+\end{claim*}
+\begin{proof}
+  Indeed, $\ell_A \perp P_AQ_A$, and $M_AM_C \perp P_AY$
+  (since $M_AP_A = M_AY$ from $(P_AQ_AY_AX)$
+  and $M_CP_A = M_CM_A = M_CY$ from the circle with diameter $AB$).
+  Hence $\dang (M_AM_C, \ell_A) = \dang (P_AY, P_AQ_A) = \dang YP_AQ_A$.
+\end{proof}
+Therefore,
+\[
+  \frac{\sin \angle (M_AM_C, \ell_A)}{\sin \angle (\ell_A, M_AM_B)}
+  = \frac{\sin \angle YP_AQ_A}{\sin \angle P_AQ_AX}
+  = \frac{YQ_A}{XP_A}
+  = \frac{BC \sin (\angle C+ \theta) }{BC \sin (\angle B+ \theta)}
+  = \frac{\sin (\angle C+ \theta)}{\sin (\angle B+ \theta)},
+\]
+and we conclude by trig Ceva theorem.
+
+\paragraph{Second solution via Jacobi, by Maxim Li.}
+Let $D$ be the foot of the $A$-altitude.
+Note that line $BC$ is the external angle bisector of $\angle P_ADQ_A$.
+\begin{claim*}
+  $(DP_AQ_A)$ passes through the midpoint $M_A$ of $BC$.
+\end{claim*}
+\begin{proof}
+  Perform $\sqrt{bc}$ inversion.
+  Then the intersection of $BC$ and $(DP_AQ_A)$
+  maps to the second intersection of $(ABC)$ and $(A'P_AQ_A)$,
+  where $A'$ is the antipode to $A$ on $(ABC)$,
+  i.e.\ the center of spiral similarity from $BC$ to $P_AQ_A$.
+  Since $BP_A:CQ_A = AB:AC$, we see the center of spiral similarity
+  is the intersection of the $A$-symmedian with $(ABC)$,
+  which is the image of $M_A$ in the inversion.
+\end{proof}
+
+It follows that $M_A$ lies on $\ell_A$;
+we need to identify a second point.
+We'll use the circumcenter $O_A$ of $(DP_AQ_A)$.
+The perpendicular bisector of $DP_A$ passes through $M_C$;
+indeed, we can easily show the angle it makes with $M_CM_A$
+is $90^\circ - \theta - C$, so $\angle O_AM_CM_A = 90 - \theta - C$,
+and then by analogous angle-chasing
+we can finish with Jacobi's theorem on $\triangle M_AM_BM_C$.

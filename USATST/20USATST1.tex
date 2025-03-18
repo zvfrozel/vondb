@@ -1,0 +1,66 @@
+author: Carl Schildkraut, Milan Haiman
+desc: Limit of $b_n n^{-2}$ sequence
+hardness: 15
+source: USA TST 2020/1
+tags: [2019-12, analysis, size, find, construct, maturity, bet]
+url: https://aops.com/community/p13654466
+
+---
+
+Choose positive integers $b_1$, $b_2$, \dots\ satisfying
+\[ 1 = \frac{b_1}{1^2} > \frac{b_2}{2^2} > \frac{b_3}{3^2} > \frac{b_4}{4^2} > \dotsb \]
+and let $r$ denote the largest real number
+satisfying $\frac{b_n}{n^2} \ge r$ for all positive integers $n$.
+What are the possible values of $r$ across all
+possible choices of the sequence $(b_n)$?
+
+---
+
+The answer is $0 \le r \le 1/2$. Obviously $r \ge 0$.
+
+In one direction, we show that
+\begin{claim*}
+  [Greedy bound]
+  For all integers $n$, we have
+  \[ \frac{b_n}{n^2} \le \half + \frac{1}{2n}. \]
+\end{claim*}
+\begin{proof}
+  This is by induction on $n$. For $n=1$ it is given.
+  For the inductive step we have
+  \begin{align*}
+    b_n &< n^2 \frac{b_{n-1}}{(n-1)^2}
+    \le n^2 \left( \frac12 + \frac{1}{2(n-1)}  \right)
+    = \frac{n^3}{2(n-1)} \\
+    &= \half \left[ n^2+n+1 + \frac{1}{n-1} \right] \\
+    &= \frac{n(n+1)}{2} + \half \left[ 1 + \frac{1}{n-1} \right] \\
+    &\le \frac{n(n+1)}{2} + 1
+  \end{align*}
+  So $b_n < \frac{n(n+1)}{2} + 1$
+  and since $b_n$ is an integer, $b_n \le \frac{n(n+1)}{2}$.
+  This implies the result.
+\end{proof}
+
+We now give a construction.
+For $r=1/2$ we take $b_n = \half n(n+1)$ for $r=0$ we take $b_n = 1$.
+
+\begin{claim*}
+[Explicit construction, given by Nikolai Beluhov]
+  Fix $0 < r < 1/2$.
+  Let $N$ be large enough that $\left\lceil rn^2+n \right\rceil < \half n(n+1)$ for all $n \ge N$.
+  Then the following sequence works:
+  \[ b_n = \begin{cases}
+    \left\lceil rn^2 + n \right\rceil & n \ge N \\
+    \frac{n^2+n}{2} & n < N.
+  \end{cases} \]
+\end{claim*}
+\begin{proof}
+  We certainly have
+  \[ \frac{b_n}{n^2} = \frac{rn^2 + n + O(1)}{n^2} \xrightarrow{n \to \infty} r. \]
+  Mainly, we contend $b_n n^{-2}$ is strictly decreasing.
+  We need only check this for $n \ge N$; in fact
+  \[ \frac{b_n}{n^2} \ge \frac{rn^2+n}{n^2}
+    > \frac{[r(n+1)^2+(n+1)]+1}{(n+1)^2}
+    > \frac{b_{n+1}}{(n+1)^2} \]
+  where the middle inequality is true
+  since it rearranges to $\frac1n > \frac{n+2}{(n+1)^2}$.
+\end{proof}

@@ -1,0 +1,102 @@
+author: Mark Sellke
+desc: Annulus guessing
+source: USA TST 2018/6
+tags: [2017-11, nice, criticalclaim, global, magic, zayin]
+hardness: 45
+url: https://aops.com/community/p9735613
+
+---
+
+Alice and Bob play a game.
+First, Alice secretly picks a finite set $S$
+of lattice points in the Cartesian plane.
+Then, for every line $\ell$ in the plane
+which is horizontal, vertical, or has slope $+1$ or $-1$,
+she tells Bob the number of points of $S$ that lie on $\ell$.
+Bob wins if he can then determine the set $S$.
+
+Prove that if Alice picks $S$ to be of the form
+\[ S = \left\{ (x,y) \in \ZZ^2 \mid m \le x^2+y^2 \le n \right\} \]
+for some positive integers $m$ and $n$, then Bob can win.
+(Bob does not know in advance that $S$ is of this form.)
+
+---
+
+Clearly Bob can compute the number $N$ of points.
+
+The main claim is that:
+\begin{claim*}
+  Fix $m$ and $n$ as in the problem statement.
+  Among all sets $T \subseteq \ZZ^2$ with $N$ points,
+  the set $S$ is the \emph{unique} one which maximizes the value of
+  \[ F(T):=\sum_{(x,y)\in T} (x^2+y^2)(m+n-(x^2+y^2)).  \]
+\end{claim*}
+\begin{proof}
+  Indeed, the different points in $T$ do not interact in this sum,
+  so we simply want the points $(x,y)$ with $x^2+y^2$
+  as close as possible to $\frac{m+n}{2}$ which is exactly what $S$ does.
+\end{proof}
+As a result of this observation,
+it suffices to show that Bob has enough information to
+compute $F(S)$ from the data given.
+(There is no issue with fixing $m$ and $n$,
+since Bob can find an upper bound on the magnitude
+of the points and then check all pairs $(m,n)$ smaller than that.)
+The idea is that he knows the full distribution of each of
+$X$, $Y$, $X+Y$, $X-Y$ and hence can compute sums
+over $T$ of any power of a single one of those linear functions.
+By taking linear combinations we can hence compute $F(S)$.
+
+Let us make the relations explicit.
+For ease of exposition we take $Z=(X,Y)$ to be a
+uniformly random point from the set $S$.
+The information is precisely the individual distributions
+of $X$, $Y$, $X+Y$, and $X-Y$.
+Now compute
+\begin{align*}
+  \frac{F(S)}{N} &= \mathbb E\left[ (m+n)(X^2+Y^2) - (X^2+Y^2)^2 \right] \\
+  &= (m+n) \left( \mathbb E[X^2] + \mathbb E[Y^2] \right)
+  - \mathbb E[X^4] - \mathbb E[Y^4] - 2 \mathbb E[X^2 Y^2].
+\end{align*}
+On the other hand,
+\[ \mathbb E[X^2Y^2]
+  = \frac{\mathbb E[(X+Y)^4] + \mathbb E[(X-Y)^4]
+  - 2\mathbb E[X^4] - 2\mathbb E[Y^4]}{12}. \]
+Thus we have written $F(S)$ in terms of the distributions
+of $X$, $Y$, $X-Y$, $X+Y$ which completes the proof.
+
+\begin{remark*}[Mark Sellke]
+  \begin{itemize}
+  \ii This proof would have worked just as well if we
+  allowed arbitrary $[0,1]$-valued weights on points
+  with finitely many weights non-zero.
+  There is an obvious continuum generalization one
+  can make concerning the indicator function for an annulus.
+  It's a simpler but fun problem to characterize
+  when just the vertical/horizontal directions determine the distribution.
+  \ii An obstruction to purely combinatorial arguments
+  is that if you take an octagon with points $(\pm a,\pm b)$
+  and $(\pm b,\pm a)$ then the two ways to pick every other point
+  (going around clockwise) are indistinguishable by Bob.
+  This at least shows that Bob's task is far from possible in general,
+  and hints at proving an inequality.
+  \ii A related and more standard fact
+  (among a certain type of person)
+  is that given a probability distribution $\mu$ on $\RR^n$,
+  if I tell you the distribution of \emph{all} $1$-dimensional
+  projections of $\mu$, that determines $\mu$ uniquely.
+  This works because this information gives me the Fourier transform $\hat{\mu}$,
+  and Fourier transforms are injective.
+
+  For the continuum version of this problem,
+  this connection gives a much larger family of counterexamples
+  to any proposed extension to arbitrary non-annular shapes.
+  Indeed, take a fast-decaying smooth function
+  $f \colon \RR^2 \to \RR$ which vanishes on the four lines
+  \[ x=0, \; y=0, \; x+y=0, \; x-y=0.\]
+  Then the Fourier transform $\hat f$ will have mean $0$
+  on each line $\ell$ as in the problem statement.
+  Hence the positive and negative parts of $\hat f$
+  will not be distinguishable by Bob.
+  \end{itemize}
+\end{remark*}

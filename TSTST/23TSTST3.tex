@@ -1,0 +1,214 @@
+author: Merlijn Staps
+desc: Odd number of red cells per rectangle
+hardness: 30
+source: TSTST 2023/3
+url: https://aops.com/community/p28015682
+tags: [2023-06, nice, find, construct, parity, linalg, grid, gimel]
+
+---
+
+Find all positive integers $n$ for which it is possible to color some cells of
+an infinite grid of unit squares red, such that each rectangle consisting of
+exactly $n$ cells (and whose edges lie along the lines of the grid) contains
+an odd number of red cells.
+
+---
+
+We claim that this is possible for all positive integers $n$. Call a positive integer for which such a coloring is possible \emph{good}. To show that all positive integers $n$ are good we prove the following:
+\begin{itemize}
+\item[(i)] If $n$ is good and $p$ is an odd prime, then $pn$ is good;
+\item[(ii)] For every $k \ge 0$, the number $n=2^k$ is good.
+\end{itemize}
+Together, (i) and (ii) imply that all positive integers are good.
+
+\paragraph{Proof of (i).}
+We simply observe that if every rectangle consisting of $n$ cells contains an
+odd number of red cells, then so must every rectangle consisting of $pn$ cells.
+Indeed, because $p$ is prime, a rectangle consisting of $pn$ cells must have a
+dimension (length or width) divisible by $p$ and can thus be subdivided
+into $p$ rectangles consisting of $n$ cells.
+
+Thus every coloring that works for $n$ automatically also works for $pn$.
+
+\paragraph{Proof of (ii).}
+Observe that rectangles with $n=2^k$ cells have $k+1$ possible shapes:
+$2^m\times 2^{k-m}$ for $0\leq m \leq k$.
+
+\begin{claim*}
+  For each of these $k+1$ shapes,
+  there exists a coloring with two properties:
+  \begin{itemize}
+    \item Every rectangle with $n$ cells and shape $2^m\times 2^{k-m}$ contains an
+      odd number of red cells.
+    \item Every rectangle with $n$ cells and a different shape contains an even
+      number of red cells.
+  \end{itemize}
+\end{claim*}
+\begin{proof}
+  This can be achieved as follows:
+  assuming the cells are labeled with $(x, y)\in \ZZ^2$,
+  color a cell red if $x\equiv 0\pmod{2^m}$ and $y\equiv 0\pmod{2^{k-m}}$.
+  For example, a $4 \times 2$ rectangle gets the following coloring:
+  \begin{center}
+    \begin{asy}
+      unitsize(12);
+      int a = 4, b = 2;
+      int n = a*b;
+      real extra = 0.25;
+      transform t = scale(1, -1);
+      for (int i = 0; i <= n; i += a)
+        for (int j = 0; j <= n; j += b)
+          fill(t * shift(i, j) * unitsquare, red);
+      clip(t*box((-extra, -extra), (n+extra, n+extra)));
+      for (int i = 0; i <= n; ++i) {
+        draw(t*((i, -extra)--(i, n+extra)));
+        draw(t*((-extra, i)--(n+extra, i)));
+      }
+    \end{asy}
+  \end{center}
+  A $2^m\times 2^{k-m}$ rectangle contains every possible pair
+  $(x\mod{2^m}, y\mod {2^{k-m}})$ exactly once,
+  so such a rectangle will contain one red cell (an odd number).
+
+  On the other hand,
+  consider a $2^{\ell}\times 2^{k-\ell}$ rectangle with $\ell > m$.
+  The set of cells this covers is $(x, y)$
+  where $x$ covers a range of size $2^{\ell}$
+  and $y$ covers a range of size $2^{k-\ell}$.
+  The number of red cells is
+  the count of $x$ with $x\equiv 0\mod{2^m}$
+  multiplied by the count of $y$ with $y\equiv 0\mod{2^{k-m}}$.
+  The former number is exactly $2^{\ell-k}$ because $2^k$ divides $2^{\ell}$
+  (while the latter is $0$ or $1$)
+  so the number of red cells is even. The $\ell < m$ case is similar.
+\end{proof}
+
+Finally, given these $k+1$ colorings, we can add them up modulo $2$,
+i.e.\ a cell will be colored red if it is red
+in an odd number of these $k+1$ colorings.
+We illustrate $n=4$ as an example;
+the coloring is $4$-periodic in both axes so we only show one $4\times 4$ cell.
+\begin{center}
+  \begin{asy}
+    unitsize(0.5cm);
+
+    int pow2(int k) {
+      int n = 1;
+      for (int i = 0; i < k; ++i) {
+        n *= 2;
+      }
+      return n;
+    }
+
+    int k = 2;
+    int n = pow2(k);
+    int XSHIFT = 0;
+
+    void draw_grid() {
+      for (int i = 0; i <= n; ++i) {
+        draw((XSHIFT+i, 0)--(XSHIFT+i, n));
+        draw((XSHIFT+0, i)--(XSHIFT+n, i));
+      }
+    }
+
+    void fill_cell(int i, int j) {
+      fill((XSHIFT+i, j)--(XSHIFT+i+1, j)--(XSHIFT+i+1, j+1)--(XSHIFT+i, j+1)--cycle, red);
+    }
+
+    void draw_single(int m) {
+      for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+          if (i%pow2(m) == 0 && j%pow2(k-m) == 0) {
+          fill_cell(i, j);
+          }
+        }
+      }
+      draw_grid();
+      XSHIFT += n;
+    }
+
+    void draw_sum() {
+      for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+          int cnt = 0;
+          for (int m = 0; m <= k; ++m) {
+            if (i%pow2(m) == 0 && j%pow2(k-m) == 0) {
+            ++cnt;
+            }
+          }
+          if (cnt%2 == 1) {
+            fill_cell(i, j);
+          }
+        }
+      }
+      draw_grid();
+      XSHIFT += n;
+    }
+
+    void draw_symbol(string s) {
+      label(scale(2)*s, (XSHIFT+1, n/2), blue);
+      XSHIFT += 2;
+    }
+
+    for (int i = 0; i < k; ++i) {
+      draw_single(i);
+      draw_symbol("$\oplus$");
+    }
+    draw_single(k);
+    draw_symbol("$=$");
+    draw_sum();
+  \end{asy}
+\end{center}
+
+This solves the problem.
+
+\begin{remark*}
+  The final coloring can be described as follows: color $(x, y)$ red if
+  \[\max(0, \min(\nu_2(x), k)+\min(\nu_2(y), k)-k+1)\]
+  is odd.
+\end{remark*}
+
+\begin{remark*}
+  [Luke Robitaille]
+  Alternatively for (i), if $n = 2^e k$ for odd $k$ then one may dissect
+  an $a \times b$ rectangle with area $n$ into
+  $k$ rectangles of area $2^e$, each $2^{\nu_2(a)} \times 2^{\nu_2(b)}$.
+  This gives a way to deduce the problem from (ii)
+  without having to consider odd prime numbers.
+\end{remark*}
+
+\paragraph{Alternate proof of (ii) using generating functions.}
+We will commit to constructing a coloring which is $n$-periodic in both directions.
+(This is actually forced, so it's natural to do so.)
+With that in mind, let
+\[ f(x, y) = \sum_{i=0}^{2^k-1} \sum_{j=0}^{2^k-1} \lambda_{i, j} x^i y^j \]
+denote its generating function, where $f \in \FF_2[x, y]$.
+
+For this to be valid, we need that for any $2^p \times 2^q$ rectangle with area $n$,
+the sum of the coefficients of $f$ over it should be one, modulo $x^{2^k} = y^{2^k} = 1$.
+In other words, whenever $p+q = k$, we must have
+\[
+  f(x, y) (1 + \dots + x^{2^p-1}) (1 + \dots + y^{2^q-1})
+  = (1 + \dots + x^{2^k-1})(1 + \dots + y^{2^k-1}),
+\]
+taken modulo $x^{2^k} = y^{2^k} = 1$.
+The idea is to rewrite these expressions:
+because we're in characteristic $2$, the given assertion is $(x+1)^{2^k} = (y+1)^{2^k} = 0$,
+and the requested property is
+\[ f(x, y) (x+1)^{2^p-1} (y+1)^{2^q-1} = (x+1)^{2^k-1} (y+1)^{2^k-1}. \]
+This suggests the substitution $g(x, y) = f(x+1, y+1)$:
+then we can replace $(x+1, y+1) \mapsto (x, y)$ to simplify the requested property significantly:
+\begin{quote}
+  Whenever $p+q = k$, we must have
+  \[ g(x, y) x^{2^p-1} y^{2^q-1} = x^{2^k-1} y^{2^k-1}, \]
+  modulo $x^{2^k}$ and $y^{2^k}$.
+\end{quote}
+However, now the construction of $g$ is very simple: for example, the choice
+\[ g(x, y) = \sum_{p+q=k} x^{2^k-2^p} y^{2^k-2^q} \]
+works. The end.
+
+\begin{remark*}
+  Unraveling the substitutions seen here,
+  it's possible to show that this is actually the
+  same construction provided in the first solution.
+\end{remark*}

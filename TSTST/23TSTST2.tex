@@ -1,0 +1,193 @@
+author: Raymond Feng, Luke Robitaille
+desc: Zeta-like Cauchy inequality
+hardness: 30
+source: TSTST 2023/2
+url: https://aops.com/community/p28015692
+tags: [2023-06, magic, holder, gimel]
+
+---
+
+Let $n \ge m \ge 1$ be integers.
+Prove that
+\[ \sum_{k=m}^n \left( \frac{1}{k^2} + \frac{1}{k^3} \right)
+  \ge m \cdot \left( \sum_{k=m}^n \frac{1}{k^2} \right)^2. \]
+
+---
+
+We show several approaches.
+
+\paragraph{First solution (authors).}
+By Cauchy-Schwarz, we have
+\begin{align*}
+  \sum_{k=m}^n\frac{k+1}{k^3}
+  &= \sum_{k=m}^n\frac{\left(\frac1{k^2}\right)^2}{\frac1{k(k+1)}} \\
+  &\geq
+  \frac{
+  \left( \frac{1}{m^2} + \frac{1}{(m+1)^2} + \dots + \frac{1}{n^2} \right)^2
+  }
+  {
+    \frac{1}{m(m+1)} + \frac{1}{(m+1)(m+2)} + \dots + \frac{1}{n(n+1)}
+  } \\
+  &=
+  \frac{
+  \left( \frac{1}{m^2} + \frac{1}{(m+1)^2} + \dots + \frac{1}{n^2} \right)^2
+  }
+  { \frac 1m - \frac{1}{n+1} } \\
+  &> \frac{\left(\sum_{k=m}^n\frac1{k^2}\right)^2}{\frac1m}
+\end{align*}
+as desired.
+
+\begin{remark*}[Bound on error]
+  Let $A = \sum_{k=m}^n k^{-2}$ and $B = \sum_{k=m}^n k^{-3}$. The inequality
+  above becomes tighter for large $m$ and $n \gg m$. If we use Lagrange's
+  identity in place of Cauchy-Schwarz,
+  we get \[ A+B-mA^2=m\cdot\sum_{m\leq a<b} \frac{(a-b)^2}{a^3b^3(a+1)(b+1)}.\]
+  We can upper bound this error by
+  \[
+    \leq m\cdot\sum_{m\leq a<b}\frac1{a^3(a+1)b(b+1)}
+    =m\cdot\sum_{m\leq a}\frac1{a^3(a+1)^2}
+    \approx m\cdot\frac1{m^4} = \frac1{m^3},
+  \]
+  which is still generous as $(a-b)^2 \ll b^2$
+  for $b$ not much larger than $a$,
+  so the real error is probably around $\frac1{10m^3}$.
+  This exhibits the tightness of the inequality since it implies
+  \[ mA^2+O(B/m) > A+B. \]
+\end{remark*}
+
+\begin{remark*}[Construction commentary, from author]
+  My motivation was to write an inequality where
+  Titu could be applied creatively to yield a telescoping sum.
+  This can be difficult because most of the time,
+  such a reverse-engineered inequality will be so loose it's trivial anyways.
+  My first attempt was the not-so-amazing inequality
+  \[\frac{n^2+3n}2=\sum_1^n i+1=\sum_1^n \frac{\frac1i}{\frac1{i(i+1)}}
+    >\left( \sum_1^n \frac1{\sqrt i} \right)^2,\]
+  which is really not surprising given that
+  $\sum\frac1{\sqrt i}\ll \frac n{\sqrt2}$.
+  The key here is that we need ``near-equality''
+  as dictated by the Cauchy-Schwarz equality case,
+  i.e.\ the square root of the numerators should be
+  approximately proportional to the denominators.
+
+  This motivates using $\frac1{i^4}$ as the numerator,
+  which works like a charm. After working out the resulting statement,
+  the LHS and RHS even share a sum,
+  which adds to the simplicity of the problem.
+
+  The final touch was to unrestrict the starting value of the sum,
+  since this allows the strength of the estimate
+  $\frac1{i^2}\approx\frac1{i(i+1)}$ to be fully exploited.
+\end{remark*}
+
+\paragraph{Second approach by inducting down, Luke Robitaille and Carl Schildkraut.}
+Fix $n$; we'll induct downwards on $m$.
+For the base case of $n=m$ the result is easy,
+since the left side is $\frac{m+1}{m^3}$ and the right side is $\frac m{m^4}=\frac1{m^3}$.
+
+For the inductive step, suppose we have shown the result for $m+1$.
+Let
+\[A=\sum_{k=m+1}^n\frac1{k^2}\qquad \text{and}\qquad B=\sum_{k=m+1}^n\frac1{k^3}.\]
+We know $A+B\geq (m+1)A^2$, and we want to show
+\[\left(A+\frac1{m^2}\right)+\left(B+\frac1{m^3}\right)\geq m\left(A+\frac1{m^2}\right)^2.\]
+Indeed,
+\begin{align*}
+  \left(A+\frac1{m^2}\right)+\left(B+\frac1{m^3}\right)-m\left(A+\frac1{m^2}\right)^2
+  &=A+B+\frac{m+1}{m^3}-mA^2-\frac{2A}m-\frac1{m^3}\\
+  &=\left(A+B-(m+1)A^2\right)+\left(A-\frac1m\right)^2\geq 0,
+\end{align*}
+and we are done.
+
+
+\paragraph{Third approach by reducing $n \to \infty$, Michael Ren and Carl Schildkraut.}
+First, we give:
+\begin{claim*}
+  [Reduction to $n \to \infty$]
+  If the problem is true when $n \to \infty$, it is true for all $n$.
+\end{claim*}
+\begin{proof}
+  Let $A = \sum_{k=m}^n k^{-2}$ and $B = \sum_{k=m}^n k^{-3}$.
+  Consider the region of the $xy$-plane defined by $y > mx^2 - x$.
+  We are interested in whether $(A,B)$ lies in this region.
+
+  However, the region is bounded by a convex curve,
+  and the sequence of points $(0,0)$,
+  $\left( \frac1{m^2},\frac1{m^3} \right)$,
+  $\left( \frac1{m^2}+\frac1{(m+1)^2},\frac1{m^3}+\frac1{(m+1)^3} \right)$,
+  $\dots$ has successively decreasing slopes between consecutive points.
+  Thus it suffices to check that the inequality is true when $n\to\infty$.
+\end{proof}
+
+Set $n=\infty$ henceforth.
+Let
+\[ A=\sum_{k=m}^\infty\frac1{k^2}\text{ and }B=\sum_{k=m}^\infty \frac1{k^3}; \]
+we want to show $B\geq mA^2-A$, which rearranges to
+\[ 1+4mB\geq (2mA-1)^2. \]
+Write
+\[ C=\sum_{k=m}^\infty\frac1{k^2(2k-1)(2k+1)}
+  \text{ and }D=\sum_{k=m}^\infty \frac{8k^2-1}{k^3(2k-1)^2(2k+1)^2}. \]
+Then
+\[ \frac2{2k-1}-\frac2{2k+1}=\frac1{k^2}+\frac1{k^2(2k-1)(2k+1)}, \]
+and
+\[ \frac2{(2k-1)^2}-\frac2{(2k+1)^2}
+  = \frac1{k^3}+\frac{8k^2-1}{k^3(2k-1)^2(2k+1)^2}, \]
+so that
+\[ A=\frac2{2m-1}-C \text{ and } B=\frac2{(2m-1)^2}-D. \]
+Our inequality we wish to show becomes
+\[ \frac{2m+1}{2m-1}C\geq D+mC^2. \]
+
+We in fact show two claims:
+\begin{claim*}
+  We have \[ \frac{2m+1/2}{2m-1}C\geq D. \]
+\end{claim*}
+\begin{proof}
+  We compare termwise; we need
+  \[ \frac{2m+1/2}{2m-1}\cdot \frac1{k^2(2k-1)(2k+1)}
+    \geq \frac{8k^2-1}{k^3(2k-1)^2(2k+1)^2} \]
+  for $k\geq m$. It suffices to show
+  \[ \frac{2k+1/2}{2k-1}\cdot \frac1{k^2(2k-1)(2k+1)}
+    \geq \frac{8k^2-1}{k^3(2k-1)^2(2k+1)^2}, \]
+  which is equivalent to $k(2k+1/2)(2k+1)\geq 8k^2-1$.
+  This holds for all $k\geq 1$.
+\end{proof}
+\begin{claim*}
+  We have \[ \frac{1/2}{2m-1}C\geq mC^2. \]
+\end{claim*}
+\begin{proof}
+  We need $C\leq 1/(2m(2m-1))$; indeed,
+  \[ \frac1{2m(2m-1)}
+    = \sum_{k=m}^\infty\left(\frac1{2k(2k-1)} - \frac1{2(k+1)(2k+1)}\right)
+    = \sum_{k=m}^\infty\frac{4k+1}{2k(2k-1)(k+1)(2k+1)}; \]
+  comparing term-wise with the definition of $C$ and
+  using the inequality $k(4k+1)\geq 2(k+1)$ for $k\geq 1$
+  gives the desired result.
+\end{proof}
+Combining the two claims finishes the solution.
+
+\paragraph{Fourth approach by bashing, Carl Schildkraut.}
+With a bit more work, the third approach can be adapted to avoid the $n\to\infty$ reduction.
+Similarly to before, define
+\[ A=\sum_{k=m}^n\frac1{k^2}\text{ and }B=\sum_{k=m}^n \frac1{k^3}; \]
+we want to show $1+4mB\geq (2mA-1)^2$. Writing
+\[ C=\sum_{k=m}^n\frac1{k^2(2k-1)(2k+1)}
+  \text{ and }D=\sum_{k=m}^n \frac{8k^2-1}{k^3(2k-1)^2(2k+1)^2}. \]
+We compute
+\[ A=\frac2{2m-1}-\frac2{2n+1}-C \text{ and } B=\frac2{(2m-1)^2}-\frac2{(2n+1)^2}-D. \]
+Then, the inequality we wish to show reduces (as in the previous solution) to
+\[
+  \frac{2m+1}{2m-1}C+\frac{2(2m+1)}{(2m-1)(2n+1)}
+  \geq D+mC^2+\frac{2(2m+1)}{(2n+1)^2}+\frac{4m}{2n+1}C.
+\]
+
+We deal first with the terms not containing the variable $n$, i.e.\ we show that
+\[ \frac{2m+1}{2m-1}C\geq D+mC^2. \]
+For this part, the two claims from the previous solution go through exactly
+as written above, and we have $C\leq 1/(2m(2m-1))$.
+We now need to show
+\[ \frac{2(2m+1)}{(2m-1)(2n+1)} \geq \frac{2(2m+1)}{(2n+1)^2}+\frac{4m}{2n+1}C \]
+(this is just the inequality between the remaining terms);
+our bound on $C$ reduces this to proving
+\[\frac{4(2m+1)(n-m+1)}{(2m-1)(2n+1)^2}\geq \frac2{(2m-1)(2n+1)}.\]
+Expanding and writing in terms of $n$, this is equivalent to
+\[n\geq \frac{1+2(m-1)(2m+1)}{4m}=m-\frac{2m+1}{4m},\]
+which holds for all $n\geq m$.

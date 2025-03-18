@@ -1,0 +1,313 @@
+author: Merlijn Staps
+desc: Double midpoint tangency
+source: USA TST 2019/1
+tags: [2018-12, harmonic, simtri, nice, anglechase, aleph]
+hardness: 20
+url: https://aops.com/community/p11419585
+
+---
+
+Let $ABC$ be a triangle and let $M$ and $N$
+denote the midpoints of $\ol{AB}$ and $\ol{AC}$, respectively.
+Let $X$ be a point such that $\ol{AX}$
+is tangent to the circumcircle of triangle $ABC$.
+Denote by $\omega_B$ the circle through $M$ and $B$ tangent to $\ol{MX}$,
+and by $\omega_C$ the circle through $N$ and $C$ tangent to $\ol{NX}$.
+Show that $\omega_B$ and $\omega_C$ intersect on line $BC$.
+
+---
+
+We present four solutions,
+the second of which shows that $M$ and $N$
+can be replaced by any two points on $AB$ and $AC$
+satisfying $AM/AB + AN/AC = 1$.
+
+\paragraph{First solution using symmedians (Merlijn Staps).}
+Let $\ol{XY}$ be the other tangent from $X$ to $(AMN)$.
+\begin{claim*}
+  Line $\ol{XM}$ is tangent to $(BMY)$;
+  hence $Y$ lies on $\omega_B$.
+\end{claim*}
+\begin{center}
+\begin{asy}
+size(11cm);
+
+pair A = dir(130); pair B = dir(220); pair C = dir(320);
+draw(B--A--C--B);
+
+pair M = 0.5*A + 0.5*B;
+pair N = 0.5*A + 0.5*C;
+pair O = circumcenter(A,M,N);
+pair Q = rotate(-90,A)*O;
+pair X = 3*Q - 2*A;
+pair Y = intersectionpoints(circle(X,abs(X-A)),circumcircle(A,M,N))[0];
+pair Z = 0.5*A + 0.5*Y;
+
+path anglemark(pair A, pair B, pair C, real t=8) {
+  pair M,N,P[],Q[];
+  path mark;
+  M=t*0.03*unit(A-B)+B;
+  N=t*0.03*unit(C-B)+B;
+  mark=arc(B,M,N);
+  mark=(mark--B--cycle);
+  return mark;
+}
+
+fill(anglemark(A,M,X,t=4),rgb(0,1,0.5)+opacity(0.7));
+fill(anglemark(Y,M,Z,t=4),rgb(0,1,0.5)+opacity(0.7));
+fill(anglemark(M,Y,B,t=4),rgb(0,1,0.5)+opacity(0.7));
+
+filldraw(circumcircle(B,Y,M),lightcyan+opacity(0.1), blue+opacity(0.5));
+filldraw(circumcircle(C,Y,N),lightcyan+opacity(0.1), blue+opacity(0.5));
+filldraw(circumcircle(A,M,N),lightred+opacity(0.1), red);
+
+draw(A--X,red);
+draw(A--Y,dashed);
+draw(X--Y,red);
+draw(X--M--Z,gray);
+draw(B--Y--M,gray);
+
+dot("$A$", A, dir(A)); dot("$B$", B, dir(B)); dot("$C$", C, dir(0));
+dot("$M$", M, dir(220)); dot("$N$", N, dir(10));
+dot("$X$", X, dir(X));
+dot("$Y$", Y, dir(-40));
+dot("$Z$", Z, dir(0));
+\end{asy}
+\end{center}
+
+\begin{proof}
+  Let $Z$ be the midpoint of $\ol{AY}$.
+  Then $\ol{MX}$ is the $M$-symmedian in triangle $AMY$.
+  Since $\ol{MZ} \parallel \ol{BY}$,
+  it follows that $\dang AMX = \dang ZMY = \dang BYM$.
+  We conclude that $\ol{XM}$ is tangent
+  to the circumcircle of triangle $BMY$.
+\end{proof}
+
+Similarly, $\omega_C$ is the circumcircle of triangle $CNY$.
+As $AMYN$ is cyclic too,
+it follows that $\omega_B$ and $\omega_C$ intersect on $\ol{BC}$,
+by Miquel's theorem.
+
+\begin{remark*}
+  The converse of Miquel's theorem is true,
+  which means the problem is equivalent
+  to showing that the second intersection
+  of the $\omega_B$ and $\omega_C$ moves along $(AMN)$.
+  Thus the construction of $Y$ above is not so unnatural.
+\end{remark*}
+
+\paragraph{Second solution (Jetze Zoethout).}
+Let $\omega_B$ intersect $\ol{BC}$ again at $S$
+and let $\ol{MS}$ intersect $\ol{AC}$ again at $Y$.
+Angle chasing gives
+$\dang XMY = \dang XMS = \dang MBS = \dang ABC = \dang XAC = \dang XAY$,
+so $Y$ is on the circumcircle of triangle $AMX$.
+Furthermore, from $\dang XMY = \dang ABC$ and
+$\dang ACB = \dang XAB = \dang XYM$ it follows that
+$\triangle ABC \sim \triangle XMY$ and from $\dang XAY = \dang MBS$
+and $\dang YXA = \dang YMA = \dang BMS$ it follows that
+$\triangle AXY \sim \triangle BMS$.
+
+\begin{center}
+\begin{asy}
+size(10cm);
+
+pair A = dir(130); pair B = dir(220); pair C = dir(320);
+draw(B--A--C--B);
+
+pair M = 0.5*A + 0.5*B;
+pair N = 0.5*A + 0.5*C;
+pair O = circumcenter(A,M,N);
+pair Q = rotate(-90,A)*O;
+pair X = 3*Q - 2*A;
+
+pair T = intersectionpoints(circle(X,abs(X-A)),circumcircle(A,M,N))[0];
+pair S = intersectionpoints(circumcircle(B,M,T),circumcircle(C,N,T))[0];
+pair Y = extension(M,S,A,C);
+fill(X--M--S--cycle,green+opacity(0.1));
+fill(X--A--N--cycle,green+opacity(0.1));
+
+draw(S--Y--A);
+draw(X--A,blue);
+draw(X--M,red);
+draw(X--N--S--X,gray);
+
+draw(circumcircle(B,M,S),red);
+draw(circumcircle(A,B,C),blue);
+draw(circumcircle(X,M,A),gray+dashed);
+draw(circumcircle(X,N,S),gray+dashed);
+
+dot("$A$", A, dir(70)); dot("$B$", B, dir(B)); dot("$C$", C, dir(0));
+dot("$M$", M, dir(50)); dot("$N$", N, dir(10));
+dot("$X$", X, dir(X));
+dot("$Y$", Y, dir(Y));
+dot("$S$", S, dir(-60));
+\end{asy}
+\end{center}
+
+We now find
+\[
+\frac{AN}{AX} = \frac{AN/BM}{AX/BM} = \frac{AC/AB}{MS/XY} = \frac{AB/AB}{MS/XM} = \frac{XM}{MS},
+\]
+which together with $\angle XMS = \angle XAN$ yields
+$\triangle XMS \sim \triangle XAN$.
+From $\dang XSY = \dang XSM = \dang XNA = \dang XNY$
+we now have that $S$ is on the circumcircle of triangle $XNY$.
+Finally, we have $\dang XNS = \dang XYS = \dang XYM = \dang ACB = \dang NCS$
+so $\ol{XN}$ is tangent to the circle through $C$, $N$, and $S$, as desired.
+
+\paragraph{Third solution by moving points method.}
+Fix triangle $ABC$ and animate $X$ along the tangent at $A$.
+We let $D$ denote the second intersection point of $\omega_C$
+with line $\ol{BC}$.
+
+\begin{claim*}
+  The composed map $X \mapsto D$ is a fractional linear transformation
+  (i.e.\ a projective map) in terms of
+  a real coordinate on line $\ol{AA}$, $\ol{BC}$.
+\end{claim*}
+\begin{proof}
+  Let $\ell$ denote the perpendicular bisector of $\ol{CN}$,
+  also equipped with a real coordinate.
+  We let $P$ denote the intersection of $\ol{XM}$ with $\ell$,
+  $S$ the circumcenter of $\triangle CMD$.
+  Let $T$ denote the midpoint of $\ol{BD}$.
+
+  We claim that the composed map
+  \begin{align*}
+    \ol{AA} &\to \ell \to \ell \to \ol{BC} \to \ol{BC} \\
+    \text{by} \quad
+      X &\mapsto P \mapsto S \mapsto T \mapsto D
+  \end{align*}
+  is projective, by showing each individual map is projective.
+  \begin{center}
+  \begin{asy}
+  size(8cm);
+
+  pair A = dir(129); pair B = dir(220); pair C = dir(320);
+  filldraw(A--B--C--cycle, opacity(0.1)+yellow, black);
+
+  pair M = 0.5*A + 0.5*B;
+  pair N = 0.5*A + 0.5*C;
+  pair O = circumcenter(A,M,N);
+  pair Q = rotate(-90,A)*O;
+  pair X = 4.2*Q - 3.2*A;
+  pair Y = intersectionpoints(circle(X,abs(X-A)),circumcircle(A,M,N))[0];
+  pair Z = 0.5*A + 0.5*Y;
+
+  // filldraw(circumcircle(B,Y,M),lightcyan+opacity(0.1), blue+opacity(0.5));
+  filldraw(circumcircle(C,Y,N),lightcyan+opacity(0.1), blue+opacity(0.5));
+  // filldraw(circumcircle(A,M,N),lightred+opacity(0.1), red);
+  draw(A--X,red);
+  pair S = circumcenter(C, N, Y);
+  pair T = foot(S, B, C);
+  pair D = 2*T - C;
+  pair P = extension(S, midpoint(N--C), X, N);
+  draw(P--S, deepgreen);
+  draw(X--P, lightblue);
+  draw(S--T, black);
+
+  dot("$A$", A, dir(A)); dot("$B$", B, dir(B)); dot("$C$", C, dir(0));
+  dot("$M$", M, dir(135)); dot("$N$", N, dir(80));
+  dot("$X$", X, dir(X));
+  dot("$S$", S, dir(135));
+  dot("$T$", T, dir(-90));
+  dot("$D$", D, dir(225));
+  dot("$P$", P, dir(45));
+  dot(extension(S,P,N,C));
+  \end{asy}
+  \end{center}
+  \begin{itemize}
+    \ii The map $X \mapsto P$ is projective since it is
+    a perspectivity through $N$ from $\ol{AA}$ to $\ell$.
+    \ii The map $P \mapsto S$ is projective
+    since it is equivalent to a negative inversion on $\ell$
+    at the midpoint of $\ol{NC}$ with radius $\half NC$.
+    (Note $\angle PNS = 90\dg$ is fixed.)
+    \ii The map $S \mapsto T$ is projective
+    since it is a perspectivity $\ell \to \ol{BC}$
+    through the point at infinity perpendicular to $\ol{BC}$
+    (in fact, it is linear).
+    \ii The map $T \mapsto D$ is projective (in fact, linear)
+    since it is a homothety through $C$ with fixed ratio $2$.
+  \end{itemize}
+  Thus the composed map is projective as well.
+\end{proof}
+
+Similarly, if we define $D'$ so that $\ol{XM}$
+is tangent to $(BMD')$, the map $X \mapsto D'$ is projective as well.
+We aim to show $D = D'$, and since the maps
+correspond to fractional linear transformations
+in projective coordinates,
+it suffices to verify it for three distinct choices of $X$.
+We do so:
+\begin{itemize}
+  \ii If $X = \ol{AA} \cap \ol{MN}$,
+  then $D$ and $D'$ satisfy $MB = MD'$, $NC = ND$.
+  This means they are the feet of the $A$-altitude on $\ol{BC}$.
+  \ii As $X$ approaches $A$ the points $D$ and $D'$
+  approach the infinity point along $\ol{BC}$.
+  \ii If $X$ is a point at infinity along $\ol{AA}$,
+  then $D$ and $D'$ coincide with the midpoint of $\ol{BC}$.
+\end{itemize}
+This completes the solution.
+
+\begin{remark*}
+  [Anant Mudgal]
+  An alternative (shorter) way to show $X \mapsto D$ is projective
+  is to notice $\dang XND$ is a constant angle.
+  I left the longer ``original'' proof for instructional reasons.
+\end{remark*}
+
+\paragraph{Fourth solution by isogonal conjugates (Anant Mudgal).}
+Let $Y$ be the isogonal conjugate of $X$ in $\triangle AMN$
+and $Z$ be the reflection of $Y$ in $\ol{MN}$.
+As $\ol{AX}$ is tangent to the circumcircle of $\triangle AMN$,
+it follows that $\ol{AY} \parallel \ol{MN}$.
+Thus $Z$ lies on $\ol{BC}$ since $\ol{MN}$
+bisects the strip made by $\ol{AY}$ and $\ol{BC}$.
+
+\begin{asy}
+size(11cm);
+
+pair A = dir(130); pair B = dir(220); pair C = dir(320);
+draw(B--A--C--B);
+
+pair M = 0.5*A + 0.5*B;
+pair N = 0.5*A + 0.5*C;
+pair O = circumcenter(A,M,N);
+pair Q = rotate(-90,A)*O;
+pair X = 3*Q - 2*A;
+pair V = intersectionpoints(circle(X,abs(X-A)),circumcircle(A,M,N))[0];
+pair Z = OP(circumcircle(B,V,M), circumcircle(C,V,N));
+pair Y = -Z+2*foot(Z,M,N);
+
+filldraw(circumcircle(B,V,M),lightcyan+opacity(0.1), blue+opacity(0.5));
+filldraw(circumcircle(C,V,N),lightcyan+opacity(0.1), blue+opacity(0.5));
+filldraw(circumcircle(A,M,N),lightred+opacity(0.1), red);
+
+// draw(A--X--P);
+// draw(X--B);
+draw(A--X,red);
+draw(B--V--M,gray);
+dot(B*C/A);
+
+filldraw(unitcircle, opacity(0.1)+yellow, black);
+draw(M--Z--N, blue);
+draw(N--X--M, lightblue);
+draw(M--N, red);
+draw(A--(B*C/A), red);
+
+dot("$A$", A, dir(A)); dot("$B$", B, dir(B)); dot("$C$", C, dir(0));
+dot("$M$", M, dir(220)); dot("$N$", N, dir(10));
+dot("$X$", X, dir(X));
+dot("$Y$", Y, dir(-45));
+dot("$Z$", Z, dir(Z));
+\end{asy}
+
+Finally, \[ \dang ZMX=\dang ZMN+\dang NMX=\dang NMY+\dang YMA
+  = \dang NMA=\dang ZBM \]
+so $\ol{XM}$ is tangent to the circumcircle of
+$\triangle ZMB$, hence $Z$ lies on $\omega_B$.
+Similarly, $Z$ lies on $\omega_C$ and we're done.

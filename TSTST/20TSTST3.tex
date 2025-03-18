@@ -1,0 +1,127 @@
+desc: Determine all quirky triangles with $(n-1,n,n+1)$
+author: Evan Chen, Danielle Wang
+source: TSTST 2020/3
+tags: [2020-11, trig, divis, polynomial, nice, mine, find, hardanswer, zayin]
+hardness: 40
+url: https://aops.com/community/p18933954
+
+---
+
+We say a nondegenerate triangle whose angles have
+measures $\theta_1$, $\theta_2$, $\theta_3$ is \emph{quirky}
+if there exists integers $r_1$, $r_2$, $r_3$, not all zero,
+such that \[ r_1 \theta_1 + r_2 \theta_2 + r_3 \theta_3 = 0. \]
+Find all integers $n \ge 3$ for which a triangle with
+side lengths $n-1$, $n$, $n+1$ is quirky.
+
+---
+
+
+The answer is $n = 3,\ 4,\ 5,\ 7$.
+
+We first introduce a variant of the $k$th Chebyshev polynomials
+in the following lemma
+(which is standard, and easily shown by induction).
+\begin{lemma*}
+  For each $k \ge 0$ there exists $P_k(X) \in \ZZ[X]$,
+  monic for $k \ge 1$ and with degree $k$, such that
+  \[ P_k( X + X^{-1} ) \equiv X^k + X^{-k}. \]
+  The first few are $P_0(X) \equiv 2$,
+  $P_1(X) \equiv X$, $P_2(X) \equiv X^2-2$, $P_3(X) \equiv X^3-3X$.
+  % In particular, $P_k(2\cos\theta) = 2\cos(k\theta)$.
+\end{lemma*}
+Suppose the angles of the triangle are $\alpha < \beta < \gamma$,
+so the law of cosines implies that
+\[ 2\cos\alpha =\frac{n+4}{n+1} \qquad \text{and} \qquad 2\cos\gamma = \frac{n-4}{n-1}. \]
+%\begin{align*}
+%  2\cos\alpha &= \tfrac{n^2+(n+1)^2-(n-1)^2}{n(n+1)}
+%    = \frac{n+4}{n+1} \\
+%  2\cos\beta &= \tfrac{(n-1)^2+(n+1)^2-n^2}{(n-1)(n+1)}
+%    = \frac{n^2+2}{n^2-1} \\
+%  2\cos\gamma &= \tfrac{n^2+(n-1)^2-(n+1)^2}{n(n-1)}
+%    = \frac{n-4}{n-1}.
+%\end{align*}
+\begin{claim*}
+  The triangle is quirky iff there exists $r,s \in \ZZ_{\ge0}$ not both zero such that
+  \[ \cos(r\alpha) = \pm \cos(s\gamma)
+    \qquad \text{or equivalently} \qquad
+    P_r\left( \frac{n+4}{n+1} \right) = \pm P_s\left( \frac{n-4}{n-1} \right). \]
+\end{claim*}
+\begin{proof}
+If there are integers $x$, $y$, $z$ for which $x\alpha + y\beta + z\gamma = 0$,
+then we have that $(x-y)\alpha = (y-z)\gamma - \pi y$,
+whence it follows that we may take $r = |x-y|$ and $s = |y-z|$
+(noting $r=s=0$ implies the absurd $x=y=z$).
+Conversely, given such $r$ and $s$ with $\cos(r\alpha) = \pm \cos(s\gamma)$,
+then it follows that $r \alpha \pm s \gamma = k\pi = k(\alpha + \beta + \gamma)$
+for some $k$, so the triangle is quirky.
+\end{proof}
+
+If $r=0$, then by rational root theorem on $P_s(X) \pm 2$ it follows
+$\frac{n-4}{n-1}$ must be an integer which occurs only when $n = 4$ (recall $n \ge 3$).
+Similarly we may discard the case $s = 0$.
+
+Thus in what follows assume $n \neq 4$ and $r,s > 0$.
+Then, from the fact that $P_r$ and $P_s$ are nonconstant
+monic polynomials, we find
+\begin{corollary*}
+  If $n \neq 4$ works, then when $\frac{n+4}{n+1}$
+  and $\frac{n-4}{n-1}$ are written as fractions in lowest terms,
+  the denominators have the same set of prime factors.
+\end{corollary*}
+But $\gcd(n+1, n-1)$ divides $2$, and $\gcd(n+4, n+1)$, $\gcd(n-4,n-1)$ divide $3$.
+So we only have three possibilities:
+\begin{itemize}
+  \ii $n+1 = 2^u$ and $n-1 = 2^v$ for some $u,v \ge 0$.
+  This is only possible if $n = 3$.
+  Here $2\cos\alpha = \frac74$ and $2\cos\gamma = -\frac12$,
+  and indeed $P_2(-1/2) = -7/4$.
+  \ii $n+1 = 3 \cdot 2^u$ and $n-1 = 2^v$ for some $u,v \ge 0$,
+  which implies $n = 5$.
+  Here $2\cos\alpha = \frac32$ and $2\cos\gamma = \frac14$,
+  and indeed $P_2(3/2) = 1/4$.
+  \ii $n+1 = 2^u$ and $n-1 = 3 \cdot 2^v$ for some $u,v \ge 0$,
+  which implies $n = 7$.
+  Here $2\cos\alpha = \frac{11}{8}$ and $2\cos\gamma = \frac12$,
+  and indeed $P_3(1/2) = -11/8$.
+\end{itemize}
+Finally, $n=4$ works because the triangle is right, completing the solution.
+
+\begin{remark*}
+  [Major generalization due to Luke Robitaille]
+  In fact one may find all quirky triangles
+  whose sides are integers in arithmetic progression.
+
+  Indeed, if the side lengths of the triangle are $x-y$, $x$, $x+y$
+  with $\gcd(x,y) = 1$ then the problem becomes
+  \[ P_r\left( \frac{x+4y}{x+y} \right) = \pm P_s \left( \frac{x-4y}{x-y} \right) \]
+  and so in the same way as before,
+  we ought to have $x+y$ and $x-y$ are both of the form $3 \cdot 2^{\ast}$ unless $rs = 0$.
+  This time, when $rs=0$, we get the extra solutions $(1,0)$ and $(5,2)$.
+
+  For $rs \neq 0$, by triangle inequality, we have $x-y \le x+y < 3(x-y)$,
+  and $\min(\nu_2(x-y), \nu_2(x+y)) \le 1$,
+  so it follows one of $x-y$ or $x+y$ must be in $\{1,2,3,6\}$.
+  An exhaustive check then leads to
+  \[ (x,y) \in \left\{ (3,1), (5,1), (7,1), (11,5) \right\}
+    \cup \left\{ (1,0), (5,2), (4,1) \right\} \]
+  as the solution set. And in fact they all work.
+
+  In conclusion the equilateral triangle, $3-5-7$ triangle (which has a $120\dg$ angle)
+  and $6-11-16$ triangle (which satisfies $B=3A+4C$)
+  are exactly the new quirky triangles (up to similarity)
+  whose sides are integers in arithmetic progression.
+\end{remark*}
+
+---
+
+One day, dumby was thinking about triangle.
+He notice 4-5-6 triangle has a linear relation from old problem
+(since $\angle B = 2\angle C$),
+and of course 3-4-5 does too since it has right angle.
+Then he mistakenly think 5-6-7 triangle has $60\dg$ angle,
+(in fact it is 5-7-8).
+He became curious whether this always worked,
+and use Python found relations for $n=3,4,5,7$ above,
+although sadly not $n=6$.
+Dumby show problem to babby and babby solve.

@@ -1,0 +1,62 @@
+author: Merlijn Staps
+desc: Exactly one of $f(m+1)$ to $f(m+f(n))$ is divisible by $n$
+source: TSTST 2022/4
+url: https://aops.com/community/p25517031
+tags: [2023-08, todo]
+
+---
+
+A function $f \colon \NN \to \NN$ has the property that
+for all positive integers $m$ and $n$, exactly one of the $f(n)$ numbers
+\[ f(m+1), f(m+2), \dots, f(m+f(n)) \]
+is divisible by $n$.
+Prove that $f(n)=n$ for infinitely many positive integers $n$.
+
+---
+
+We start with the following claim:
+
+\begin{claim*}
+  If $a \mid b$ then $f(a) \mid f(b)$.
+\end{claim*}
+\begin{proof}
+  From applying the condition with $n=a$,
+  we find that the set $S_a = \{n \ge 2: a \mid f(n)\}$
+  is an arithmetic progression with common difference $f(a)$.
+  Similarly, the set $S_b = \{n \ge 2: b \mid f(n)\}$
+  is an arithmetic progression with common difference $f(b)$.
+  From $a \mid b$ it follows that $S_b \subseteq S_a$.
+  Because an arithmetic progression with common difference $x$ can only be
+  contained in an arithmetic progression with common difference $y$
+  if $y \mid x$, we conclude $f(a) \mid f(b)$.
+\end{proof}
+
+In what follows, let $a \ge 2$ be any positive integer.
+Because $f(a)$ and $f(2a)$ are both divisible by $f(a)$,
+there are $a+1$ consecutive values of $f$ of which
+at least two divisible by $f(a)$. It follows that $f(f(a)) \le a$.
+
+However, we also know that exactly one of
+$f(2)$, $f(3)$, \dots, $f(1+f(a))$ is divisible by $a$; let this be $f(t)$.
+Then we have $S_a = \{t, t+f(a), t+2f(a), \dots\}$.
+Because $a \mid f(t) \mid f(2t)$,
+we know that $2t \in S_a$, so $t$ is a multiple of $f(a)$.
+Because $2 \le t \le 1+f(a)$, and $f(a) \ge 2$ for $a \ge 2$,
+we conclude that we must have $t=f(a)$,
+so $f(f(a))$ is a multiple of $a$.
+Together with $f(f(a)) \le a$, this yields $f(f(a)) = a$.
+Because $f(f(a)) = a$ also holds for $a=1$
+(from the given condition for $n=1$ it immediately follows that $f(1)=1$),
+we conclude that $f(f(a))=a$ for all $a$, and hence $f$ is a bijection.
+
+Moreover, we now have that $f(a) \mid f(b)$ implies $f(f(a)) \mid f(f(b))$,
+i.e.\ $a \mid b$, so $a \mid b$ if and only if $f(a) \mid f(b)$.
+Together with the fact that $f$ is a bijection,
+this implies that $f(n)$ has the same number of divisors of $n$.
+Let $p$ be a prime. Then $f(p)=q$ must be a prime as well.
+If $q \neq p$, then from $f(p) \mid f(pq)$
+and $f(q) \mid f(pq)$ it follows that $pq \mid f(pq)$, so $f(pq) = pq$
+because $f(pq)$ and $pq$ must have the same number of divisors.
+Therefore, for every prime number $p$ we either have that $f(p)=p$
+or $f(pf(p)) = pf(p)$.
+From here, it is easy to see that $f(n)=n$ for infinitely many $n$.

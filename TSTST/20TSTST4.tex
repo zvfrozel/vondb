@@ -1,0 +1,88 @@
+desc: $ab \mid (a-b)^4+1$
+hardness: 15
+source: TSTST 2020/4
+tags: [2020-12, find, size, mods, order, aleph]
+author: Yang Liu
+url: https://aops.com/community/p19444614
+
+---
+
+Find all pairs of positive integers $(a, b)$ satisfying
+the following conditions:
+\begin{enumerate}[(i)]
+  \ii $a$ divides $b^4+1$,
+  \ii $b$ divides $a^4+1$,
+  \ii $\lfloor \sqrt{a} \rfloor = \lfloor \sqrt{b} \rfloor$.
+\end{enumerate}
+
+---
+
+The only solutions are $(1, 1)$, $(1, 2)$, and $(2, 1)$,
+which clearly work. Now we show there are no others.
+
+Obviously, $\gcd(a,b) = 1$, so the problem conditions imply
+\[ ab \mid (a-b)^4+1 \]
+since each of $a$ and $b$ divide the right-hand side.
+We define
+\[ k \stackrel{\text{def}}{=} \frac{(b-a)^4 + 1}{ab}. \]
+
+\begin{claim*}
+  [Size estimate]
+  We must have $k \le 16$.
+\end{claim*}
+\begin{proof}
+  Let $n = \lfloor \sqrt{a} \rfloor = \lfloor \sqrt{b} \rfloor$,
+  so that $a,b \in [n^2, n^2+2n]$.
+  We have that
+  \begin{align*}
+    ab &\ge n^2(n^2 + 1) \ge n^4 + 1 \\
+    (b-a)^4+1 &\le (2n)^4+1 = 16n^4+1
+  \end{align*}
+  which shows $k \le 16$.
+\end{proof}
+
+\begin{claim*}
+  [Orders argument]
+  In fact, $k = 1$.
+\end{claim*}
+
+\begin{proof}
+  First of all, note that $k$ cannot be even:
+  if it was, then $a$, $b$ have opposite parity,
+  but then $4 \mid (b-a)^4 + 1$, contradiction.
+
+  Thus $k$ is odd. However, every odd prime divisor of $(b-a)^4 + 1$
+  is congruent to $1 \pmod{8}$ and is thus at least $17$,
+  so $k = 1$ or $k \ge 17$.
+  It follows that $k = 1$.
+\end{proof}
+
+At this point, we have reduced to solving
+\[ ab = (b-a)^4+1 \]
+and we need to prove the claimed solutions are the only ones.
+Write $b = a+d$, and assume WLOG that $d \ge 0$:
+then we have $a(a+d) = d^4 + 1$, or
+\[ a^2 - da - (d^4 + 1) = 0. \]
+The discriminant $d^2 + 4(d^4 + 1)
+= 4d^4 + d^2 + 4$ must be a perfect square.
+\begin{itemize}
+\ii The cases $d = 0$ and $d = 1$ lead to pairs $(1, 1)$ and $(1, 2)$.
+\ii If $d \ge 2$, then we can sandwich
+\[
+  (2d^2)^2 < 4d^4 + d^2 + 4
+  < 4d^4 + 4d^2 + 1 = (2d^2 + 1)^2,
+\]
+so the discriminant is not a square.
+\end{itemize}
+The solution is complete.
+
+\begin{remark*}[Author remarks on origin]
+  This comes from the problem of the existence of
+  a pair of elliptic curves over $\FF_a$, $\FF_b$ respectively,
+  such that the number of points on one is the field size of the other.
+  The bound $n^2 \le a,b < (n+1)^2$ is the Hasse bound.
+  The divisibility conditions correspond to asserting that the embedding degree of each curve is $8$,
+  so that they are \emph{pairing friendly}.
+  In this way, the problem is essentially the key result of \url{https://arxiv.org/pdf/1803.02067.pdf},
+  shown in Proposition 3.
+\end{remark*}

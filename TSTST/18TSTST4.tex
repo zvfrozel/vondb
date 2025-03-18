@@ -1,0 +1,154 @@
+desc: $\mathcal F(n)$ with $x^2+mx+n$ irreducible
+source: TSTST 2018/4
+tags: [2018-06, stronger, criticalclaim, aleph]
+author: Ivan Borsenco
+hardness: 10
+url: https://aops.com/community/p10570991
+
+---
+
+For an integer $n > 0$,
+denote by $\mathcal F(n)$ the set of integers $m > 0$ for which
+the polynomial $p(x) = x^2 + mx + n$ has an integer root.
+\begin{enumerate}
+\item [(a)] Let $S$ denote the set of integers $n > 0$
+  for which $\mathcal F(n)$ contains two consecutive integers.
+  Show that $S$ is infinite but
+  \[ \sum_{n \in S} \frac 1n \le 1. \]
+\item [(b)] Prove that there are infinitely many positive integers $n$
+  such that $\mathcal F(n)$ contains three consecutive integers.
+\end{enumerate}
+
+---
+
+We prove the following.
+\begin{claim*}
+  The set $S$ is given explicitly by
+  $S = \{ x(x+1)y(y+1) \mid x,y > 0 \}$.
+\end{claim*}
+\begin{proof}
+  Note that $m, m+1 \in \mathcal F(n)$ if and only if
+  there exist integers $q > p \ge 0$ such that
+  \begin{align*}
+    m^2 - 4n &= p^2 \\
+    (m+1)^2 - 4n &= q^2.
+  \end{align*}
+  Subtraction gives $2m+1 = q^2-p^2$, so $p$ and $q$ are different parities.
+  We can thus let $q-p = 2x+1$, $q+p = 2y+1$, where $y \ge x \ge 0$ are integers.
+  It follows that
+  \begin{align*}
+    4n &= m^2 - p^2 \\
+    &= \left( \frac{q^2-p^2-1}{2} \right)^2 - p^2
+    = \left( \frac{q^2-p^2-1}{2} - p \right) \left( \frac{q^2-p^2-1}{2} + p \right) \\
+    &= \frac{q^2-(p^2+2p+1)}{2} \cdot \frac{q^2-(p^2-2p+1)}{2} \\
+    &= \frac14 (q-p-1)(q-p+1)(q+p-1)(q+p+1)
+    = \frac14 (2x)(2x+2)(2y)(2y+2) \\
+    \implies n &= x(x+1)y(y+1).
+  \end{align*}
+  Since $n > 0$ we require $x,y > 0$.
+  Conversely, if $n = x(x+1)y(y+1)$ for positive $x$ and $y$ then
+  $m = \sqrt{p^2+4n} = \sqrt{(y-x)^2+4n} = 2xy+x+y = x(y+1) + (x+1)y$
+  and $m+1 = 2xy+x+y+1 = xy + (x+1)(y+1)$.
+  Thus we conclude the main claim.
+\end{proof}
+From this, part (a) follows as
+\[ \sum_{n \in S} n\inv
+  \le
+  \left( \sum_{x \ge 1} \frac{1}{x(x+1)} \right)
+  \left( \sum_{y \ge 1} \frac{1}{y(y+1)} \right)
+  = 1 \cdot 1 = 1.
+\]
+
+As for (b), retain the notation in the proof of the claim.
+Now $m+2 \in S$ if and only if
+$(m+2)^2 - 4n$ is a square, say $r^2$.
+Writing in terms of $p$ and $q$ as parameters we find
+\begin{align*}
+  r^2 &= (m+2)^2 - 4n = m^2-4n + 4m + 4 = p^2 + 2 + 2(2m+1) \\
+  &= p^2 + 2(q^2-p^2) + 2 = 2q^2 - p^2 + 2 \\
+  \iff 2q^2 + 2 &= p^2 + r^2 \qquad (\dagger)
+\end{align*}
+with $q > p$ of different parity
+and $n = \frac{1}{16} (q-p-1)(q-p+1)(q+p-1)(q+p+1)$.
+
+Note that (by taking modulo $8$) we have $q \not\equiv p \equiv r \pmod 2$,
+and so there are no parity issues
+and we will always assume $p < q < r$ in $(\dagger)$.
+Now, for every $q$, the equation $(\dagger)$
+has a canonical solution $(p,r) = (q-1, q+1)$, but this leaves $n = 0$.
+Thus we want to show for infinitely many $q$
+there is a third way to write $2q^2+2$ as a sum of squares,
+which will give the desired $p$.
+
+To do this, choose large integers $q$ such that $q^2+1$
+is divisible by at least three distinct $1\bmod4$ primes.
+Since each such prime can be written
+as a sum of two squares, using Lagrange identity,
+we can deduce that $2q^2+2$ can be written as a sum of
+two squares in at least three different ways, as desired.
+
+\begin{remark*}
+  We can see that $n=144$ is the smallest integer
+  such that $\mathcal F(n)$ contains three consecutive integers
+  and $n=15120$ is the smallest integer such that $\mathcal F(n)$
+  contains four consecutive integers.
+  It would be interesting to determine whether
+  the number of consecutive elements in $\mathcal F(n)$
+  can be arbitrarily large or is bounded.
+\end{remark*}
+
+---
+
+% TODO clean this up
+Suppose $p(x)$ can be factored as $(x + d_i)(x+\frac{n}{d_i})$, where $d_i$ is a positive integer divisor of $n$.
+The case when $p(x)$ can be factored as $(x -d_i)(x-\frac{n}{d_i}x)$ can be solved analogously.
+
+It follows that $m=d_i+\frac{n}{d_i}$.
+
+(a) The set $\mathcal F(n)$ contains two consecutive integers if there exist divisors $d_1 < d_2 \leq \sqrt{n}$
+such that $\left| d_1+\frac{n}{d_1}-\left(d_2 +\frac{n}{d_2}\right)\right|=1$. Regrouping the terms,
+we get $(d_2-d_1)(\frac{n}{d_1d_2}-1)=1$, because $d_2 > d_1$ and $n > d_1d_2$.
+
+Set $d=\gcd(d_1, d_2)$, $d_1=dk$, $d_2=d\ell$, where $\gcd(k,\ell)=1$, and $n=dk \ell s$, for some positive integers $k, \ell, s$.
+The condition $(d_2-d_1)(\frac{n}{d_1d_2}-1)=1$ implies that $(d\ell - dk)(dk \ell s- d^2k\ell)=d^2 k \ell$.
+Hence $(\ell -k)(s-d)=1$ and we must have $\ell=k+1$, $s=d+1$, yielding $d_1=dk$, $d_2=d(k+1)$, and $n$ must be of the form \[ d(d+1)k(k+1). \]
+Given this characterization for the numbers,
+the part (a) follows directly, since
+\[ \sum_{n \in S} n\inv
+  \le
+  \left( \sum_{d \ge 1} \frac{1}{d(d+1)} \right)
+  \left( \sum_{k \ge 1} \frac{1}{k(k+1)} \right)
+  = 1 \cdot 1 = 1.
+\]
+
+%(a) We list products of consecutive numbers $2, 6, 12, 30, 42, \dots$.
+%We can check that  $2052=2\cdot 3 \cdot 18 \cdot 19$ is the smallest integer $n$ greater than 2018 that can be written as a product
+%of two numbers in our list.
+
+(b) Note that if $n=d(d+1)k(k+1)$, then
+\[x^2+[d(k+1)+k(d+1)]x+d(d+1)k(k+1)=(x-d(k+1))(x-k(d+1))\]
+and
+\[x^2+[d(k+1)+k(d+1)+1]x+d(d+1)k(k+1)=(x-dk)\left(x-(d+1)(k+1)\right).\]
+If $\mathcal F(n)$ contains three consecutive integers, then we can find $n$ such that polynomial
+\[
+x^2 - [d(k+1)+k(d+1)-1]x+d(k+1)k(d+1)
+\]
+can be factored. This is possible if discriminant is a perfect square:
+\[
+D= (d(k+1)+k(d+1)-1)^2-4d(k+1)k(d+1)=(k-d)^2+2-(2k+1)(2d+1)=a^2,
+\]
+Let $b=k+d+1$ and $c=k-d$, then
+\[
+2c^2+2=a^2+(2k+1)(2d+1)+(k-d)^2=a^2+b^2.
+\]
+If we find infinite triples $(a, b, c)$ such that $b-c \geq 3$, then we can find infinitely many pairs $(k, d)$ satisfying the conditions
+of the problem.
+
+Choose $c$ such that $c^2+1$ is divisible by at least three primes of the form $4k+1$.
+Since each prime of the form $4k+1$ can be written as a sum of two squares, using Lagrange identity
+we can deduce that $c^2+1$ can be written as a sum of two squares in at least three different ways,
+so there exist $a$ and $b$, such that $c-b \geq 3$ satisfying the above condition.
+
+\textbf{Comments.} We can see that $n=144$ is the smallest integer such that $\mathcal F(n)$ contains three consecutive integers
+and $n=15120$ is the smallest integer such that $\mathcal F(n)$ contains four consecutive integers.
+It would be interesting to find the answer if the number of consecutive elements in $\mathcal F(n)$ can be arbitrarily large or is bounded.

@@ -1,0 +1,26 @@
+desc: Binary expansion of $\sqrt3$
+author: Iurie Boreico
+source: USA TST 2016/4
+tags: [2016-08, manip, rushdown, grinding, exam, aleph]
+hardness: 10
+url: https://aops.com/community/p6368201
+
+---
+
+Let $\sqrt{3}=1.b_1b_2b_3\dots_{(2)}$ be the binary representation
+of $\sqrt 3$. Prove that for any positive integer $n$, at least one of
+the digits $b_n, b_{n+1}, \dots, b_{2n}$ equals 1.
+
+---
+
+Assume the contrary, so that for some integer $k$ we have
+\[k < 2^{n-1} \sqrt 3 < k + \frac{1}{2^{n+1}}. \]
+Squaring gives
+\begin{align*}
+k^2 < 3 \cdot 2^{2n-2} &< k^2 + \frac{k}{2^n} + \frac{1}{2^{2n+2}} \\
+&\le k^2 + \frac{2^{n-1} \sqrt 3}{2^n} + \frac{1}{2^{2n+2}} \\
+&= k^2 + \frac{\sqrt3}{2} + \frac{1}{2^{2n+2}} \\
+&\le k^2 + \frac{\sqrt3}{2} + \frac{1}{16} \\
+&< k^2+1
+\end{align*}
+and this is a contradiction.

@@ -1,0 +1,101 @@
+desc: Stable sets
+hardness: 25
+source: TSTST 2020/5
+tags: [2020-12, induct, grid, bet]
+author: Ashwin Sah, Mehtaab Sawhney
+url: https://aops.com/community/p19444403
+
+---
+
+Let $\NN^2$ denote the set of ordered pairs of positive integers.
+A finite subset $S$ of $\NN^2$ is \emph{stable}
+if whenever $(x,y)$ is in $S$,
+then so are all points $(x',y')$ of $\NN^2$
+with both $x' \leq x$ and $y' \leq y$.
+
+Prove that if $S$ is a stable set,
+then among all stable subsets of $S$
+(including the empty set and $S$ itself),
+at least half of them have an even number of elements.
+
+---
+
+The following inductive solution was given by Nikolai Beluhov.
+We proceed by induction on $|S|$, with $|S| \le 1$ clear.
+
+Suppose $|S| \ge 2$.
+For any $p \in S$, let $R(p)$ denote
+the stable rectangle with upper-right corner $p$.
+We say such $p$ is \emph{pivotal} if $p + (1, 1) \notin S$
+and $|R(p)|$ is even.
+
+\begin{center}
+\begin{asy}
+  path R = box( (0,0), (6,3) );
+  fill(R, palered);
+  fill(shift(5,2)*unitsquare, lightcyan);
+  label("$p$", (5.5,2.5));
+  for (int i=0; i<=0; ++i) {
+    draw(shift(i,5)*unitsquare);
+  }
+  for (int i=0; i<=1; ++i) {
+    draw(shift(i,4)*unitsquare);
+  }
+  for (int i=0; i<=3; ++i) {
+    draw(shift(i,3)*unitsquare);
+  }
+  for (int i=0; i<=7; ++i) {
+    draw(shift(i,2)*unitsquare);
+  }
+  for (int i=0; i<=10; ++i) {
+    draw(shift(i,1)*unitsquare);
+  }
+  for (int i=0; i<=10; ++i) {
+    draw(shift(i,0)*unitsquare);
+  }
+  draw(R, heavyred+1.5);
+\end{asy}
+\end{center}
+
+\begin{claim*}
+  If $|S| \ge 2$, then a pivotal $p$ always exists.
+\end{claim*}
+
+\begin{proof}
+  Consider the top row of $S$.
+  \begin{itemize}
+    \ii If it has length at least $2$,
+    one of the two rightmost points in it is pivotal.
+    \ii Otherwise, the top row has length $1$.
+    Now either the top point or the point below it
+    (which exists as $|S| \ge 2$) is pivotal.
+    \qedhere
+  \end{itemize}
+\end{proof}
+
+We describe how to complete the induction,
+given some pivotal $p \in S$.
+There is a partition
+\[ S = R(p) \sqcup S_1 \sqcup S_2 \]
+where $S_1$ and $S_2$ are the sets of points in $S$
+above and to the right of $p$
+(possibly empty).
+
+\begin{claim*}
+  The desired inequality holds for stable subsets containing $p$.
+\end{claim*}
+\begin{proof}
+  Let $E_1$ denote the number of even stable subsets of $S_1$;
+  denote $E_2$, $O_1$, $O_2$ analogously.
+  The stable subsets containing $p$ are exactly $R(p) \sqcup T_1 \sqcup T_2$,
+  where $T_1 \subseteq S_1$ and $T_2 \subseteq S_2$ are stable.
+
+  Since $|R(p)|$ is even,
+  exactly $E_1E_2 + O_1O_2$ stable subsets containing $p$ are even,
+  and exactly $E_1O_2 + E_2O_1$ are odd.
+  As $E_1 \ge O_1$ and $E_2 \ge O_2$ by inductive hypothesis,
+  we obtain $E_1E_2 + O_1O_2 \ge E_1O_2 + E_2O_1$ as desired.
+\end{proof}
+
+By the inductive hypothesis, the desired inequality also holds
+for stable subsets not containing $p$, so we are done.

@@ -1,0 +1,136 @@
+author: Sean Li
+desc: Young diagrams inequality
+source: USA TST 2023/3
+url: https://aops.com/community/p26685437
+tags: [2022-12, find, bestpossible, blind, yod]
+
+---
+
+Consider pairs $(f,g)$ of functions
+from the set of nonnegative integers to itself such that
+\begin{itemize}
+		\ii $f(0) \ge f(1) \ge f(2) \ge \dots \ge f(300) \ge 0$;
+		\ii $f(0) + f(1) + f(2) + \dots + f(300) \leq 300$;
+		\ii for any $20$ nonnegative integers $n_1$, $n_2$, \dots, $n_{20}$,
+		not necessarily distinct, we have
+		\[ g(n_1 + n_2 + \dots + n_{20}) \leq f(n_1) + f(n_2) + \dots + f(n_{20}). \]
+\end{itemize}
+Determine the maximum possible value of $g(0) + g(1) + \dots + g(6000)$
+over all such pairs of functions.
+
+---
+
+Replace $300 = \frac{24 \cdot 25}{2}$ with $\frac{s(s+1)}{2}$ where $s=24$, and
+$20$ with $k$. The answer is $115440 = \frac{ks(ks+1)}{2}$. Equality is achieved
+at $f(n) = \max (s-n, 0)$ and $g(n) = \max (ks-n,0)$. To prove
+\[g(n_1+\dotsb+n_k)\leq f(n_1)+\dotsb+f(n_k),\]
+write it as
+\[\max(x_1+\dotsb+x_k, 0)\leq \max(x_1, 0)+\dotsb+\max(x_k, 0)\]
+with $x_i=s-n_i$. This can be proven from the $k=2$ case and induction.
+
+\medskip
+
+It remains to show the upper bound. For this problem, define a \emph{partition}
+to be a nonincreasing function $p \colon \ZZ_{\geq 0}\to \ZZ_{\geq 0}$
+such that $p(n)=0$ for some $n$. The sum of $p$ is defined to be
+$\sum_{n=0}^{\infty}p(n)$, which is finite under the previous assumption. Let
+$L=\ZZ_{\geq 0}^2$. The
+\emph{Young diagram} of the partition is the set of points
+\[\mathcal{P} := \{(x, y)\in L: y < p(x)\}.\]
+The number of points in $\mathcal{P}$ is equal to the sum of $p$.
+The \emph{conjugate} of a partition defined as
+\[p_*(n) = \text{the number of $i$ for which $p(i) > n$}.\]
+This is a partition with the same sum as $p$. Geometrically, the Young diagrams
+of $p$ and $p_*$ are reflections about $x=y$.
+
+Since each $g(n)$ is independent, we may
+maximize each one separately for all $n$ and assume that
+\[
+  g(n) = \min_{n_1+\dotsb+n_k=n}(f(n_1)+\dotsb+f(n_k)) \tag{*}.
+\]
+The conditions of the problem statement imply that $f\big(\tfrac{s(s+1)}{2}\big)=0$.
+Then, for any $n\leq k\frac{s(s+1)}{2}$, there exists an optimal combination
+$(n_1, \dots, n_k)$ in (*) where all $n_i$ are at most $\frac{s(s+1)}{2}$, by
+replacing any term in an optimum greater than $\frac{s(s+1)}{2}$ by
+$\frac{s(s+1)}{2}$ and shifting the excess to smaller terms (because $f$ is
+nonincreasing). Therefore we may extend $f$ to a partition by letting $f(n) = 0$
+for $n > \frac{s(s+1)}{2}$ without affecting the relevant values of $g$. Then
+(*) implies that $g$ is a partition as well.
+
+The problem can be restated as follows: $f$ is a partition with sum
+$\frac{s(s+1)}{2}$, and $g$ is a partition defined by (*). Find the maximum
+possible sum of $g$. The key claim is that the problem is the
+same under conjugation.
+\begin{claim*}
+  Under these conditions, we have
+  \[
+    g_*(n) = \min_{n_1+\dotsb+n_k=n}(f_*(n_1)+\dotsb+f_*(n_k)).
+  \]
+\end{claim*}
+
+\begin{proof}
+  Let $\mathcal{F}$ and $\mathcal{G}$ be the Young diagrams of $f$ and $g$
+  respectively, and $\ol{\mathcal{F}} = L\setminus \mathcal{F}$ and
+  $\ol{\mathcal{G}} = L\setminus \mathcal{G}$ be their complements. The
+  lower boundary of $\ol{\mathcal{F}}$ is formed by the points $(n, f(n))$
+  for $i\in \ZZ_{\geq 0}$. By the definition of $g$, the lower boundary
+  of $\ol{\mathcal{G}}$
+  consists of points $(n, g(n))$ which are formed by adding $k$ points of
+  $\ol{\mathcal{F}}$. This means
+  \[
+    \ol{\mathcal{G}} = \underbrace{\ol{\mathcal{F}} + \dots +
+    \ol{\mathcal{F}}}_{k \ \ol{\mathcal{F}}\text{'s}}
+  \]
+  where $+$ denotes set addition. This definition remains invariant under
+  reflection about $x=y$, which swaps $f$ and $g$ with their conjugates.
+\end{proof}
+
+Let $A$ be the sum of $g$. We now derive different bounds on $A$. First, by
+Hermite's identity
+\[n = \sum_{i=0}^{k-1}\left\lfloor\tfrac{n+i}{k}\right\rfloor\]
+we have
+\begin{align*}
+  A &= \sum_{n=0}^{\infty} g(n) \\
+    & \leq \sum_{n=0}^{\infty} \sum_{i=0}^{k-1} f\left( \left\lfloor
+    \tfrac{n+i}{k} \right\rfloor \right) \\
+    &= k^2 \sum_{n=0}^{\infty}f(n) - \frac{k(k-1)}{2}f(0) \\
+    &= k^2\frac{s(s+1)}{2}-\frac{k(k-1)}{2}f(0).
+\end{align*}
+By the claim, we also get the second bound $A \leq k^2 \frac{s(s+1)}{2} -
+\frac{k(k-1)}{2}f_*(0)$.
+
+For the third bound, note that $f(f_*(0)) = 0$ and thus $g(k f_*(0)) = 0$. Moreover,
+\[g(q f_*(0) + r) \le q \cdot f(f_*(0)) + (k-q-1) f(0) + f(r) = (k-q-1)f(0) +
+f(r),\]
+so we have
+\begin{align*}
+A &= \sum_{\substack{0 \leq q < k \\ 0 \leq r < f_*(0)}} g(qf_*(0) + r) \\
+& \le \frac{k(k-1)}{2}f_*(0)f(0) + k \sum_{0 \leq r < f_*(0)} f(r) \\
+&= \frac{k(k-1)}{2} f_*(0)f(0) + k\frac{s(s+1)}{2}.
+\end{align*}
+
+Now we have three cases:
+\begin{itemize}
+  \item If $f(0)\geq s$ then
+    \[
+      A\leq k^2 \frac{s(s+1)}{2} - \frac{k(k-1)}{2}f(0) \leq \frac{ks(ks+1)}{2}.
+    \]
+  \item If $f_*(0)\geq s$ then
+    \[
+      A\leq k^2 \frac{s(s+1)}{2} - \frac{k(k-1)}{2}f_*(0) \leq \frac{ks(ks+1)}{2}.
+    \]
+  \item Otherwise, $f(0)f_*(0) \leq s^2$ and
+    \[
+      A\leq \frac{k(k-1)}{2} f_*(0)f(0) + k\frac{s(s+1)}{2} \leq \frac{ks(ks+1)}{2}.
+    \]
+\end{itemize}
+
+\medskip
+
+In all cases, $A \leq \frac{ks(ks+1)}{2}$, as desired.
+
+\begin{remark*}
+  One can estimate the answer to be around $k^2 \frac{s(s+1)}{2}$ by
+  observing the set addition operation ``dilates'' $\mathcal{F}$ by a factor of
+  $k$, but significant care is needed to sharpen the bound.
+\end{remark*}

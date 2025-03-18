@@ -1,0 +1,120 @@
+author: Maxim Li
+desc: Iterated FE jumpscare
+source: USA TST 2023/6
+url: https://aops.com/community/p26896222
+tags: [2023-01, arrows, yod]
+
+---
+
+Fix a function $f \colon \NN \to \NN$ and for any $m,n \in \NN$ define
+\[
+  \Delta(m,n) = \underbrace{f(f(\dots f}_{f(n)\text{ times}} (m)\dots)) %chktex 9
+  - \underbrace{f(f(\dots f}_{f(m)\text{ times}} (n)\dots)). %chktex 9
+\]
+Suppose $\Delta(m,n) \neq 0$ for any distinct $m,n \in \NN$.
+Show that $\Delta$ is unbounded, meaning that for any constant $C$
+there exist $m,n \in \NN$ with $\left\lvert \Delta(m,n) \right\rvert > C$.
+
+---
+
+Suppose for the sake of contradiction that $|\Delta(m,n)|\le N$ for all $m$, $n$.
+Note that $f$ is injective, as
+\[ f(m)=f(n) \implies \Delta(m,n) = 0 \implies m=n, \]
+as desired.
+
+Let $G$ be the ``arrow graph'' of $f$,
+which is the directed graph with vertex set $\NN$ and edges $n\to f(n)$.
+The first step in the solution is to classify the structure of $G$.
+Injectivity implies that $G$ is a disjoint collection of chains
+(infinite and half-infinite) and cycles.
+We have the following sequence of claims that further refine the structure.
+
+\begin{claim*}
+  The graph $G$ has no cycles.
+\end{claim*}
+\begin{proof}
+  Suppose for the sake of contradiction that $f^k(n)=n$
+  for some $k\ge 2$ and $n\in\NN$.
+  As $m$ varies over $\NN$, we have $|\Delta(m,n)|\le N$,
+  so $f^{f(n)}(m)$ can only take on some finite set of values.
+  In particular, this means that
+  \[f^{f(n)}(m_1)=f^{f(n)}(m_2)\]
+  for some $m_1\ne m_2$, which contradicts injectivity.
+\end{proof}
+\begin{claim*}
+  The graph $G$ has at most $2N+1$ chains.
+\end{claim*}
+\begin{proof}
+  Suppose we have numbers $m_1$, \dots, $m_k$ in distinct chains.
+  Select a positive integer $B > \max\{f(m_1), \dots,f(m_k)\}$.
+  Now,
+  \[ \left|\Delta\left(m_i,f^{B-f(m_i)}(1)\right)\right|\le N
+    \implies \left|f^B(1)-f^{f^{B-f(m_i)+1}(1)}(m_i)\right|\le N.\]
+  Since the $m_i$s are in different chains,
+  we have that $f^{f^{B-f(m_i)+1}(1)}(m_i)$ are distinct for each $i$,
+  which implies that $k\le 2N+1$, as desired.
+\end{proof}
+
+\begin{claim*}
+  The graph $G$ consists of exactly one half-infinite chain.
+\end{claim*}
+\begin{proof}
+  Fix some $c\in\NN$.
+  Call an element of $\NN$ \textit{bad} if
+  it is not of the form $f^k(c)$ for some $k\ge 0$.
+  It suffices to show that there are only finitely many bad numbers.
+
+  Since there are only finitely many chains, $f^{f(c)}(n)$ achieves all
+  sufficiently large positive integers, say all positive integers at least $M$.
+  Fix $A$ and $B$ such that $B>A\ge M$.
+  If $f^{f(c)}(n)\in[A,B]$, then $f^{f(n)}(c)\in[A-N,B+N]$,
+  and distinct $n$ generate distinct $f^{f(n)}(c)$ due to the structure of $G$.
+  Therefore, we have at least $B-A+1$ good numbers in $[A-N,B+N]$,
+  so there are at most $2N$ bad numbers in $[A-N,B+N]$.
+
+  Varying $B$, this shows there are at most $2N$ bad numbers at least $A-N$.
+\end{proof}
+
+Let $c$ be the starting point of the chain,
+so every integer is of the form $f^k(c)$, where $k\geq 0$.
+Define a function $g \colon \ZZ_{\ge 0}\to\NN$
+by \[ g(k) \coloneqq f^k(c). \]
+Due to the structure of $G$, $g$ is a bijection.
+Define
+\[\delta(a,b) \coloneqq \Delta(f^a(c),f^b(c)) = g(g(b+1)+a)-g(g(a+1)+b),\]
+so the conditions are equivalent to $|\delta(a,b)|\le N$
+for all $a,b\in\ZZ_{\ge 0}$ and $\delta(a,b)\ne 0$ for $a\ne b$,
+which is equivalent to $g(a+1)-a\ne g(b+1)-b$ for $a\ne b$.
+This tells us that $g(x)-x$ is injective for $x\ge 1$.
+
+\begin{lemma*}
+  For all $M$, there exists a nonnegative integer $x$ with $g(x)\leq x-M$.
+\end{lemma*}
+\begin{proof}
+  Assume for the sake of contradiction that $g(x)-x$ is bounded below.
+  Fix some large positive $K$.
+  Since $g(x)-x$ is injective,
+  there exists $B$ such that $g(x)-x\geq K$ for all $x\geq B$.
+  Then $\min \{g(B+1),g(B+2),\dots\} \ge B+K$,
+  while $\{g(0),\dots,g(B)\}$ only achieve $B+1$ values.
+  Thus, at least $K-1$ values are not achieved by $g$, which is a contradiction.
+\end{proof}
+
+Now pick $B$ such that $g(B)+N\le B$ and $g(B) > N$.
+Note that infinitely many such $B$ exist,
+since we can take $M$ to be arbitrarily small in the above lemma.
+Let
+\[ t = \max \{g^{-1}(g(B)-N), g^{-1}(g(B)-N+1), \dots, g^{-1}(g(B)+N)\}. \]
+Note that $g(t)\le g(B)+N\le B$, so we have
+\[ |\delta(t-1,B-g(t))| = |g(B)-g(t-1+g(B+1-g(t)))| \le N, \]
+so
+\[ t-1+g(B+1-g(t)) \in
+  \{g^{-1}(g(B)-N),g^{-1}(g(B)-N+1),\dots,g^{-1}(g(B)+N)\},\]
+so by the maximality of $t$, we must have $g(B+1-g(t))=1$,
+so $B+1-g(t)=g^{-1}(1)$.
+We have $|g(t)-g(B)|\le N$, so
+\[|(B-g(B))+1-g^{-1}(1)|\le N.\]
+This is true for infinitely many values of $B$,
+so infinitely many values of $B-g(B)$ (by injectivity of $g(x)-x$),
+which is a contradiction.
+This completes the proof.

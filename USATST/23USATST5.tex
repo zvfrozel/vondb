@@ -1,0 +1,271 @@
+author: Nikolai Beluhov
+desc: Linear algebra guessing game
+source: USA TST 2023/5
+url: https://aops.com/community/p26896130
+tags: [2023-01, grid, linalg, nice, find, bestpossible, cyclotomic, gimel]
+
+---
+
+Let $m$ and $n$ be fixed positive integers.
+Tsvety and Freyja play a game on an infinite grid of unit square cells.
+Tsvety has secretly written a real number inside of each cell so that
+the sum of the numbers within every rectangle of size
+either $m \times n$ or $n \times m$ is zero.
+Freyja wants to learn all of these numbers.
+
+One by one, Freyja asks Tsvety about some cell in the grid,
+and Tsvety truthfully reveals what number is written in it.
+Freyja wins if, at any point, Freyja can simultaneously deduce
+the number written in every cell of the entire infinite grid.
+(If this never occurs, Freyja has lost the game and Tsvety wins.)
+
+In terms of $m$ and $n$, find the smallest number of
+questions that Freyja must ask to win,
+or show that no finite number of questions can suffice.
+
+---
+
+The answer is the following:
+\begin{itemize}
+  \ii If $\gcd(m, n) > 1$, then Freyja cannot win.
+  \ii If $\gcd(m, n) = 1$, then Freyja
+  can win in a minimum of $(m-1)^2 + (n-1)^2$ questions.
+\end{itemize}
+
+First, we dispose of the case where $\gcd(m, n) > 1$.
+Write $d = \gcd(m, n)$.
+The idea is that any labeling where each $1 \times d$ rectangle has sum zero is valid.
+Thus, to learn the labeling, Freyja must ask at least one question in every row,
+which is clearly not possible in a finite number of questions.
+
+Now suppose $\gcd(m, n) = 1$.
+We split the proof into two halves.
+
+\paragraph{Lower bound.}
+Clearly, any labeling where each $m \times 1$ and $1 \times m$ rectangle has sum zero is valid.
+These labelings form a vector space with dimension $(m-1)^2$, by inspection.
+(Set the values in an $(m-1)\times (m-1)$ square arbitrarily and every other
+value is uniquely determined.)
+
+Similarly, labelings where each $n \times 1$ and $1 \times n$ rectangle have sum
+zero are also valid, and have dimension $(n-1)^2$.
+
+It is also easy to see that no labeling other than the all-zero labeling
+belongs to both categories;
+labelings in the first space are periodic in both directions with period $m$,
+while labelings in the second space are periodic in both directions with period $n$;
+and hence any labeling in both categories must be constant, ergo all-zero.
+
+Taking sums of these labelings gives a space of valid labelings
+of dimension $(m-1)^2 + (n-1)^2$.
+Thus, Freyja needs at least $(m-1)^2 + (n-1)^2$ questions to win.
+
+\paragraph{Proof of upper bound using generating functions, by Ankan Bhattacharya.}
+We prove:
+\begin{claim*}[Periodicity]
+  Any valid labeling is doubly periodic with period $mn$.
+\end{claim*}
+\begin{proof}
+  By Chicken McNugget, there exists $N$ such that $N$ and $N+1$
+  are both nonnegative integer linear combinations of $m$ and $n$.
+
+  Then both $mn \times N$ and $mn \times (N+1)$ rectangles have zero sum,
+  so $mn \times 1$ rectangles have zero sum.
+  This implies that any two cells with a vertical displacement of $mn$ are equal;
+  similarly for horizontal displacements.
+\end{proof}
+
+With that in mind, consider a valid labeling.
+It naturally corresponds to a generating function
+\[ f(x, y) = \sum_{a=0}^{mn-1} \sum_{b=0}^{mn-1} c_{a, b} x^a y^b \]
+where $c_{a, b}$ is the number in $(a, b)$.
+
+The generating function corresponding to sums over $n \times m$ rectangles is
+\[
+  f(x, y) (1 + x + \dots + x^{m-1}) (1 + y + \dots + y^{n-1})
+  = f(x, y) \cdot \frac{x^m - 1}{x - 1} \cdot \frac{y^n - 1}{y - 1}.
+\]
+Similarly, the one for $m \times n$ rectangles is
+\[ f(x, y) \cdot \frac{x^n - 1}{x - 1} \cdot \frac{y^m - 1}{y - 1}. \]
+
+Thus, the constraints for $f$ to be valid are equivalent to
+\[
+  f(x, y) \cdot \frac{x^m - 1}{x - 1} \cdot \frac{y^n - 1}{y - 1}
+  \quad \text{and} \quad
+  f(x, y) \cdot \frac{x^n - 1}{x - 1} \cdot \frac{y^m - 1}{y - 1}
+\]
+being zero when reduced modulo $x^{mn} - 1$ and $y^{mn} - 1$,
+or, letting $\omega = \exp(2\pi i/mn)$,
+both terms being zero when powers of $\omega$ are plugged in.
+
+To restate the constraints one final time, we need
+\[
+  f(\omega^a, \omega^b) \cdot \frac{\omega^{am} - 1}{\omega^a - 1} \cdot \frac{\omega^{bn} - 1}{\omega^b - 1}
+  = f(\omega^a, \omega^b) \cdot \frac{\omega^{an} - 1}{\omega^a - 1} \cdot \frac{\omega^{bm} - 1}{\omega^b - 1} = 0
+\]
+for all $a, b \in \{0, \dots, mn-1\}$.
+
+\begin{claim*}
+  This implies that $f(\omega^a, \omega^b) = 0$
+  for all but at most $(m-1)^2 + (n-1)^2$ values of $(a,b) \in \{0, \dots, mn-1\}^2$.
+\end{claim*}
+\begin{proof}
+  Consider a pair $(a,b)$ such that $f(\omega^a, \omega^b) \neq 0$.
+  Then we need
+  \[
+    \frac{\omega^{am} - 1}{\omega^a - 1} \cdot \frac{\omega^{bn} - 1}{\omega^b - 1}
+    = \frac{\omega^{an} - 1}{\omega^a - 1} \cdot \frac{\omega^{bm} - 1}{\omega^b - 1} = 0.
+  \]
+  This happens when (at least) one fraction in either product is zero.
+  \begin{itemize}
+    \ii If the first fraction is zero,
+    then either $n \mid a$ and $a > 0$, or $m \mid b$ and $b > 0$.
+    \ii If the second fraction is zero,
+    then either $m \mid a$ and $a > 0$, or $n \mid b$ and $b > 0$.
+  \end{itemize}
+  If the first condition holds in both cases, then $mn \mid a$, but $0 < a < mn$,
+  a contradiction. Thus if $n \mid a$, then we must have $n \mid b$, and similarly
+  if $m \mid a$ then $m \mid b$.
+
+  The former case happens $(m-1)^2$ times, and the latter case happens $(n-1)^2$ times.
+  Thus, at most $(m-1)^2 + (n-1)^2$ values of $f(\omega^a, \omega^b)$ are nonzero.
+\end{proof}
+
+\begin{claim*}
+  The $(mn)^2$ equations $f(\omega^a, \omega^b) = 0$ are linearly independent
+  when viewed as linear equations in $(mn)^2$ variables $c_{a,b}$.
+  Hence, any subset of these equations is also linearly independent.
+\end{claim*}
+\begin{proof}
+  In general, the equation $f(x,y) = 0$ is a polynomial relation with
+  $\deg_x f(x,y) = \deg_y f(x,y) < mn$.
+  However, if we let $S = \{\omega^0, \omega^1, \dots, \omega^{mn-1}\}$, then
+  $|S| = mn$ and we are given $f(s,s') = 0$ for all $s,s' \in S$.
+  This can only happen if $f$ is the zero polynomial,
+  that is, $c_{a,b} = 0$ for all $a$ and $b$.
+\end{proof}
+
+It follows that the dimension of the space of valid labelings is at
+most $(m-1)^2 + (n-1)^2$, as desired.
+
+
+\paragraph{Explicit version of winning algorithm by Freyja, from author.}
+Suppose that $\gcd(m, n) = 1$ and $m \le n$. Let $[a, b]$ denote the set of integers
+between $a$ and $b$ inclusive.
+
+Let Freyja ask about all cells $(x, y)$ in the two squares
+\begin{align*}
+  S_\text{1} &= [1, m - 1] \times [1, m - 1] \\
+  S_\text{2} &= [m, m + n - 2] \times [1, n - 1].
+\end{align*}
+In the beginning, one by one,
+Freyja determines all values inside of the rectangle
+$Q \coloneqq [1, m - 1] \times [m, n - 1]$.
+To that end, on each step she considers some
+rectangle with $m$ rows and $n$ columns such that its top left corner is in $Q$
+and all of the other values in it have been determined already.
+In this way, Freyja uncovers all of $Q$, starting with its lower right corner and
+then proceeding upwards and to the left.
+
+Thus Freyja can learn all numbers inside of the rectangle
+\[ R \coloneqq [1, m + n - 2]
+  \times [1, n - 1] = Q \cup S_\text{1} \cup S_\text{2}.  \]
+See the figure below for an illustration for $(m,n) = (5,8)$.
+The first cell of $Q$ is uncovered using the dotted green rectangle.
+\begin{center}
+\begin{asy}
+  defaultpen(fontsize(18pt));
+  size(9cm);
+  for (int i=-1; i<=9; ++i) {
+    draw( (-1,i)--(12,i), mediumgrey );
+  }
+  for (int i=-1; i<=12; ++i) {
+    draw( (i,-1)--(i,9), mediumgrey );
+  }
+  filldraw(box((0,0),(4,4)), opacity(0.1)+lightred, black+1.5);
+  filldraw(box((4,0),(11,7)), opacity(0.1)+yellow, black+1.5);
+  filldraw(box((0,4),(4,7)), opacity(0.1)+cyan, black+1.5);
+  filldraw(box((3,0),(11,5)), opacity(0.1)+green, deepgreen+dotted+1.1);
+  filldraw(box((0,7),(11,8)), opacity(0.1)+purple, purple+dashed+1.1);
+  label("$S_1$", (2,2), red);
+  label("$S_2$", (7.5,3.5), brown);
+  label("$Q$", (2,5.5), blue);
+  label("$T$", (5.5,7.5), purple);
+  label("$(m,n)=(5,8)$", (5.5,-1), dir(-90));
+\end{asy}
+\end{center}
+
+
+We need one lemma:
+\begin{lemma*}
+  Let $m$ and $n$ be positive integers with $\gcd(m, n) = 1$.
+  Consider an unknown sequence of real numbers $z_1$, $z_2$, $\dots$, $z_s$
+  with $s \ge m + n - 2$. Suppose that we know the sums of all contiguous blocks
+  of size either $m$ or $n$ in this sequence. Then we can determine all
+  individual entries in the sequence as well.
+\end{lemma*}
+
+\begin{proof}
+  By induction on $m + n$. Suppose, without loss of generality, that $m \le n$.
+  Our base case is $m = 1$, which is clear. For the induction step, set $\ell =
+  n - m$. Each contiguous block of size $\ell$ within $z_1$, $z_2$, $\dots$,
+  $z_{s - n}$ is the difference of two contiguous blocks of sizes $m$ and $n$
+  within the original sequence. By the induction hypothesis for $\ell$ and $m$,
+  it follows that we can determine all of $z_1$, $z_2$, $\dots$, $z_{s - n}$.
+  Then we determine the remaining $z_i$ as well, one by one, in order from left
+  to right, by examining on each step an appropriate contiguous block of size $m$.
+\end{proof}
+
+Let $T$ be the rectangle $[1, m + n - 2] \times \{n\}$. By looking at
+appropriate rectangles of sizes $m \times n$ and $n \times m$ such that
+their top row is contained within $T$ and all of their other rows are
+contained within $R$, Freyja can learn the sums of all contiguous blocks of
+values of sizes $m$ and $n$ within $T$. By the Lemma, it follows that Freyja
+can uncover all of $T$.
+
+In this way, with the help of the Lemma, Freyja can extend her rectangular area
+of knowledge both upwards and downwards. Once its height reaches $m + n -
+2$, by the same method she will be able to extend it to the left and right as
+well. This allows Freyja to determine all values in the grid. Therefore, $(m -
+1)^2 + (n - 1)^2$ questions are indeed sufficient.
+
+\begin{remark*}
+The ideas in the solution also yield a proof of the following result:
+\begin{quote}
+Let $m$ and $n$ be relatively prime positive integers.
+Consider an infinite grid of unit square cells coloured in
+such a way that every rectangle of size either $m \times n$ or $n \times m$
+contains the same multiset of colours.
+Then the colouring is either doubly periodic with period length $m$
+or doubly periodic with period length $n$.
+\end{quote}
+
+(Here, ``doubly periodic with period length $s$''
+means ``both horizontally and vertically periodic with period length $s$''.)
+
+Here is a quick sketch of the proof. Given two positive integers $i$ and $j$
+with $1 \le i, j \le m - 1$, we define
+\[
+  f_{ij}(x, y) \coloneqq
+  \begin{cases}
+    +1 & \text{ when } (x, y) \equiv (0, 0) \text{ or } (i, j) \pmod{m}; \\
+    -1 & \text{ when } (x, y) \equiv (0, j) \text{ or } (i, 0) \pmod{m};
+      \text{ and } \\
+    \phantom{+}0 & \text{ otherwise.}
+  \end{cases}
+\]
+Define $g_{i, j}$ similarly, but with $1 \le i, j \le n - 1$ and ``mod $m$''
+everywhere replaced by ``mod $n$''. First we show that if a linear combination
+$h := \sum \alpha_{i, j}f_{i, j}+\sum\beta_{i, j}g_{i, j}$ of the $f_{i, j}$ and
+$g_{i, j}$ contains only two distinct values, then either all of the $\alpha_{i,
+j}$ vanish or all of the $\beta_{i, j}$ do. It follows that each colour,
+considered in isolation, is either doubly periodic with period length $m$ or
+doubly periodic with period length $n$. Finally, we check that different period
+lengths cannot mix.
+
+On the other hand, if $m$ and $n$ are not relatively prime,
+then there exist infinitely many non-isomorphic valid colourings.
+Furthermore, when $\gcd(m, n) = 2$, there exist valid colourings
+which are not horizontally periodic; and, when $\gcd(m, n) \ge 3$,
+there exist valid colourings which are neither horizontally nor vertically periodic.
+\end{remark*}

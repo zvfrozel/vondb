@@ -1,0 +1,90 @@
+desc: Ana/Banana words problem
+author: Kevin Sun
+source: TSTST 2017/2
+tags: [2017-06, process, find, nice, adhoc, reliable, construct, hardanswer, equalitycase, maturity, understand, aleph]
+hardness: 15
+url: https://aops.com/community/p8526115
+
+---
+
+Ana and Banana are playing a game. First Ana picks a word,
+which is defined to be a nonempty sequence of capital English letters.
+Then Banana picks a nonnegative integer $k$ and challenges Ana
+to supply a word with exactly $k$ subsequences which are equal to Ana's word.
+Ana wins if she is able to supply such a word, otherwise she loses.
+For example, if Ana picks the word ``TST'', and Banana chooses $k = 4$,
+then Ana can supply the word ``TSTST'' which has $4$ subsequences
+which are equal to Ana's word.
+Which words can Ana pick so that she can win no matter what value of
+$k$ Banana chooses?
+
+---
+
+First we introduce some notation.
+Define a \emph{block} of letters to be a maximal
+contiguous subsequence of consecutive letters.
+For example, the word $AABBBCAAA$ has four blocks, namely $AA$, $BBB$, $C$, $AAA$.
+Throughout the solution, we fix the word $A$ that Ana picks,
+and introduce the following notation for its $m$ blocks:
+\[ A =
+  A_1 A_2 \dots A_m
+  = \underbrace{a_1 \dots a_1}_{x_1}
+  \underbrace{a_2 \dots a_2}_{x_2}
+  \dots
+  \underbrace{a_m \dots a_m}_{x_m}.
+\]
+A \emph{rainbow} will be a subsequence equal to Ana's initial word $A$
+(meaning Ana seeks words with exactly $k$ rainbows).
+Finally, for brevity, let $A_i = \underbrace{a_i \dots a_i}_{x_i}$,
+so $A = A_1 \dots A_m$.
+
+We prove two claims that resolve the problem.
+\begin{claim*}
+  If $x_i = 1$ for some $i$, then for any $k \ge 1$, the word
+  \[ W = A_1 \dots A_{i-1} \underbrace{a_i \dots a_i}_{k}
+    A_{i+1} \dots A_m  \]
+  obtained by repeating the $i$th letter $k$ times
+  has exactly $k$ rainbows.
+\end{claim*}
+\begin{proof}
+  Obviously there are at least $\binom{k}{k-1}=k$ rainbows,
+  obtained by deleting $k-1$ choices of the letter $a_i$
+  in the repeated block.
+  We show they are the only ones.
+
+  Given a rainbow, consider the location of this singleton block in $W$.
+  It cannot occur within the first $|A_1| + \dots + |A_{i-1}|$ letters,
+  nor can it occur within the final $|A_{i+1}| + \dots + |A_m|$ letters.
+  So it must appear in the $i$th block of $W$.
+  That implies that all the other $a_i$'s in the
+  $i$th block of $W$ must be deleted, as desired.
+  (This last argument is actually nontrivial, and has some substance;
+  many students failed to realize that the upper bound requires care.)
+\end{proof}
+
+\begin{claim*}
+  If $x_i \ge 2$ for all $i$, then no word $W$ has exactly two rainbows.
+\end{claim*}
+\begin{proof}
+  We prove if there are two rainbows of $W$, then we can construct
+  at least three rainbows.
+
+  Let $W = w_1 \dots w_n$ and consider the two rainbows of $W$.
+  Since they are not the same, there must be a block $A_p$ of the rainbow,
+  of length $\ell \ge 2$, which do not occupy the same locations in $W$.
+
+  Assume the first rainbow uses $w_{i_1}$, \dots, $w_{i_\ell}$ for this block
+  and the second rainbow uses $w_{j_1}$, \dots, $w_{j_\ell}$ for this block.
+  Then among the letters $w_q$ for
+  $\min(i_1, j_1) \le q \le \max(i_\ell, j_\ell)$,
+  there must be at least $\ell+1$ copies of the letter $a_p$.
+  Moreover, given a choice of $\ell$ copies of the letter $a_p$
+  in this range, one can complete the subsequence to a rainbow.
+  So the number of rainbows is at least $\binom{\ell+1}{\ell} \ge \ell+1$.
+
+  Since $\ell \ge 2$, this proves $W$ has at least three rainbows.
+\end{proof}
+
+In summary, Ana wins if and only if $x_i = 1$ for some $i$,
+since she can duplicate the isolated letter $k$ times;
+but if $x_i \ge 2$ for all $i$ then Banana only needs to supply $k = 2$.

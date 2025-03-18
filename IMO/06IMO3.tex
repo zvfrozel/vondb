@@ -1,0 +1,57 @@
+desc: $M(a^2+b^2+c^2)^2$
+source: IMO 2006/3
+tags: [ineq, 2016-09, good, equalitycase, reliable, exam, find, bestpossible, perturb, local, zayin]
+hardness: 35
+url: https://aops.com/community/p571945
+author: Finbarr Holland (IRL)
+
+---
+
+Determine the least real number $M$ such that the inequality
+\[ \left\lvert ab(a^2-b^2)+bc(b^2-c^2)+ca(c^2-a^2) \right\rvert
+  \leq M\left( a^2+b^2+c^2 \right)^2 \]
+holds for all real numbers $a$, $b$ and $c$.
+
+---
+
+It's the same as
+\[ \left\lvert (a-b)(b-c)(c-a)(a+b+c) \right\rvert
+\le M \left( a^2+b^2+c^2 \right)^2. \]
+Let $x=a-b$, $y=b-c$, $z=c-a$, $s=a+b+c$.
+Then we want to have
+\[
+  \left\lvert xyzs \right\rvert
+  \le \frac{M}{9} (x^2+y^2+z^2+s^2)^2.
+\]
+Here $x+y+z=0$.
+
+Now if $x$ and $y$ have the same sign,
+we can replace them with the average
+(this increases the LHS and decreases RHS).
+So we can have $x=y$, $z=-2x$.
+Now WLOG $x > 0$ to get
+\[ 2x^3 \cdot s \le \frac{M}{9} \left( 6x^2+s^2 \right)^2. \]
+After this routine calculation gives
+$M = \frac{9}{32}\sqrt2$ works and is optimal
+(by $6x^2+s^2 = 2x^2 + 2x^2 + 2x^2 + s^2$ and AM-GM).
+
+---
+
+We start with some usual algebra.
+\begin{walk}
+  \ii Factor the left-hand side.
+  \ii Rewrite the inequality in terms of $x=a-b$, $y=b-c$, $z=c-a$,
+  where $x+y+z=0$, and $s = a+b+c$
+  (which is ``unrelated'' to the $x$, $y$, $z$).
+\end{walk}
+Now, for the smoothing part, where we try to change $x$ and $y$.
+\begin{walk}[resume]
+  \ii If $x$ and $y$ have the same sign,
+  how can we smooth them?
+  (Remember, we want to increase the left-hand side
+  and decrease the right-hand side.)
+  \ii Show that after smoothing, we can reduce the inequality to
+  \[ 2x^3 \cdot s \le \frac{M}{9} \left( 6x^2+s^2 \right)^2 \]
+  for arbitrary $x,s \in \RR_{>0}$.
+  \ii Establish the answer $M = \frac{9}{32}\sqrt2$.
+\end{walk}

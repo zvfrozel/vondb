@@ -1,0 +1,157 @@
+desc: Rhombus EVAN
+author: Danielle Wang, Evan Chen
+source: USA TST 2017/5
+tags: [2016-12, mine, nice, rich, harmonic, polar, config, gimel]
+hardness: 30
+url: https://aops.com/community/p7732197
+
+---
+
+Let $ABC$ be a triangle with altitude $\ol{AE}$.
+The $A$-excircle touches $\ol{BC}$ at $D$,
+and intersects the circumcircle at two points $F$ and $G$.
+Prove that one can select points $V$ and $N$
+on lines $DG$ and $DF$ such that quadrilateral $EVAN$ is a rhombus.
+
+---
+
+Let $I$ denote the incenter, $J$ the $A$-excenter,
+and $L$ the midpoint of $\ol{AE}$.
+Denote by $\ol{IY}$, $\ol{IZ}$ the tangents
+from $I$ to the $A$-excircle.
+Note that lines $\ol{BC}$, $\ol{GF}$, $\ol{YZ}$ then concur at $H$
+(unless $AB=AC$, but this case is obvious),
+as it's the radical center of cyclic hexagon $BICYJZ$,
+the circumcircle and the $A$-excircle.
+
+\begin{center}
+\begin{asy}
+size(12cm);
+pair A = dir(110);
+pair B = dir(210);
+pair C = dir(330);
+pair I = incenter(A, B, C);
+pair M = dir(270);
+pair J = 2*M-I;
+pair D = foot(J, B, C);
+pair E = foot(A, B, C);
+
+pair F = IP(CP(J, D), unitcircle);
+pair G = OP(CP(J, D), unitcircle);
+
+filldraw(unitcircle, opacity(0.1)+lightblue, lightblue);
+draw(arc(J,abs(D-J),-30,210), lightblue);
+
+pair L = midpoint(A--E);
+pair V = extension(G, D, L, L+B-C);
+pair N = extension(F, D, L, L+B-C);
+draw(A--B--C--cycle, lightblue);
+draw(A--E, lightblue);
+draw(G--V, lightblue);
+draw(N--F, lightblue);
+filldraw(E--V--A--N--cycle, opacity(0.1)+lightgreen, heavygreen);
+draw(V--N, heavygreen);
+pair H = extension(G, F, B, C);
+draw(C--H--G, lightblue);
+
+filldraw(circumcircle(B, I, C), opacity(0.1)+lightred, lightred);
+pair Y = IP(circumcircle(B, I, C), circumcircle(D, F, G));
+pair Z = OP(circumcircle(B, I, C), circumcircle(D, F, G));
+pair T = -D+2*foot(J, D, I);
+draw(T--H, blue);
+draw(Z--H, blue);
+draw(L--T, blue);
+draw(Y--I--Z, blue);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$I$", I, dir(I));
+dot("$M$", M, dir(M));
+dot("$J$", J, dir(J));
+dot("$D$", D, dir(D));
+dot("$E$", E, dir(E));
+dot("$F$", F, dir(270));
+dot("$G$", G, dir(270));
+dot("$L$", L, dir(L));
+dot("$V$", V, dir(V));
+dot("$N$", N, dir(N));
+dot("$H$", H, dir(H));
+dot("$Y$", Y, dir(Y));
+dot("$Z$", Z, dir(Z));
+dot("$T$", T, dir(T));
+
+/* TSQ Source:
+
+!size(12cm);
+A = dir 110
+B = dir 210
+C = dir 330
+I = incenter A B C
+M = dir 270
+J = 2*M-I
+D = foot J B C
+E = foot A B C
+
+F = IP CP J D unitcircle R270
+G = OP CP J D unitcircle R270
+
+unitcircle 0.1 lightblue / lightblue
+!draw(arc(J,abs(D-J),-30,210), lightblue);
+
+L = midpoint A--E
+V = extension G D L L+B-C
+N = extension F D L L+B-C
+A--B--C--cycle lightblue
+A--E lightblue
+G--V lightblue
+N--F lightblue
+E--V--A--N--cycle 0.1 lightgreen / heavygreen
+V--N heavygreen
+H = extension G F B C
+C--H--G lightblue
+
+circumcircle B I C 0.1 lightred / lightred
+Y = IP circumcircle B I C circumcircle D F G
+Z = OP circumcircle B I C circumcircle D F G
+T = -D+2*foot J D I
+T--H blue
+Z--H blue
+L--T blue
+Y--I--Z blue
+
+*/
+\end{asy}
+\end{center}
+
+Now let $\ol{HD}$ and $\ol{HT}$ be the tangents
+from $H$ to the $A$-excircle.
+It follows that $\ol{DT}$ is the symmedian of $\triangle DZY$,
+hence passes through $I = \ol{YY} \cap \ol{ZZ}$.
+Moreover, it's well known that $\ol{DI}$ passes through $L$,
+the midpoint of the $A$-altitude
+(for example by homothety).
+Finally, $(DT;FG) = -1$,
+hence project through $D$ onto the line through $L$
+parallel to $\ol{BC}$ to obtain $(\infty L; VN) = -1$ as desired.
+
+\paragraph{Authorship comments.}
+This is a joint proposal with Danielle Wang (mostly by her).
+The formulation given was that the tangents to the $A$-excircle
+at $F$ and $G$ was on line $\ol{DI}$;
+I solved this formulation using the radical axis argument above.
+I then got the idea to involve the point $L$,
+already knowing it was on $\ol{DI}$.
+Observing the harmonic quadrilateral,
+I took perspectivity through $M$ onto the line through $L$ parallel to $\ol{BC}$
+(before this I had tried to use the $A$-altitude with little luck).
+This yields the rhombus in the problem.
+
+---
+
+Alternative ending:
+Now pick $V$ and $N$ such that points $V$, $L$, $N$ are collinear
+parallel to $\ol{BC}$ (with $V \in \ol{DG}$, $N \in \ol{DF}$).
+Since $BCGF$ is cyclic, so is $GFNV$,
+and so the symmedian $\ol{DI}$ bisects $\ol{VN}$.
+Hence $L$ is the midpoint of $\ol{VN}$, as desired.

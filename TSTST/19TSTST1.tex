@@ -1,0 +1,293 @@
+desc: Diamond functional equation
+author: Evan Chen
+source: TSTST 2019/1
+tags: [FE, 2019-07, mine, nice, reliable, pitfall, size, find, divis, primes, bet]
+hardness: 20
+url: https://aops.com/community/p12608849
+
+---
+
+\def\di{\mathbin{\diamondsuit}}
+Find all binary operations $\di \colon \RR_{>0} \times \RR_{>0} \to \RR_{>0}$
+(meaning $\di$ takes pairs of
+positive real numbers to positive real numbers)
+such that for any real numbers $a,b,c > 0$,
+\begin{itemize}
+  \ii the equation $a \di (b \di c) = (a \di b) \cdot c$ holds; and
+  \ii if $a \ge 1$ then $a \di a \ge 1$.
+\end{itemize}
+
+---
+
+
+\def\di{\mathbin{\diamondsuit}}
+The answer is only multiplication and division,
+which both obviously work.
+
+We present two approaches,
+one appealing to theorems on Cauchy's functional equation,
+and one which avoids it.
+
+\paragraph{First solution using Cauchy FE.}
+We prove:
+\begin{claim*}
+  We have $a \di b = a f(b)$ where $f$ is
+  some involutive and totally multiplicative function.
+  (In fact, this classifies all functions
+  satisfying the first condition completely.)
+\end{claim*}
+\begin{proof}
+  Let $P(a,b,c)$ denote the
+  assertion $a \di (b \di c) = (a \di b) \cdot c$.
+  \begin{itemize}
+    \ii Note that for any $x$,
+    the function $y \mapsto x \di y$ is injective,
+    because if $x \di y_1 = x \di y_2$ then take $P(1, x, y_i)$
+    to get $y_1 = y_2$.
+
+    \ii Take $P(1,x,1)$ and injectivity to get $x \di 1 = x$.
+    \ii Take $P(1,1,y)$ to get $1 \di (1 \di y) = y$.
+    \ii Take $P(x, 1, 1 \di y)$ to get
+    \[ x \di y = x \cdot (1 \di y). \]
+  \end{itemize}
+  Henceforth let us define $f(y) = 1 \di y$, so
+  $f(1) = 1$, $f$ is involutive and
+  \[ x \di y = xf(y). \]
+
+  Plugging this into the original condition now gives
+  $f(bf(c)) = f(b)c$,
+  which (since $f$ is an involution)
+  gives $f$ completely multiplicative.
+\end{proof}
+
+In particular, $f(1) = 1$.
+We are now interested only in the second condition,
+which reads $f(x) \ge 1/x$ for $x \ge 1$.
+
+Define the function
+\[ g(t) = \log f(e^t) \]
+so that $g$ is additive,
+and also $g(t) \ge -t$ for all $t \ge 0$.
+We appeal to the following theorem:
+\begin{lemma*}
+  If $h \colon \RR \to \RR$ is an additive function
+  which is not linear,
+  then it is \emph{dense} in the plane:
+  for any point $(x_0, y_0)$ and $\eps > 0$
+  there exists $(x,y)$ such that $h(x) = y$
+  and $\sqrt{(x-x_0)^2 + (y-y_0)^2} < \eps$.
+\end{lemma*}
+Applying this lemma with the fact
+that $g(t) \ge -t$ implies readily that $g$ is linear.
+In other words, $f$ is of the form $f(x) = x^r$
+for some fixed real number $r$.
+It is easy to check $r =\pm 1$ which finishes.
+
+\paragraph{Second solution manually.}
+As before we arrive at $a \di b = af(b)$,
+with $f$ an involutive and totally multiplicative function.
+
+We prove that:
+\begin{claim*}
+  For any $a > 0$, we have $f(a) \in \{1/a, a\}$.
+\end{claim*}
+\begin{proof}
+  WLOG $b > 1$, and suppose $f(b) = a \ge 1/b$ hence $f(a) = b$.
+
+  Assume that $ab > 1$; we show $a = b$.
+  Note that for integers $m$ and $n$ with $a^n b^m \ge 1$, we must have
+  \[ a^m b^n = f(b)^m f(a)^n
+    = f(a^n b^m) \ge \frac{1}{a^n b^m} \implies (ab)^{m+n} \ge 1 \]
+  and thus we have arrived at the proposition
+  \[ m+n < 0 \implies n \log_b a + m < 0 \]
+  for all integers $m$ and $n$.
+  Due to the density of $\QQ$ in the real numbers,
+  this can only happen if $\log_b a = 1$ or $a = b$.
+\end{proof}
+
+\begin{claim*}
+  The function $f$ is continuous.
+\end{claim*}
+\begin{proof}
+  Indeed, it's equivalent to show $g(t) = \log f(e^t)$ is continuous, and we have that
+  \[
+    \left\lvert g(t)-g(s) \right\rvert = \left\lvert \log f(e^{t-s}) \right\rvert
+    = \left\lvert t-s \right\rvert
+  \]
+  since $f(e^{t-s}) = e^{\pm |t-s|}$.
+  Therefore $g$ is Lipschitz.
+  Hence $g$ continuous, and $f$ is too.
+\end{proof}
+
+Finally, we have from $f$ multiplicative that
+\[ f(2^q) = f(2)^q \]
+for every rational number $q$, say.
+As $f$ is continuous this implies $f(x) \equiv x$ or $f(x) \equiv 1/x$ identically
+(depending on whether $f(2) = 2$ or $f(2)=1/2$, respectively).
+
+Therefore, $a \di b = ab$ or $a \di b = a \div b$, as needed.
+
+\begin{remark*}
+  The Lipschitz condition is one of several other ways to proceed.
+  The point is that if $f(2) = 2$ (say),
+  and $x/2^q$ is close to $1$,
+  then $f(x)/2^q = f(x/2^q)$ is close to $1$,
+  which is enough to force $f(x) = x$ rather than $f(x) = 1/x$.
+\end{remark*}
+
+\begin{remark*}
+  Compare to AMC 10A 2016 \#23,
+  where the second condition is $a \di a = 1$.
+\end{remark*}
+
+
+---
+
+Thus, we are interested only in the second condition now.
+The final claim is:
+
+\begin{claim*}
+  For every prime $p$, we have $f(p) = p$ or $f(p) = 1/p$.
+\end{claim*}
+\begin{proof}
+  Let $f(p) = t \ge 1/p$ (in particular $t>0$), hence $f(t) = p$.
+  Assume that $t \neq 1/p$; we prove $t = p$.
+
+  Consider any pair of integers $m$ and $n$ with $m+n < 0$.
+  Let $a = p^m t^n$ so $f(a) = p^n t^m$.
+  Note that
+  \[ 1 > (pt)^{m+n} = p^m t^n \cdot p^n t^m = a f(a). \]
+  This means $a < 0$. In other words,
+  whenever $m$ and $n$ are integers with $m+n< 0$,
+  we must have $n \log_p t + m < 0$.
+  Since rational numbers are dense in $\RR$,
+  this could only hold if $\log_p t = 1$, or $t = p$.
+\end{proof}
+---
+
+
+\pagebreak
+OLD SOLUTION where the condition was $n \di n$
+
+We first characterize all $\di$.
+Let $F$ be a set of primes (possibly empty or infinite),
+and for each prime $q \notin F$ let $g(q)$
+be any integer in $\{1, \dots, q-1\}$ with all prime factors in $F$.
+Then define a function $f$ on primes by
+\[
+  f(p) = \begin{cases}
+    p & p \in F \\
+    g(p)^2/p & p \notin F
+  \end{cases}
+\]
+and extend $f$ to a completely multiplicative function on all of $\QQ_{>0}$.
+Then $x \di y = x f(y)$ is a solution and we claim all solutions
+are of this form.
+
+First, note that for any $x$, the function $y \mapsto x \di y$ is injective,
+because if $x \di y_1 = x \di y_2$ then take $(a,b,c)=(1,x,y_i)$.
+Next, take $c=1$ and injectivity to get $b \di 1 = b$.
+Now, take $a=b=1$ in the given to get $1 \di (1 \di c) = c$.
+Finally, let $(a,b,c)=(x, 1, 1 \di y)$ to get
+\[ x \di y = x \cdot (1 \di y). \]
+Henceforth let $f(y) = 1 \di y$, so
+$f(1) = 1$, $f$ is involutive and $x \di y = xf(y)$.
+
+Plugging this into the original condition now gives
+$f(bf(c)) = f(b)c$, which (since $f$ involution)
+gives $f$ completely multiplicative.
+
+Next, we claim that for any prime $p$ we have that
+$pf(p)$ is a perfect square at most $p^2$.
+Indeed, let $k$ be a large odd integer.
+Then, by the second condition we have
+\[  (pf(p))^k = p^k f(p^k) = p^k \di p^k
+  < (100k \cdot p^k \log p)^{2k}
+  \implies pf(p) < (100k\log p)^{2/k} p^2 \]
+so for $k$ sufficiently large, we get $pf(p) < (1+\eps) p^2$,
+and thus $pf(p) \in \{1, 4, \dots, p^2\}$.
+
+Now let $F$ be the set of primes $p$ fixed by $f$.
+Thus if $p \notin F$, then $\sqrt{pf(p)} \in \{1, \dots, p-1\}$.
+We claim that in this case $pf(p)$ has all prime factors in $F$.
+The proof is by induction:
+if not, let $n = pf(p)$ and look at the
+largest prime factor $q$ of $n$ not in $F$ (thus $q < p$).
+But $f(n) = f(pf(p)) = f(p)p = n$.
+However, if we factor $n = \prod p_i^{e_i}$ into its prime factorization
+and use $f$ completely multiplicative then we observe
+no $f(p_i)$ may be divisible by $q$, contradiction.
+This proves the claim, and it follows all $\di$ have the form prescribed.
+
+\medskip
+
+Finally we answer the question at hand.
+Let $p = 1009$ be an odd prime.
+We seek $2p \cdot f(2p) = 2p \cdot f(2)f(p)$ across all $f$.
+If $2 \in F \implies f(2) = 2$,
+then $\sqrt{pf(p)} \in \{1, 2, 3, \dots, p\}$.
+Otherwise $2 \notin F \implies f(2) = 1/2$,
+and $\sqrt{pf(p)} \in \{1, 3, 5, \dots p\}$.
+In summary the possible values are:
+\begin{itemize}
+  \ii $4k^2$ for $k=1,2,3,\dots,p$ and
+  \ii $k^2$ for $k=1,3,5,\dots,p$ and
+\end{itemize}
+
+---
+
+\def\di{\mathbin{\diamondsuit}}
+
+Some conditions I tried before I found the one I liked:
+\begin{itemize}
+  \ii No condition at all (in that case $a \di b = a f(b)$,
+  $f$ involutive and completely multiplicative)
+  \ii $n \di n$ is always an integer (better but still lots of solutions)
+  \ii $n \di n$ divides $n^2$ (too easy)
+  \ii $1 \le n \di n < n^2$  (forces division)
+  \ii $1 \le n \di n \le n^2$ (okay, but still lots of solutions)
+\end{itemize}
+
+After this there was some design in figuring out an answer extraction
+format since the set of all possible $\di$ was too clunky to describe.
+Originally I asked for possible values of $2p \di 2p$.
+(Answer: they are $\{2^2, 4^2, \dots, (2p)^2\} \cup \{ 1^2, 3^2, \dots, p^2 \}$.)
+This one I think is better.
+
+And of course, this is all inspired by a certain AMC problem
+in which $n \di n = 1$, from which it follows $\di$ is division.
+
+---
+
+%Finally we return to the question at hand.
+%The pair in question is $(20f(2)^4, 20f(17))$.
+%If $2 \in F \implies f(2) = 2$, then
+%$f(17)  = \frac{k^2}{17}$ for $k \in \{1,2,\dots,17\}$.
+%If $2 \notin F \implies f(2) = 1/2$, then
+%$f(17) = \frac{k^2}{17}$ for $k \in \{1,3,\dots,17\}$.
+
+%Finally we answer the question at hand.
+%We see that we would like the number of values
+%of $f(2p) = f(2)f(p)$ across all $f$.
+%If $2 \in F \implies f(2) = 2$,
+%then $\sqrt{pf(p)} \in \{1, 2, 3, \dots, p\}$.
+%Otherwise $2 \notin F \implies f(2) = 1/2$,
+%and $\sqrt{pf(p)} \in \{1, 3, 5, \dots p\}$.
+%So altogether we get $\left\lceil 3p/2 \right\rceil$ solutions.
+
+There are two possibilities:
+\begin{itemize}
+  \ii $(320, 20 \cdot \frac{k^2}{17})$ for $k = 1, 2, 3, \dots, 17$,
+  \ii $(\frac54, 20 \cdot \frac{k^2}{17})$ for $k = 1, 3, 5, \dots, 17$.
+\end{itemize}
+
+Finally, we return to the particular question at hand.
+We seek all possible values of $20f(18) = 20f(2)f(3)^2$.
+There are two cases:
+\begin{itemize}
+  \ii If $2 \in F$ then $f(2) = 2$, and $f(3) \in \{1/3, 4/3,  3\}$.
+  This gives $40/9$, $640/9$, $360$.
+
+  \ii If $2 \notin F$ then $f(2) = 1/2$, and $f(3) \in \{1/3,3\}$.
+  So the possible values here are $10/9$, $90$.
+\end{itemize}

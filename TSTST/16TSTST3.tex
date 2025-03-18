@@ -1,0 +1,77 @@
+desc:  $0.499n$ residues modulo $n$
+author: Yang Liu
+source:  TSTST 2016/3
+tags:  [QR, mods, troll, hardanswer, construct, explicit, primes, nice, yesno, 2016-07, well, brave, zayin]
+hardness: 40
+url: https://aops.com/community/p6575217
+
+---
+
+Decide whether or not there exists a nonconstant polynomial $Q(x)$
+with integer coefficients with the following property:
+for every positive integer $n > 2$, the numbers
+\[ Q(0), \; Q(1), Q(2),  \; \dots, \; Q(n-1) \]
+produce at most $0.499n$ distinct residues when taken modulo $n$.
+
+---
+
+We claim that
+\[ Q(x) = 420(x^2-1)^2 \]
+works.
+Clearly, it suffices to prove the result when $n=4$ and when $n$ is an odd prime $p$.
+The case $n=4$ is trivial, so assume now $n=p$ is an odd prime.
+
+First, we prove the following easy claim.
+\begin{claim*}
+  For any odd prime $p$, there are at least $\frac12(p-3)$
+  values of $a$ for which $\left( \frac{1-a^2}{p} \right) = +1$.
+\end{claim*}
+\begin{proof}
+  Note that if $k \neq 0$, $k \neq \pm 1$, $k^2 \neq -1$, then $a = 2(k+k\inv)$ works.
+  Also $a=0$ works.
+\end{proof}
+
+Let $F(x) = (x^2-1)^2$.
+The range of $F$ modulo $p$ is contained within the $\half(p+1)$ quadratic residues modulo $p$.
+On the other hand, if for some $t$ neither of $1 \pm t$ is a quadratic residue,
+then $t^2$ is omitted from the range of $F$ as well.
+Call such a value of $t$ \emph{useful}, and let $N$ be the number of useful residues.
+We aim to show $N \ge \frac14 p - 2$.
+
+We compute a lower bound on the number $N$ of useful $t$ by writing
+\begin{align*}
+  N &= \frac{1}{4} \left( \sum_t \left[ \left(1 - \left(\frac{1-t}{p} \right) \right)
+    \left(1 - \left(\frac{1+t}{p} \right) \right) \right]
+    - \left( 1- \left( \frac2p \right) \right)
+    - \left( 1- \left( \frac{-2}p \right) \right)
+  \right) \\
+  &\ge \frac{1}{4} \sum_t \left[ \left(1 - \left(\frac{1-t}{p} \right) \right)
+    \left(1 - \left(\frac{1+t}{p} \right) \right) \right] -1 \\
+  &= \frac{1}{4} \left(p + \sum_t \left(\frac{1-t^2}{p} \right) \right) -1 \\
+  &\ge \frac14 \left( p + (+1) \cdot \tfrac12(p-3) + 0 \cdot 2
+    + (-1) \cdot ( (p-2) - \tfrac12(p-3)) \right) - 1 \\
+  &\ge \frac14 \left( p - 5 \right).
+\end{align*}
+
+Thus, the range of $F$ has size at most
+\[ \half(p+1) - \half N \le \frac38(p+3). \]
+This is less than $0.499p$ for any $p \ge 11$.
+
+\begin{remark*}
+  In fact, the computation above is essentially an equality.
+  There are only two points where terms are dropped:
+  one, when $p \equiv 3 \pmod 4$ there are no $k^2 = -1$ in the lemma,
+  and secondly, the terms $1-\left( 2/p \right)$ and $1-\left( -2/p \right)$
+  are dropped in the initial estimate for $N$.
+  With suitable modifications, one can show that in fact,
+  the range of $F$ is exactly equal to
+  \[
+    \half(p+1) - \half N =
+    \begin{cases}
+      \frac18(3p+5) & p \equiv 1 \pmod 8 \\
+      \frac18(3p+7) & p \equiv 3 \pmod 8 \\
+      \frac18(3p+9) & p \equiv 5 \pmod 8 \\
+      \frac18(3p+3) & p \equiv 7 \pmod 8.
+    \end{cases}
+  \]
+\end{remark*}

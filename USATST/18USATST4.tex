@@ -1,0 +1,106 @@
+desc: Majority circuits
+source: USA TST 2018/4
+author: Josh Brakensiek
+tags: [2017-11, induct, perturb, rushdown, aleph]
+hardness: 15
+url: https://aops.com/community/p9735607
+
+---
+
+Let $n$ be a positive integer and let $S \subseteq \{0,1\}^n$
+be a set of binary strings of length $n$.
+Given an odd number $x_1, \dots, x_{2k+1} \in S$ of binary strings
+(not necessarily distinct), their \emph{majority} is defined as
+the binary string $y \in \{0,1\}^n$ for which
+the $i$\textsuperscript{th} bit of $y$ is the most common bit
+among the $i$\textsuperscript{th} bits of $x_1$, \dots, $x_{2k+1}$.
+(For example, if $n=4$ the majority of
+$0000$, $0000$, $1101$, $1100$, $0101$ is $0100$.)
+
+Suppose that for some positive integer $k$,
+$S$ has the property $P_k$ that the majority of any $2k+1$
+binary strings in $S$ (possibly with repetition) is also in $S$.
+Prove that $S$ has the same property $P_k$ for all
+positive integers $k$.
+
+---
+
+Let $M$ denote the majority function (of any length).
+
+\paragraph{First solution (induction).}
+We prove all $P_k$ are equivalent by induction on $n \ge 2$,
+with the base case $n = 2$ being easy to check by hand.
+(The case $n=1$ is also vacuous; however,
+the inductive step is not able to go from $n=1$ to $n=2$.)
+
+For the inductive step, we proceed by contradiction;
+assume $S$ satisfies $P_{\ell}$, but not $P_{k}$,
+so there exist $x_1, \dots, x_{2k+1} \in S$
+whose majority $y = M(x_1, \dots, x_k)$ is not in $S$.
+We contend that:
+\begin{claim*}
+  Let $y_i$ be the string which differs from $y$
+  only in the $i$\ts{th} bit.
+  Then $y_i \in S$.
+\end{claim*}
+\begin{proof}
+  For a string $s \in S$
+  we let $\hat s$ denote the string $s$ with the $i$\ts{th} bit deleted
+  (hence with $n-1$ bits).
+  Now let \[ T = \left\{ \hat s \mid s \in S \right\}. \]
+  Since $S$ satisfies $P_\ell$, so does $T$;
+  thus by the induction hypothesis on $n$, $T$ satisfies $P_{k}$.
+
+  Consequently, $T \ni M(\hat{x}_1, \dots, \hat{x}_{2k+1}) = \hat y$.
+  Thus there exists $s \in S$ such that $\hat s = \hat y$.
+  This implies $s = y$ or $s = y_i$.
+  But since we assumed $y \notin S$ it follows $y_i \in S$ instead.
+\end{proof}
+
+Now take any $2\ell+1$ copies of the $y_i$, about equally often
+(i.e.\ the number of times
+any two $y_i$ are taken differs by at most $1$).
+We see the majority of these is $y$ itself, contradiction.
+
+\paragraph{Second solution (circuit construction).}
+Note that $P_k \implies P_1$ for any $k$, since
+\[ M( \underbrace{a,\dots,a}_k, \underbrace{b,\dots,b}_k, c )
+  = M(a,b,c) \]
+for any $a$, $b$, $c$.
+
+We will now prove $P_1 + P_k \implies P_{k+1}$ for any $k$,
+which will prove the result.
+Actually, we will show that the majority
+of any $2k+3$ strings $x_1$, \dots, $x_{2k+3}$
+can be expressed by $3$ and $(2k+1)$-majorities.
+WLOG assume that $M(x_1, \dots, x_{2k+3}) = 0\dots0$,
+and let $\odot$ denote binary AND.
+\begin{claim*}
+  We have $M(x_1, x_2, M(x_3, \dots, x_{2k+3})) = x_1 \odot x_2$.
+\end{claim*}
+\begin{proof}
+  Consider any particular bit.
+  The result is clear if the bits are equal.
+  Otherwise, if they differ,
+  the result follows from the original hypothesis that
+  $M(x_1, \dots, x_{2k+3}) = 0\dots0$
+  (removing two differing bits does not change the majority).
+\end{proof}
+By analogy we can construct any $x_i \odot x_j$.
+Finally, note that
+\[ M(x_1 \odot x_2, x_2 \odot x_3, \dots,
+  x_{2k+1} \odot x_{2k+2}) = 0\dots0, \]
+as desired. (Indeed, if we look at any index,
+there were at most $k+1$ $1$'s in the $x_i$ strings,
+and hence there will be at most $k$ $1$'s among
+$x_i \odot x_{i+1}$ for $i=1,\dots,2k+1$.)
+
+\begin{remark*}
+  The second solution can be interpreted in circuit language
+  as showing that all ``$2k+1$-majority gates'' are equivalent.
+  See also \url{https://cstheory.stackexchange.com/a/21399/48303},
+  in which Valiant gives a probabilistic construction to prove
+  that one can construct $(2k+1)$-majority gates from a
+  \emph{polynomial} number of $3$-majority gates.
+  No explicit construction is known for this.
+\end{remark*}

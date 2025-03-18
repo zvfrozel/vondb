@@ -1,0 +1,252 @@
+author: Merlijn Staps
+desc: Black magic geometry
+hardness: 35
+source: USA TST 2020/2
+tags: [2019-12, anglechase, nice, length, trig, gimel]
+url: https://aops.com/community/p13654481
+
+---
+
+Two circles $\Gamma_1$ and $\Gamma_2$
+have common external tangents $\ell_1$ and $\ell_2$ meeting at $T$.
+Suppose $\ell_1$ touches $\Gamma_1$ at $A$ and $\ell_2$ touches $\Gamma_2$ at $B$.
+A circle $\Omega$ through $A$ and $B$ intersects $\Gamma_1$
+again at $C$ and $\Gamma_2$ again at $D$, such that quadrilateral $ABCD$ is convex.
+
+Suppose lines $AC$ and $BD$ meet at point $X$,
+while lines $AD$ and $BC$ meet at point $Y$.
+Show that $T$, $X$, $Y$ are collinear.
+
+---
+
+We present four solutions.
+
+\paragraph{First solution, elementary (original).}
+We have $\triangle YAC \sim \triangle YBD$, from which it follows
+\[ \frac{d(Y,AC)}{d(Y,BD)} = \frac{AC}{BD}. \]
+Moreover, if we denote by $r_1$ and $r_2$ the radii of $\Gamma_1$ and $\Gamma_2$, then
+\[
+  \frac{d(T,AC)}{d(T,BD)}
+  = \frac{TA \sin \angle(AC,\ell_1)}{TB \sin \angle (BD,\ell_2)}
+  = \frac{2r_1 \sin \angle(AC,\ell_1)}{2r_2 \sin \angle(BD,\ell_2)}
+  = \frac{AC}{BD}
+\]
+the last step by the law of sines.
+
+\begin{center}
+\begin{asy}
+size(12.5cm);
+
+pair A,E,O_A,O_B,T;
+T = (0,0);
+A = (14.4,-6);
+O_A = (16.9,0);
+E = 1.6 * A;
+O_B = 1.6 * O_A;
+
+draw(circle(O_A,abs(O_A-A)),gray);
+draw(circle(O_B,abs(O_B-E)),gray);
+pair B = intersectionpoint(circumcircle(T,E,O_B),circle(O_B,abs(O_B-E)));
+draw(T--1.2*E);
+draw(T--1.2*B);
+
+pair G = (17,-3);
+// draw(circumcircle(A,B,G),red);
+
+pair C = intersectionpoints(circle(O_A,abs(O_A-A)),circumcircle(A,B,G))[0];
+pair D = intersectionpoints(circle(O_B,abs(O_B-B)),circumcircle(A,B,G))[1];
+
+pair X = extension(A,C,B,D);
+pair Y = extension(A,D,B,C);
+
+draw(A--C,red);
+draw(B--D,red);
+draw(-0.2*X--1.6*X,dashed);
+draw(A--Y--B, orange);
+dot("$A$", A, dir(-90));
+dot("$B$",B,dir(150));
+dot("$C$",C,dir(-20));
+dot("$D$",D,dir(D));
+dot("$X$",X,dir(135));
+dot("$Y$",Y,dir(-45));
+dot("$T$",T,dir(-90));
+label("$\ell_1$",8*dir(A),dir(-90));
+label("$\ell_2$",8*dir(B),dir(90));
+label("$\Gamma_1$",O_A+dir(170)*abs(O_A-A),dir(170),gray);
+label("$\Gamma_2$",O_B+dir(70)*abs(O_B-B),dir(70),gray);
+\end{asy}
+\end{center}
+
+This solves the problem up to configuration issues:
+we claim that $Y$ and $T$ both lie
+inside $\angle AXB \equiv \angle CXD$.
+WLOG $TA < TB$.
+\begin{itemize}
+  \ii The former is since $Y$ lies outside segments $BC$ and $AD$,
+  since we assumed $ABCD$ was convex.
+  \ii For the latter, we note that $X$ lies inside both $\Gamma_1$ and $\Gamma_2$
+  in fact on the radical axis of the two circles
+  (since $X$ was an interior point of both chords $AC$ and $BD$).
+  In particular, $X$ is contained inside $\angle ATB$, and moreover $\angle ATB < 90\dg$,
+  and this is enough to imply the result.
+\end{itemize}
+
+\paragraph{Second solution, inversive.}
+This is based on the solution posted by \texttt{kapilpavase} on AoPS.
+Consider the inversion at $T$ swapping $\Gamma_1$ and $\Gamma_2$;
+we let it send $A$ to $E$, $B$ to $F$, $C$ to $V$, $D$ to $W$, as shown.
+Draw circles $ADWE$ and $BCVF$.
+\begin{center}
+\begin{asy}
+size(12.5cm);
+
+pair A,E,O_A,O_B,T;
+T = (0,0);
+A = (14.4,-6);
+O_A = (16.9,0);
+E = 1.6 * A;
+O_B = 1.6 * O_A;
+
+draw(circle(O_A,abs(O_A-A)),gray);
+draw(circle(O_B,abs(O_B-E)),gray);
+pair B = intersectionpoint(circumcircle(T,E,O_B),circle(O_B,abs(O_B-E)));
+draw(T--1.2*E);
+draw(T--1.2*B);
+
+pair G = (17,-3);
+// draw(circumcircle(A,B,G),red);
+
+pair C = intersectionpoints(circle(O_A,abs(O_A-A)),circumcircle(A,B,G))[0];
+pair D = intersectionpoints(circle(O_B,abs(O_B-B)),circumcircle(A,B,G))[1];
+
+pair X = extension(A,C,B,D);
+pair Y = extension(A,D,B,C);
+
+pair F = extension(T,B,A,A+B-E);
+filldraw(circumcircle(A,D,E), opacity(0.1)+yellow, red);
+filldraw(circumcircle(B,C,F), opacity(0.1)+yellow, red);
+pair V = extension(T,C,X,E);
+pair W = extension(T,D,X,F);
+
+draw(A--C,red);
+draw(B--D,red);
+// draw(-0.2*X--1.6*X,dashed);
+draw(A--Y--B, grey+dotted);
+draw(W--T--C, lightblue);
+
+draw(V--E, lightblue+dashed);
+draw(W--F, lightblue+dashed);
+
+dot("$A$", A, dir(225));
+dot("$B$",B,dir(80));
+dot("$C$",C,dir(-10));
+dot("$D$",D,dir(-45));
+dot("$X$",X,dir(175));
+dot("$Y$",Y,dir(-45));
+dot("$T$",T,dir(-90));
+label("$\ell_1$",8*dir(A),dir(-90));
+label("$\ell_2$",8*dir(B),dir(90));
+label("$\Gamma_1$",O_A+dir(170)*abs(O_A-A),dir(170),gray);
+label("$\Gamma_2$",O_B+dir(70)*abs(O_B-B),dir(70),gray);
+
+dot("$E$", E, dir(-90));
+dot("$F$", F, dir(160));
+dot("$V$", V, dir(110));
+dot("$W$", W, dir(-10));
+\end{asy}
+\end{center}
+
+\begin{claim*}
+  Points $T$ and $Y$ lie on the radical axis of $(ADE)$ and $(BCF)$.
+\end{claim*}
+\begin{proof}
+  Because $TF \cdot TB = TA \cdot TE$ and $YA \cdot YD = YC \cdot YB$.
+\end{proof}
+
+\begin{claim*}
+  Point $X$ has equal power to $(ADE)$ and $(BCF)$.
+\end{claim*}
+\begin{proof}
+  Since $TV \cdot TC = TA \cdot TE$, quadrilateral $VCEA$ is cyclic too,
+  so by radical axis with $\Gamma_1$ and $\Gamma_2$ we find $X$ lies on $VE$.
+  Similarly, $X$ lies on $FW$.
+  Thus, $X$ is the center of negative inversion between $(ADE)$ and $(BCF)$.
+
+  But since $AE = BF$ and moreover
+  \begin{align*}
+    \dang BCF + \dang ADE
+    &= (\dang BCA + \dang ACF) + (\dang ADB + \dang BDE) \\
+    &= (\dang BCA + \dang ADB) + (\dang ACF + \dang BDE) = 0 + 0 = 0
+  \end{align*}
+  we conclude that $(ADE)$ and $(BCF)$ are \emph{congruent}.
+  As $X$ was the center of negative inversion between them, we're done.
+\end{proof}
+
+\paragraph{Third solution, projective (Nikolai Beluhov).}
+We start with some definitions.
+Let $\ell_1$ touch $\Gamma_2$ at $E$, $\ell_2$ touch $\Gamma_1$ at $F$,
+$K = \ell_1 \cap \ol{BD}$, $L = \ell_2 \cap \ol{AC}$,
+line $FX$ meet $\Gamma_1$ again at $M$,
+line $EX$ meet $\Gamma_2$ again at $N$,
+and lines $AB$, $AD$, and $BC$ meet line $TX$ at $Z$, $Y_1$, and $Y_2$.
+Thus the desired statement is equivalent to $Y_1 = Y_2$.
+
+\begin{claim*}
+  $(EB; ND)_{\Gamma_2} = (FA; MC)_{\Gamma_1}$.
+\end{claim*}
+
+\begin{proof}
+  Note that $AX \cdot XC = BX \cdot XD = EX \cdot XN$, so $AECN$ is cyclic.
+  Likewise $BFDM$ is cyclic.
+
+  Consider the inversion with center $T$ which swaps $\Gamma_1$ and $\Gamma_2$;
+  it also swaps the pairs $\{A, E\}$ and $\{B, F\}$.
+  Since $AECN$ is cyclic, $C$ is on $\Gamma_1$, and $N$ is on $\Gamma_2$,
+  it also swaps $\{C, N\}$; similarly it swaps $\{D, M\}$.
+
+  Thus $(EB; ND)_{\Gamma_2} = (AF; CM)_{\Gamma_1} = (FA; MC)_{\Gamma_1}$ as desired.
+\end{proof}
+With this claim, the remainder of the proof is chasing cross-ratios:
+\[
+  (TZ; XY_1)
+  \stackrel{A}{=} (KB; XD)
+  \stackrel{E}{=} (EB; ND)_{\Gamma_2}
+  = (FA; MC)_{\Gamma_1}
+  \stackrel{F}{=} (LA; XC)
+  \stackrel{B}{=} (TZ; XY_2)
+\]
+implies $Y_1 = Y_2$ as desired.
+
+\paragraph{Fourth solution by untethered moving points.}
+Fix $\ell_1$, $\ell_2$, $T$, $\Gamma_1$ and $\Gamma_2$,
+and let $\Gamma_1$ and $\Gamma_2$ meet at $U$ and $V$.
+By the radical axis theorem, $X$ lies on $UV$.
+
+Thus we instead treat $X$ as a variable point on line $UV$
+and let $C = AX \cap \Gamma_1$, $D = BX \cap \Gamma_2$.
+By definition, $X$ has degree $1$ and $T$ has degree $0$.
+
+We apply \textbf{Zack's lemma} to untethered point $Y$.
+Note that $C$ and $D$ move projectively on conics,
+and therefore have degree $2$.
+Then, lines $AD$ and $BC$ each have degree at most $\deg(A)+\deg(D)=0+2=2$,
+and so their intersection $Y$ has degree at most $2+2=4$.
+But when $X \in AB$, the lines $AD$ and $BC$ are the same,
+so Zack's lemma implies that
+\[ \deg Y \le 4 - 1 = 3. \]
+
+Thus the assertion that $T$, $X$, $Y$ are collinear
+(which for example can be seen as a certain vanishing determinant)
+is a statement of degree at most $0+1+3=4$.
+Thus it suffices to find $5$ values of $X$
+(other than $X \in \ol{AB}$, which we used already).
+This is remarkably easy:
+\begin{enumerate}
+    \item When $X=U$ or $X=V$, then $X=C=D=Y$ and the statement is obvious.
+    \item When $X \in \ell_1$, say, then $A=C$ and so $Y$ lies on $AC=\ell_1$ as well.
+    The case $X \in \ell_2$ is symmetric.
+    \item Finally, take $X$ at infinity along $UV$.
+    Then $C$ and $D$ are the other tangency points
+    of the circles with $\ell_1$, $\ell_2$, and so $AC=\ell_1$, $BD=\ell_2$, so $Y=T$.
+\end{enumerate}
+This finishes the problem.

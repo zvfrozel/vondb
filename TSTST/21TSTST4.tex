@@ -1,0 +1,71 @@
+author: Holden Mui
+desc: Double quadratic
+hardness: 25
+source: TSTST 2021/4
+tags: [2021-12, manip, pigeonhole, dalet]
+url: https://aops.com/community/p23864177
+
+---
+
+Let $a$ and $b$ be positive integers.
+Suppose that there are infinitely many pairs of positive integers $(m, n)$
+for which $m^2+an+b$ and $n^2+am+b$ are both perfect squares.
+Prove that $a$ divides $2b$.
+
+---
+
+Treating $a$ and $b$ as fixed,
+we are given that there are infinitely many quadrpules $(m,n,r,s)$
+which satisfy the system
+\begin{gather*}
+  m^2+an+b=(m+r)^2 \\
+  n^2+am+b=(n+s)^2
+\end{gather*}
+We say that $(r,s)$ is \emph{exceptional}
+if there exists infinitely many $(m,n)$ that satisfy.
+
+\begin{claim*}
+  If $(r,s)$ is exceptional, then either
+  \begin{itemize}
+    \ii $0 < r < a/2$, and $0 < s < \frac14 a^2$; or
+    \ii $0 < s < a/2$, and $0 < r < \frac14 a^2$; or
+    \ii $r^2 + s^2 \le 2b$.
+  \end{itemize}
+  In particular, finitely many pairs $(r,s)$ can be exceptional.
+\end{claim*}
+
+\begin{proof}
+  Sum the two equations to get:
+  \[ r^2+s^2-2b = (a-2r)m + (a-2s)n. \qquad (\dagger) \]
+  If $0 < r < a/2$, then the idea is to use the bound
+  $an+b \ge 2m+1$ to get $m \le \frac{an+b-1}{2}$.
+  Consequently,
+  \[ (n+s)^2 = n^2+am+b \le n^2 + a \cdot \frac{an+b-1}{2} + b \]
+  For this to hold for infinitely many integers $n$,
+  we need $2s \le \frac{a^2}{2}$, by comparing coefficients.
+
+  A similar case occurs when $0 < s < a/2$.
+
+  If $\min(r,s) > a/2$, then $(\dagger)$ forces $r^2+s^2 \le 2b$,
+  giving the last case.
+\end{proof}
+
+Hence, there exists some particular pair $(r,s)$
+for which there are infinitely many solutions
+$(m,n)$. Simplifying the system gives
+\begin{gather*}
+  an = 2rm + r^2-b \\
+  2sn = am + b-s^2
+\end{gather*}
+Since the system is linear,
+for there to be infinitely many solutions $(m, n)$
+the system must be dependent.
+This gives \[\frac{a}{2s}=\frac{2r}{a}=\frac{r^2-b}{b-s^2}\]
+so $a = 2\sqrt{rs}$ and $b = \frac{s^2\sqrt{r}+r^2\sqrt{s}}{\sqrt{r}+\sqrt{s}}$.
+Since $rs$ must be square, we can reparametrize as $r=kx^2$, $s=ky^2$, and $\gcd(x, y)=1$.
+This gives
+\begin{align*}
+    a &= 2kxy \\
+    b &= k^2xy(x^2-xy+y^2).
+\end{align*}
+Thus, $a \mid 2b$, as desired.

@@ -1,0 +1,105 @@
+desc:  gcd and Psi commute
+author: Mark Sellke
+source:  USA TST 2016/3
+tags:  [criticalclaim, euclid, manysolutions, highermath, good, polynomial, primes, gimel]
+hardness: 30
+url: https://aops.com/community/p5679392
+
+---
+
+Let $p$ be a prime number. Let $\FF_p$ denote the integers modulo $p$,
+and let $\FF_p[x]$ be the set of polynomials with coefficients in $\FF_p$.
+Define $\Psi \colon \FF_p[x] \to \FF_p[x]$ by
+\[ \Psi\left( \sum_{i=0}^n a_i x^i \right) = \sum_{i=0}^n a_i x^{p^i}. \]
+Prove that for nonzero polynomials $F,G \in \FF_p[x]$,
+\[ \Psi(\gcd(F,G)) = \gcd(\Psi(F), \Psi(G)). \]
+%Here, a polynomial $Q$ divides $P$ if there exists $R \in \FF_p[x]$
+%such that $P(x) - Q(x) R(x)$ is the polynomial with all coefficients $0$
+%(with all addition and multiplication in the coefficients taken modulo $p$),
+%and the gcd of two polynomials is the highest degree polynomial
+%with leading coefficient $1$ which divides both of them.
+%A non-zero polynomial is a polynomial with not all coefficients $0$.
+%As an example of multiplication, $(x+1)(x+2)(x+3) = x^3+x^2+x+1$
+%in $\FF_5[x]$.
+
+---
+
+
+Observe that $\Psi$ is also a linear map of $\FF_p$ vector spaces,
+and that $\Psi(xP) = \Psi(P)^p$ for any $P \in \FF_p[x]$.
+(In particular, $\Psi(1) = x$, not $1$, take caution!)
+
+\paragraph{First solution (Ankan Bhattacharya).}
+We start with:
+\begin{claim*}
+  If $P \mid Q$ then $\Psi(P) \mid \Psi(Q)$.
+\end{claim*}
+\begin{proof}
+  Set $Q = PR$, where $R = \sum_{i=0}^k r_i x^i$.
+  Then
+  \[ \Psi(Q) = \Psi\left( P\sum_{i=0}^k r_i x^i \right)
+    = \sum_{i=0}^k \Psi\left( P \cdot r_i x^i  \right)
+    = \sum_{i=0}^k r_i \Psi(P)^{p^i} \]
+  which is divisible by $\Psi(P)$.
+\end{proof}
+
+This already implies
+\[ \Psi(\gcd(F,G)) \mid \gcd(\Psi(F), \Psi(G)). \]
+For the converse, by Bezout there exists $A,B \in \FF_p[x]$
+such that $AF + BG = \gcd(F,G)$, so taking $\Psi$ of both sides gives
+\[ \Psi(AF) + \Psi(BG) = \Psi\left( \gcd(F,G) \right). \]
+The left-hand side is divisible by $\gcd(\Psi(F), \Psi(G))$
+since the first term is divisible by $\Psi(F)$
+and the second term is divisible by $\Psi(G)$.
+So $\gcd(\Psi(F), \Psi(G)) \mid \Psi(\gcd(F,G))$
+and noting both sides are monic we are done.
+
+\paragraph{Second solution.}
+Here is an alternative (longer but more conceptual) way to finish without Bezout lemma.
+Let $\beth \subseteq \FF_p[x]$ denote the set of polynomials in the image of $\Psi$,
+thus $\Psi \colon \FF_p[x] \to \beth$ is a bijection on the level of sets.
+
+\begin{claim*}
+  If $A,B \in \beth$ then $\gcd(A,B) \in \beth$.
+\end{claim*}
+\begin{proof}
+  It suffices to show that if $A$ and $B$ are monic,
+  and $\deg A > \deg B$,
+  then the remainder when $A$ is divided by $B$ is in $\beth$.
+  Suppose $\deg A = p^k$ and $B = x^{p^{k-1}} - c_2x^{p^{k-2}} - \dots - c_k$.
+  Then
+  \begin{align*}
+    x^{p^k} &\equiv \left( c_2x^{p^{k-2}} + c_3x^{p^{k-3}}
+    + \dots + c_k  \right)^p \pmod B  \\
+    &\equiv c_2x^{p^{k-1}} + c_3x^{p^{k-2}} \dots + c_k \pmod B
+  \end{align*}
+  since exponentiation by $p$ commutes with addition in $\FF_p$.
+  This is enough to imply the conclusion.
+  The proof if $\deg B$ is smaller less than $p^{k-1}$ is similar.
+\end{proof}
+
+Thus, if we view $\FF_p[x]$ and $\beth$ as partially ordered sets
+under polynomial division, then $\gcd$ is the
+``greatest lower bound'' or ``meet'' in both partially ordered sets.
+We will now prove that $\Psi$ is an \emph{isomorphism} of the posets.
+We have already seen that $P \mid Q \implies \Psi(P) \mid \Psi(Q)$
+from the first solution. For the converse:
+
+\begin{claim*}
+  If $\Psi(P) \mid \Psi(Q)$ then $P \mid Q$.
+\end{claim*}
+\begin{proof}
+  Suppose $\Psi(P) \mid \Psi(Q)$, but $Q=PA+B$ where $\deg B < \deg P$.
+  Thus $\Psi(P) \mid \Psi(PA) + \Psi(B)$, hence $\Psi(P) \mid \Psi(B)$,
+  but $\deg \Psi(P) > \deg \Psi(B)$ hence $\Psi(B) = 0 \implies B = 0$.
+\end{proof}
+
+This completes the proof.
+
+\begin{remark*}
+   In fact $\Psi \colon \FF_p[x] \to \beth$ is a ring isomorphism
+   if we equip $\beth$ with function composition as the ring multiplication.
+   Indeed in the proof of the first claim
+   (that $P \mid Q \implies \Psi(P) \mid \Psi(Q)$) we saw that
+   \[ \Psi(RP) = \sum_{i=0}^k r_i \Psi(P)^{p^i} = \Psi(R) \circ \Psi(P). \]
+\end{remark*}

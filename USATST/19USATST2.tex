@@ -1,0 +1,237 @@
+author: Ashwin Sah, Yang Liu
+desc: Valiant functions
+source: USA TST 2019/2
+tags: [2018-12, find, mods, nice, global, manip, polynomial, exactsum, zayin]
+hardness: 40
+url: https://aops.com/community/p11419598
+
+---
+
+Let $\ZZ/n\ZZ$ denote the set of integers considered modulo $n$
+(hence $\ZZ/n\ZZ$ has $n$ elements).
+Find all positive integers $n$ for which there exists a bijective function
+$g \colon \ZZ/n\ZZ \to \ZZ/n\ZZ$,
+such that the $101$ functions
+\[ g(x), \quad g(x)+x, \quad g(x)+2x, \quad \dots, \quad g(x)+100x \]
+are all bijections on $\ZZ/n\ZZ$.
+
+---
+
+Call a function $g$ \emph{valiant} if it obeys this condition.
+We claim the answer is all numbers relatively prime to $101!$.
+
+The construction is to just let $g$ be the identity function.
+
+Before proceeding to the converse solution,
+we make a long motivational remark.
+\begin{remark*}
+  [Motivation for both parts]
+  The following solution is dense,
+  and it is easier to think about some small cases first,
+  to motivate the ideas.
+  We consider the result
+  where $101$ is replaced by $2$ or $3$.
+  \begin{itemize}
+    \ii If we replaced $101$ with $2$,
+    you can show $2 \nmid n$ easily: write
+    \[ \sum_x x \equiv \sum_x g(x) \equiv \sum_x (g(x) + x ) \pmod n \]
+    which implies
+    \[ 0 \equiv \sum_x x = \half n (n+1) \pmod n \]
+    which means $\half n(n+1) \equiv 0 \pmod n$, hence $n$ odd.
+    \ii If we replaced $101$ with $3$,
+    then you can try a similar approach using squares, since
+    \begin{align*}
+      0 &\equiv \sum_x \left[ \left( g(x)+2x \right)^2
+      - 2\left( g(x)+x \right)^2
+      + g(x)^2 \right] \pmod n\\
+      &= \sum_x 2x^2 = 2 \cdot \frac{n(n+1)(2n+1)}{6}
+    \end{align*}
+    which is enough to force $3 \nmid n$.
+  \end{itemize}
+\end{remark*}
+We now present several different proofs of the converse,
+all of which generalize the ideas contained here.
+In everything that follows we assume $n > 1$ for convenience.
+
+\paragraph{First solution (original one).}
+The proof is split into two essentially orthogonal claims,
+which we state as lemmas.
+\begin{lemma*}
+  [Lemma I: elimination of $g$]
+  Assume valiant $g \colon \ZZ/n\ZZ \to \ZZ/n\ZZ$ exists.
+  Then \[ k! \sum_{x \in \ZZ/n\ZZ} x^k \equiv 0 \pmod{n} \]
+  for $k = 0, 1, \dots, 100$.
+\end{lemma*}
+
+\begin{proof}
+  Define $g_x(T) = g(x) + Tx$ for any integer $T$.
+  If we view $g_x(T)^k$
+  as a polynomial in $\ZZ[T]$ of degree $k$
+  with leading coefficient $x^k$,
+  then taking the $k$th finite difference implies that,
+  for any $x$,
+  \[ k! x^k = \binom k0 g_x(k)^k
+    - \binom k1 g_x(k-1)^k  + \binom k2 g_x(k-2)^k - \dots
+    + (-1)^k \binom kk g_x(0)^k.  \]
+  On the other hand, for any $1 \le k \le 100$
+  we should have
+  \begin{align*}
+    \sum_x g_x(0)^k \equiv \sum_x g_x(1)^k
+    &\equiv \dots \equiv \sum_x g_x(k)^k \\
+    &\equiv S_k \coloneqq 0^k + \dots + (n-1)^k \pmod n
+  \end{align*}
+  by the hypothesis.
+  Thus we find
+  \[ k! \sum_x x^k
+    \equiv \left[ \binom k0 - \binom k1 + \binom k2 - \dotsb \right] S_k
+    \equiv 0 \pmod n \]
+  for any $1 \le k \le 100$, but also obviously for $k = 0$.
+\end{proof}
+
+We now prove the following self-contained lemma.
+\begin{lemma*}
+  [Lemma II: power sum calculation]
+  Let $p$ be a prime, and let $n$, $M$ be positive integers such that
+  \[ M \quad\text{ divides }\quad 1^k + 2^k + \dots + n^k \]
+  for $k = 0, 1, \dots, p-1$.
+  If $p \mid n$ then $\nu_p(M) < \nu_p(n)$.
+\end{lemma*}
+
+\begin{proof}
+  The hypothesis means that
+  that any polynomial $f(T) \in \ZZ[T]$
+  with $\deg f \le p-1$ will have $\sum_{x=1}^n f(x) \equiv 0 \pmod{M}$.
+  In particular, we have
+  \begin{align*}
+    0 &\equiv \sum_{x=1}^n (x-1)(x-2) \dotsm (x-(p-1)) \\
+    &= (p-1)! \sum_{x=1}^{n} \binom{x-1}{p-1}
+    = (p-1)! \binom np \pmod{M}.
+  \end{align*}
+  But now $\nu_p(M) \le \nu_p(\binom np) = \nu_p(n) - 1$.
+\end{proof}
+
+Now assume for contradiction that valiant
+$g \colon \ZZ/n\ZZ \to \ZZ/n\ZZ$ exists,
+and $p \le 101$ is the \emph{smallest} prime dividing $n$.
+Lemma I implies that $k! \sum_x x^k \equiv 0 \pmod n$
+for $k = 1, \dots, p-1$
+and hence $\sum_x x^k \equiv 0 \pmod n$ too.
+Thus $M = n$ holds in the previous lemma, impossible.
+
+\paragraph{A second solution.}
+Both lemmas above admit variations
+where we focus on working modulo $p^e$ rather than working modulo $n$.
+\begin{lemma*}
+  [Lemma I']
+  Assume valiant $g \colon \ZZ/n\ZZ \to \ZZ/n\ZZ$ exists.
+  Let $p \le 101$ be a prime, and $e = \nu_p(n)$.
+  Then \[ \sum_{x \in \ZZ/n\ZZ} x^k \equiv 0 \pmod{p^e} \]
+  for $k = 0, 1, \dots, p-1$.
+\end{lemma*}
+\begin{proof}
+  This is weaker than Lemma I,
+  but we give an independent specialized proof.
+  Begin by writing
+  \[ \sum_x \left( g(x) + Tx \right)^k \equiv \sum_x x^k \pmod{p^e}. \]
+  Both sides are integer polynomials in $T$,
+  which vanish at $T = 0, 1, \dots, p-1$ by hypothesis
+  (since $p-1 \le 100$).
+
+  We now prove the following more general fact:
+  if $f(T) \in \ZZ[T]$ is an integer polynomial with $\deg f \le p-1$,
+  such that $f(0) \equiv \dots \equiv f(p-1) \equiv 0 \pmod{p^e}$,
+  then all coefficients of $f$ are divisible by $p^e$.
+  The proof is by induction on $e \ge 1$.
+  When $e = 1$, this is just the assertion that
+  the polynomial has at most $\deg f$ roots modulo $p$.
+  When $e \ge 2$, we note that the previous result
+  implies all coefficients are divisible by $p$,
+  and then we divide all coefficients by $p$.
+
+  Applied here, we have that all coefficients of
+  \[ f(T) \coloneqq \sum_x \left( g(x) + Tx \right)^k - \sum_x x^k \]
+  are divisible by $p^e$.
+  The leading $T^k$ coefficient is $\sum_k x^k$ as desired.
+\end{proof}
+
+\begin{lemma*}
+  [Lemma II']
+  If $e \ge 1$ is an integer,
+  and $p$ is a prime, then
+  \[ \nu_p\left( 1^{p-1} + 2^{p-1} + \dots + (p^e-1)^{p-1}  \right)
+    = e-1. \]
+\end{lemma*}
+\begin{proof}
+  First, note that the cases where $p = 2$ or $e = 1$
+  are easy; since if $p = 2$ we have
+  $\sum_{x = 0}^{2^e - 1} x \equiv 2^{e - 1}(2^e - 1)
+    \equiv -2^{e - 1}\pmod{2^e}$,
+  while if $e = 1$ we have $1^{p-1} + \dots + (p-1)^{p-1} \equiv -1 \pmod p$.
+  Henceforth assume that $p > 2$, $e > 1$.
+
+  Let $g$ be an integer which is a primitive root modulo $p^e$.
+  Then, we can sum the terms which are relatively prime to $p$ as
+  \[ S_0 \coloneqq \sum_{\gcd(x,p) = 1} x^{p-1}
+    \equiv \sum_{i=1}^{\varphi(p^e)} g^{(p-1) \cdot i}
+    \equiv \frac{g^{p^{e-1}(p-1)^2} - 1}{g^{p-1}-1}
+    \pmod{p^e}
+  \]
+  which implies $\nu_p(S_0) = e-1$, by lifting the exponent.
+  More generally, for $r \ge 1$ we may set
+  \[ S_r \coloneqq \sum_{\nu_p(x) = r} x^{p-1}
+    \equiv (p^r)^{p-1} \sum_{i=1}^{\varphi(p^{e-r})}
+      g_r^{(p-1) \cdot i}
+    \pmod{p^e}
+  \]
+  where $g_r$ is a primitive root modulo $p^{e-r}$.
+  Repeating the exponent-lifting calculation
+  shows that $\nu_p(S_r) = r(p-1) + \left( (e-r)-1 \right) > e$,
+  as needed.
+\end{proof}
+
+Assume to the contrary that $p \le 101$ is a prime dividing
+$n$, and a valiant $g \colon \ZZ / n \ZZ \to \ZZ / n \ZZ$ exists.
+Take $k = p-1$ in Lemma I' to contradict Lemma II'
+
+\paragraph{A third remixed solution.}
+We use Lemma I and Lemma II' from before.
+As before, assume $g \colon \ZZ / n \ZZ \to \ZZ / n \ZZ$ is valiant,
+and $n$ has a prime divisor $p \le 101$.
+Also, let $e = \nu_p(n)$.
+
+Then $(p-1)! \sum_x x^{p-1} \equiv 0 \pmod{n}$ by Lemma I,
+and now
+\begin{align*}
+  0 & \equiv \sum_x x^{p-1} \pmod{p^e} \\
+  &\equiv \frac{n}{p^e} \sum_{x=1}^{p^e-1} x^{p-1} \not\equiv 0 \pmod{p^e}
+\end{align*}
+by Lemma II', contradiction.
+
+\paragraph{A fourth remixed solution.}
+We also can combine Lemma I' and Lemma II.
+As before, assume $g \colon \ZZ / n \ZZ \to \ZZ / n \ZZ$ is valiant,
+and let $p$ be the smallest prime divisor of $n$.
+
+Assume for contradiction $p \le 101$.
+By Lemma I' we have
+\[ \sum_x x^k \equiv 0 \pmod{p^e} \]
+for $k = 0, \dots, p-1$.
+This directly contradicts Lemma II with $M = p^e$.
+
+---
+
+
+\begin{remark*}
+  [Possible mistake]
+  It is tempting to try to take $k = \varphi(p^e)$,
+  but then $k > p-1$ and indeed we could have $k > 100$,
+  so this would not imply anything as the first lemma fails.
+\end{remark*}
+
+
+Finally, let $\alpha = \nu_p(n)$.
+Then taking $k = \varphi(p^\alpha)$ gives
+\[ \sum_{x=0}^{n-1} x^k
+  \equiv  \frac{n}{p^\alpha} \cdot \varphi(p^\alpha)
+  = n(1-1/p) \pmod{p^\alpha} \]
+which is not divisible by $p^\alpha$, contradiction.

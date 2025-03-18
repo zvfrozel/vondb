@@ -1,0 +1,139 @@
+
+desc: Bunbun hopping
+source: USA TST 2023/1
+url: https://aops.com/community/p26685816
+tags: [2022-12, find, bestpossible, global, equalitycase, aleph]
+author: Kevin Cong
+
+---
+
+There are $2022$ equally spaced points
+on a circular track $\gamma$ of circumference $2022$.
+The points are labeled $A_1$, $A_2$, \dots, $A_{2022}$ in some order, each label used once.
+Initially, Bunbun the Bunny begins at $A_1$.
+She hops along $\gamma$ from $A_1$ to $A_2$, then from $A_2$ to $A_3$,
+until she reaches $A_{2022}$, after which she hops back to $A_1$.
+When hopping from $P$ to $Q$, she always hops along the
+shorter of the two arcs $\arc{PQ}$ of $\gamma$;
+if $\ol{PQ}$ is a diameter of $\gamma$, she moves along either semicircle.
+
+Determine the maximal possible sum of the lengths of the $2022$ arcs
+which Bunbun traveled, over all possible labellings of the $2022$ points.
+
+---
+
+Replacing $2022$ with $2n$, the answer is $2n^2 - 2n + 2$.
+(When $n=1011$, the number is $2042222$.)
+
+\begin{center}
+  \begin{asy}
+    unitsize(48);
+    int n = 5;
+    int m = 2*n;
+    int[] a = {};
+    a.push(0);
+    for (int i = 1; i < m; ++i)
+      a.push(a[i-1] + (i % 2 > 0 ? n : n-1));
+
+    int[] b = new int[m];
+    pair[] B = new pair[m];
+    b.cyclic = true;
+    B.cyclic = true;
+    for (int i = 0; i < m; ++i) {
+      b[a[i]] = i+1;
+      B[i] = dir(a[i]*360/m);
+    }
+
+    draw(unitcircle);
+
+    for (int i = 0; i < m; ++i) {
+      draw(B[i]--B[i+1], gray(0.7));
+    }
+    for (int i = 0; i < m; ++i) {
+      pair P = dir(i*360/m);
+      dot((string) b[i], P, P);
+    }
+  \end{asy}
+  \hspace{3em}
+  \begin{asy}
+    unitsize(48);
+    int n = 5;
+    int m = 2*n;
+
+    draw(unitcircle);
+
+    for (int i = 0; i < m; ++i)
+      dot(dir(i*360/m));
+    for (int i = 0; i < n; ++i) {
+      pair P = dir(i*360/m + 180/m);
+      draw(scale(1.15) * (P--(-P)), red);
+    }
+  \end{asy}
+\end{center}
+
+\paragraph{Construction.}
+The construction for $n = 5$ shown on the left half of the figure
+easily generalizes for all $n$.
+\begin{remark*}
+  The validity of this construction
+  can also be seen from the below proof.
+\end{remark*}
+
+\paragraph{First proof of bound.}
+Let $d_i$ be the shorter distance from $A_{2i-1}$ to $A_{2i+1}$.
+\begin{claim*}
+The distance of the leg of the journey $A_{2i-1} \to A_{2i} \to A_{2i+1}$
+is at most $2n - d_i$.
+\end{claim*}
+\begin{proof}
+  Of the two arcs from $A_{2i-1}$ to $A_{2i+1}$,
+  Bunbun will travel either $d_i$ or $2n-d_i$.
+  One of those arcs contains $A_{2i}$ along the way.
+  So we get a bound of $\max(d_i, 2n-d_i) = 2n - d_i$.
+\end{proof}
+That means the total distance is at most
+\[ \sum_{i=1}^n \left( 2n - d_i \right)
+  = 2n^2 - (d_1 + d_2 + \dots + d_n). \]
+\begin{claim*}
+  We have \[ d_1 + d_2 + \dots + d_n \ge 2n-2. \]
+\end{claim*}
+\begin{proof}
+  The left-hand side is the sum of the walk
+  $A_1 \to A_3 \to \dots \to A_{2n-1} \to A_1$.
+  Among the $n$ points here, two of them must have distance at least $n-1$ apart;
+  the other $d_i$'s contribute at least $1$ each.
+  So the bound is $(n-1) + (n-1) \cdot 1 = 2n-2$.
+\end{proof}
+
+\paragraph{Second proof of bound.}
+Draw the $n$ diameters through the $2n$ arc midpoints,
+as shown on the right half of the figure for $n = 5$ in red.
+\begin{claim*}[Interpretation of distances]
+  The distance between any two points equals the number of diameters crossed to travel between the points.
+\end{claim*}
+\begin{proof}
+    Clear.
+\end{proof}
+
+With this in mind, call a diameter \emph{critical} if it is crossed by all $2n$ arcs.
+\begin{claim*}
+  At most one diameter is critical.
+\end{claim*}
+\begin{proof}
+  Suppose there were two critical diameters; these divide the circle into four arcs.
+  Then all $2n$ arcs cross both diameters, and so travel between opposite arcs.
+  But this means that points in two of the four arcs are never accessed --- contradiction.
+\end{proof}
+
+\begin{claim*}
+  Every diameter is crossed an even number of times.
+\end{claim*}
+\begin{proof}
+  Clear: the diameter needs to be crossed an even number of times for the loop to return to its origin.
+\end{proof}
+
+This immediately implies that the maximum possible total distance
+is achieved when one diameter is crossed all $2n$ times,
+and every other diameter is crossed $2n-2$ times,
+for a total distance of at most
+\[ n \cdot (2n-2) + 2 = 2n^2 - 2n + 2. \]

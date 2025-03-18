@@ -1,0 +1,166 @@
+desc: Dies to inversion, concurrence of $AA_2$ et al
+author: Evan Chen
+source: USA TST 2017/2
+tags: [2016-08, harmonic, spiralsim, mine, nice, inversion, rich, bet, well]
+hardness: 25
+url: https://aops.com/community/p7389108
+
+---
+
+Let $ABC$ be an acute scalene triangle with circumcenter $O$,
+and let $T$ be on line $BC$ such that $\angle TAO = 90\dg$.
+The circle with diameter $\ol{AT}$
+intersects the circumcircle of $\triangle BOC$ at two points
+$A_1$ and $A_2$, where $OA_1 < OA_2$.
+Points $B_1$, $B_2$, $C_1$, $C_2$ are defined analogously.
+\begin{enumerate}
+  \ii[(a)]
+  Prove that $\ol{AA_1}$, $\ol{BB_1}$, $\ol{CC_1}$ are concurrent.
+  \ii[(b)]
+  Prove that $\ol{AA_2}$, $\ol{BB_2}$, $\ol{CC_2}$ are concurrent
+  on the Euler line of triangle $ABC$.
+\end{enumerate}
+
+---
+
+Let triangle $ABC$ have circumcircle $\Gamma$.
+Let $\triangle XYZ$ be the tangential triangle of $\triangle ABC$
+(hence $\Gamma$ is the incircle of $\triangle XYZ$),
+and denote by $\Omega$ its circumcircle.
+Suppose the symmedian $\ol{AX}$ meets $\Gamma$ again at $D$,
+and let $M$ be the midpoint of $\ol{AD}$.
+Finally, let $K$ be the Miquel point of quadrilateral $ZBCY$,
+meaning it is the intersection of $\Omega$
+and the circumcircle of $\triangle BOC$ (other than $X$).
+
+\begin{center}
+\begin{asy}
+size(12cm);
+pair A = dir(115);
+pair B = dir(200);
+pair C = dir(340);
+draw(A--B--C--cycle, blue);
+filldraw(circumcircle(A, B, C), opacity(0.1)+lightblue, blue);
+pair O = circumcenter(A, B, C);
+
+pair X = 2*B*C/(B+C);
+pair Y = 2*C*A/(C+A);
+pair Z = 2*A*B/(A+B);
+
+filldraw(circumcircle(X, Y, Z), opacity(0.1)+lightcyan, cyan);
+draw(X--Y--Z--cycle, cyan);
+
+filldraw(circumcircle(B, O, C), opacity(0.1)+heavycyan, heavycyan);
+pair T = extension(Y, Z, B, C);
+draw(Z--T, lightcyan);
+draw(T--B, blue+dashed);
+
+pair D = -A+2*foot(O, A, X);
+pair U = foot(A, B, C);
+filldraw(circumcircle(T, A, U), opacity(0.1)+lightgreen, heavygreen);
+
+pair V = circumcenter(X, Y, Z);
+pair M = midpoint(A--D);
+pair L = IP(V--(Y+Z-V), circumcircle(X, Y, Z));
+pair K = extension(L, A, O, U);
+draw(A--X, heavycyan);
+draw(K--L, heavygreen+dashed);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$O$", O, dir(O));
+dot("$X$", X, dir(X));
+dot("$Y$", Y, dir(Y));
+dot("$Z$", Z, dir(Z));
+dot("$T$", T, dir(T));
+dot("$D$", D, dir(D));
+dot("$M$", M, dir(M));
+dot("$L$", L, dir(L));
+dot("$K$", K, dir(K));
+
+/* TSQ Source:
+
+!size(12cm);
+A = dir 115
+B = dir 200
+C = dir 340
+A--B--C--cycle blue
+circumcircle A B C 0.1 lightblue / blue
+O = circumcenter A B C
+
+X = 2*B*C/(B+C)
+Y = 2*C*A/(C+A)
+Z = 2*A*B/(A+B)
+
+circumcircle X Y Z 0.1 lightcyan / cyan
+X--Y--Z--cycle cyan
+
+circumcircle B O C 0.1 heavycyan / heavycyan
+T = extension Y Z B C
+Z--T lightcyan
+T--B blue dashed
+
+D = -A+2*foot O A X
+U := foot A B C
+circumcircle T A U 0.1 lightgreen / heavygreen
+
+V := circumcenter X Y Z
+M = midpoint A--D
+L = IP V--(Y+Z-V) circumcircle X Y Z
+K = extension L A O U
+A--X heavycyan
+K--L heavygreen dashed
+
+*/
+\end{asy}
+\end{center}
+
+We first claim that $M$ and $K$ are $A_1$ and $A_2$.
+In that case $OM < OA < OK$, so $M = A_1$, $K = A_2$.
+
+To see that $M = A_1$, note that $\angle OMX = 90\dg$,
+and moreover that $\ol{TA}$, $\ol{TD}$ are tangents to $\Gamma$,
+whence we also have $M = \ol{TO} \cap \ol{AD}$.
+Thus $M$ lies on both $(BOC)$ and $(AT)$.
+This solves part (a) of the problem:
+the concurrency point is the symmedian point of $\triangle ABC$.
+
+Now, note that since $K$ is the Miquel point,
+\[ \frac{ZK}{YK} = \frac{ZB}{YC} = \frac{ZA}{YA} \]
+and hence $\ol{KA}$ is an angle bisector of $\angle ZKY$.
+Thus from $(TA;YZ)=-1$ we obtain $\angle TKA = 90\dg$.
+
+It remains to show $\ol{AK}$ passes through a fixed point on the Euler line.
+We claim it is the exsimilicenter of $\Gamma$ and $\Omega$.
+Let $L$ be the midpoint of the arc $YZ$ of $\triangle XYZ$ not containing $X$.
+Then we know that $K$, $A$, $L$ are collinear.
+Now the positive homothety sending $\Gamma$ to $\Omega$ maps $A$ to $L$;
+this proves the claim.
+Finally, it is well-known that the line through $O$
+and the circumcenter of $\triangle XYZ$
+coincides with the Euler line of $\triangle ABC$;
+hence done.
+
+A second approach to (b) presented by many contestants
+is to take an inversion around the circumcircle of $ABC$.
+In that situation, the part reduces to the following
+known lemma: if $\ol{AH_a}$, $\ol{BH_b}$, $\ol{CH_c}$
+are the altitudes of a triangle,
+then the circumcircles of triangles $OAH_a$, $BOH_b$, $COH_c$
+are coaxial, and the radical axis coincides with the Euler line.
+Indeed one simply observes that the orthocenter
+has equal power to all three circles.
+
+\paragraph{Authorship comments.}
+This problem was inspired by the fact that $K$, $A$, $L$
+are collinear in the figure,
+which was produced by one of my students (Ryan Kim)
+in a solution to a homework problem.
+I realized for example that this implied that line $AK$
+passed through the $X_{56}$ point of $\triangle XYZ$
+(which lies on the Euler line of $\triangle ABC$).
+
+This problem was the result of playing around with
+the resulting very nice picture:
+all the power comes from the ``magic'' point $K$.

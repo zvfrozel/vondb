@@ -1,0 +1,85 @@
+author: Merlijn Staps
+desc: Coin divisions
+source: TSTST 2019/4
+tags: [2019-07, algorithm, find, bestpossible, nice, equalitycase, parity, aleph]
+hardness: 15
+url: https://aops.com/community/p12608513
+
+---
+
+Consider coins with positive real denominations not exceeding $1$.
+Find the smallest $C>0$ such that the following holds:
+if we are given any $100$ such coins
+with total value $50$, then we can
+always split them into two stacks
+of $50$ coins each such that the absolute difference
+between the total values of the two stacks is at most $C$.
+
+---
+
+The answer is $C = \frac{50}{51}$.
+The lower bound is obtained
+if we have $51$ coins of value $\frac{1}{51}$
+and $49$ coins of value $1$.
+(Alternatively, $51$ coins of value $1-\frac{\eps}{51}$
+and $49$ coins of value $\frac{\eps}{49}$ works fine for $\eps > 0$.)
+We now present two (similar)
+proofs that this $C = \frac{50}{51}$ suffices.
+
+\paragraph{First proof (original).}
+Let $a_1 \le \dots \le a_{100}$ denote the values of the coins in ascending order.
+Since the $51$ coins $a_{50}, \dots, a_{100}$ are worth at least $51 a_{50}$,
+it follows that $a_{50} \le \tfrac{50}{51}$;
+likewise $a_{51} \ge \tfrac{1}{51}$.
+
+We claim that choosing the stacks with coin values
+\[a_1, a_3, \dots, a_{49}, \quad a_{52}, a_{54}, \dots, a_{100}\]
+and
+\[a_2, a_4, \dots, a_{50}, \quad a_{51}, a_{53}, \dots, a_{99}\]
+works.
+Let $D$ denote the (possibly negative) difference between the two total values.
+Then
+\begin{align*}
+D & = (a_1-a_2) + \dots + (a_{49}-a_{50}) - a_{51} + (a_{52}-a_{53}) + \dots + (a_{98}-a_{99}) + a_{100}\\
+& \le 25 \cdot 0 - \frac{1}{51} + 24 \cdot 0 + 1 = \frac{50}{51}.
+\end{align*}
+Similarly, we have
+\begin{align*}
+D & = a_1 + (a_3-a_2) + \dots + (a_{49}-a_{48}) - a_{50} + (a_{52}-a_{51}) + \dots + (a_{100}-a_{99})\\
+& \ge 0 + 24 \cdot 0 - \frac{50}{51} + 25 \cdot 0 = - \frac{50}{51}.
+\end{align*}
+It follows that $|D| \le \tfrac{50}{51}$, as required.
+
+\paragraph{Second proof (Evan Chen).}
+Again we sort the coins in increasing order
+$0 < a_1 \le a_2 \le \dots \le a_{100} \le 1$.
+A \emph{large gap} is an index $i \ge 2$
+such that $a_i > a_{i-1} + \frac{50}{51}$;
+obviously there is at most one such large gap.
+
+\begin{claim*}
+If there is a large gap,
+it must be $a_{51} > a_{50} + \frac{50}{51}$.
+\end{claim*}
+\begin{proof}
+If $i < 50$ then we get $a_{50}, \dots, a_{100} > \frac{50}{51}$
+and the sum $\sum_1^{100} a_i > 50$ is too large.
+Conversely if $i > 50$ then we get
+$a_1, \dots, a_{i-1} < \frac{1}{51}$
+and the sum $\sum_1^{100} a_i < 1/51 \cdot 51 + 49$ is too small.
+\end{proof}
+
+Now imagine starting with the coins $a_1$, $a_3$, \dots, $a_{99}$,
+which have total value $S \le 25$.
+We replace $a_1$ by $a_2$,
+then $a_3$ by $a_4$, and so on,
+until we replace $a_{99}$ by $a_{100}$.
+At the end of the process we have $S \ge 25$.
+Moreover, since we did not cross a large gap at any point,
+the quantity $S$ changed by at most $C = \frac{50}{51}$ at each step.
+So at some point in the process we need to have $25-C/2 \le S \le 25+C/2$,
+which proves $C$ works.
+
+---
+
+Rejected EGMO 2017 at last moment

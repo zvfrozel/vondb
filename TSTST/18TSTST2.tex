@@ -1,0 +1,125 @@
+desc: Hamiltonian cycles on 2-regular digraph
+source: TSTST 2018/2
+tags: [2018-06, nice, linalg, parity, graph, bet]
+author: Victor Wang
+hardness: 15
+url: https://aops.com/community/p10570985
+
+---
+
+In the nation of Onewaynia,
+certain pairs of cities are connected by one-way roads.
+Every road connects exactly two cities
+(roads are allowed to cross each other, e.g., via bridges),
+and each pair of cities has at most one road between them.
+Moreover, every city has exactly two roads leaving it and
+exactly two roads entering it.
+
+We wish to close half the roads of Onewaynia in such a way that
+every city has exactly one road leaving it and exactly one road entering it.
+Show that the number of ways to do so is a power of $2$ greater than $1$
+(i.e.\ of the form $2^n$ for some integer $n \ge 1$).
+
+---
+
+In the language of graph theory, we have a simple digraph $G$
+which is 2-regular and we seek the
+number of sub-digraphs which are $1$-regular.
+We now present two solution paths.
+
+\paragraph{First solution, combinatorial.}
+We construct a simple undirected bipartite graph $\Gamma$ as follows:
+\begin{itemize}
+  \ii the vertex set consists of two copies of $V(G)$,
+  say $V_{\text{out}}$ and $V_{\text{in}}$; and
+  \ii for $v \in V_{\text{out}}$ and $w \in V_{\text{in}}$
+  we have an undirected edge $vw \in E(\Gamma)$
+  if and only if the directed edge $v \to w$ is in $G$.
+\end{itemize}
+Moreover, the desired sub-digraphs of $H$ correspond exactly
+to perfect matchings of $\Gamma$.
+
+However the graph $\Gamma$ is $2$-regular
+and hence consists of several disjoint (simple) cycles of even length.
+If there are $n$ such cycles, the number of perfect matchings
+is $2^n$, as desired.
+
+\begin{remark*}
+  The construction of $\Gamma$ is not as magical as it may first seem.
+
+  Suppose we pick a road $v_1 \to v_2$ to use.
+  Then, the other road $v_3 \to v_2$ is certainly \emph{not} used;
+  hence some other road $v_3 \to v_4$ must be used, etc.
+  We thus get a cycle of forced decisions until
+  we eventually return to the vertex $v_1$.
+
+  These cycles in the original graph $G$
+  (where the arrows alternate directions)
+  correspond to the cycles we found in $\Gamma$.
+  It's merely that phrasing the solution in terms of $\Gamma$
+  makes it cleaner in a linguistic sense,
+  but not really in a mathematical sense.
+\end{remark*}
+
+\paragraph{Second solution by linear algebra over $\FF_2$ (Brian Lawrence).}
+This is actually not that different from the first solution.
+For each edge $e$, we create an indicator variable $x_e$.
+We then require for each vertex $v$ that:
+\begin{itemize}
+  \ii If $e_1$ and $e_2$ are the two edges leaving $v$,
+  then we require $x_{e_1} + x_{e_2} \equiv 1 \pmod 2$.
+  \ii If $e_3$ and $e_4$ are the two edges entering $v$,
+  then we require $x_{e_3} + x_{e_4} \equiv 1 \pmod 2$.
+\end{itemize}
+We thus get a large system of equations.
+Moreover, the solutions come in natural pairs $\vec x$ and $\vec x + \vec 1$
+and therefore the number of solutions is either zero, or a power of two.
+So we just have to prove there is at least one solution.
+
+For linear algebra reasons, there can only be zero solutions
+if some nontrivial linear combination of the equations gives the sum $0 \equiv 1$.
+So suppose we added up some subset $S$ of the equations
+for which every variable appeared on the left-hand side an even number of times.
+Then every variable that did appear appeared exactly twice;
+and accordingly we see that the edges corresponding to these variables
+form one or more even cycles as in the previous solution.
+Of course, this means $|S|$ is even, so we really have $0 \equiv 0 \pmod 2$ as needed.
+
+\begin{remark*}
+  The author's original proposal contained a second part
+  asking to show that it was not always possible
+  for the resulting $H$ to be connected,
+  even if $G$ was strongly connected.
+  This problem is related to IMO Shortlist 2002 C6,
+  which gives an example of a strongly connected graph
+  which does have a full directed Hamiltonian cycle.
+\end{remark*}
+
+---
+
+%We wish to consider subgraphs $H$ for which each connected
+%component is strongly connected.
+%Notice, however that this requires every vertex to have
+%indegree and outdegree at least $1$ (with respect to $H$);
+%since $H$ has exactly half as many edges as $E$,
+%this can only occur if every indegree and outdegree is exactly $1$.
+%(Equivalently, we are looking for the number of ways
+%to partition $G$ into directed cycles.)
+
+%We say a sequence of edges is a \emph{wobbly cyclic trail}
+%if they are distinct and have the form
+%\[ v_1 \leftarrow w_1 \rightarrow v_2 \leftarrow w_2 \rightarrow v_3
+%  \leftarrow \dots
+%  \rightarrow v_m \leftarrow w_m \rightarrow v_1. \]
+%(We allow repeated vertices but not repeated edges.)
+%Note that every vertex is part of exactly two wobbly cycles,
+%one containing its two out-neighbors
+%and one containing its two in-neighbors.
+%In particular, we can fix a partition of
+%\[ E(G) = W_1 \sqcup W_2 \sqcup \dots \sqcup W_n \]
+%into wobbly cycles.
+
+%Then, a choice of half the edges of $E(G)$ with the desired
+%property is exactly a choice of
+%either the even or odd edges of each wobbly cycle.
+%In particular, there are exactly $2^n$ choices.

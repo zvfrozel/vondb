@@ -1,0 +1,484 @@
+author: Kevin Cong
+desc: Exsim $K$ of $(BME)$ and $(CMF)$ on $ABC$; $AK \perp BC$
+source: USA TST 2023/2
+url: https://aops.com/community/p26685484
+tags: [2022-12, inversion, anglechase, pop, config, good, gimel]
+
+---
+
+Let $ABC$ be an acute triangle.
+Let $M$ be the midpoint of side $BC$,
+and let $E$ and $F$ be the feet of the altitudes from $B$ and $C$, respectively.
+Suppose that the common external tangents
+to the circumcircles of triangles $BME$ and $CMF$ intersect at a point $K$,
+and that $K$ lies on the circumcircle of $ABC$.
+Prove that line $AK$ is perpendicular to line $BC$.
+
+---
+
+We present several distinct approaches.
+
+\paragraph{Inversion solution submitted by Ankan Bhattacharya and Nikolai Beluhov.}
+Let $H$ be the orthocenter of $\triangle ABC$.
+We use inversion in the circle with diameter $\ol{BC}$.
+We identify a few images:
+\begin{itemize}
+  \ii The circumcircles of $\triangle BME$ and $\triangle CMF$ are mapped to lines $BE$ and $CF$.
+  \ii The common external tangents are mapped to the two circles through $M$
+  which are tangent to lines $BE$ and $CF$.
+  \ii The image of $K$, denoted $K^\ast$, is the second intersection of these circles.
+  \ii The assertion that $K$ lies on $(ABC)$ is equivalent to $K^\ast$ lying on $(BHC)$.
+\end{itemize}
+However, now $K^\ast$ is simple to identify directly:
+it's just the reflection of $M$ in the bisector of $\angle BHC$.
+
+\begin{center}
+\begin{asy}
+size(12cm);
+
+pair B = dir(202.82);
+pair C = dir(337.18);
+pair A = dir(136);
+
+pair K = -B*C/A;
+pair E = foot(B, C, A);
+pair F = foot(C, A, B);
+draw(B--E, lightred);
+draw(C--F, lightred);
+draw(A--K, lightred);
+
+pair M = midpoint(B--C);
+filldraw(unitcircle, opacity(0.1)+yellow, red);
+filldraw(A--B--C--cycle, opacity(0.1)+yellow, red);
+filldraw(circumcircle(B, M, E), opacity(0.1)+cyan, grey);
+filldraw(circumcircle(C, M, F), opacity(0.1)+cyan, grey);
+
+pair O_2 = circumcenter(C, M, F);
+pair K_u = IP(CP(midpoint(K--O_2), K), CP(O_2, M));
+pair K_v = OP(CP(midpoint(K--O_2), K), CP(O_2, M));
+draw(K_u--K--K_v, grey);
+
+pair H = orthocenter(A, B, C);
+pair Q = foot(A, H, M);
+filldraw(circumcircle(B, H, C), opacity(0.1)+green, deepgreen);
+pair K_asterisk = ((2*foot(Q, B, C))-Q);
+
+draw(circumcircle(K_asterisk, B, M), dotted);
+draw(circumcircle(K_asterisk, C, M), dotted);
+
+clip(box((-2,-2),(2,2)));
+
+
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$A$", A, dir(A));
+dot("$K$", K, dir(K));
+dot("$E$", E, dir(70));
+dot("$F$", F, dir(55));
+dot("$M$", M, dir(285));
+dot("$H$", H, dir(315));
+dot("$K^{\ast}$", K_asterisk, dir(K_asterisk));
+
+/* -----------------------------------------------------------------+
+|                 TSQX: by CJ Quines and Evan Chen                  |
+| https://github.com/vEnhance/dotfiles/blob/main/py-scripts/tsqx.py |
++-------------------------------------------------------------------+
+!size(12cm);
+B = dir 202.82
+C = dir 337.18
+A = dir 136
+K = -B*C/A
+E 70= foot B C A
+F 55 = foot C A B
+B--E lightred
+C--F lightred
+A--K lightred
+M 285 = midpoint B--C
+unitcircle / 0.1 yellow / red
+A--B--C--cycle / 0.1 yellow / red
+circumcircle B M E / 0.1 cyan / grey
+circumcircle C M F / 0.1 cyan / grey
+O_2 := circumcenter C M F
+K_u := IP (CP (midpoint K--O_2) K) (CP O_2 M)
+K_v := OP (CP (midpoint K--O_2) K) (CP O_2 M)
+K_u--K--K_v / grey
+H 315 = orthocenter A B C
+Q := foot A H M
+circumcircle B H C / 0.1 green / deepgreen
+K& = (minus (mult 2 (foot Q B C)) Q)
+circumcircle K& B M / dotted
+circumcircle K& C M / dotted
+!clip(box((-2,-2),(2,2)));
+*/
+\end{asy}
+\end{center}
+
+In particular, $\ol{HK^\ast}$ is a symmedian of $\triangle BHC$.
+However, since $K^\ast$ lies on $(BHC)$,
+this means $(HK^\ast; BC) = -1$.
+
+Then, we obtain that $\ol{BC}$ bisects $\angle HMK^\ast \equiv \angle HMK$.
+However, $K$ also lies on $(ABC)$,
+which forces $K$ to be the reflection of $H$ in $\ol{BC}$.
+Thus $\ol{AK} \perp \ol{BC}$, as wanted.
+
+\paragraph{Solution with coaxial circles (Pitchayut Saengrungkongka).}
+
+Let $H$ be the orthocenter of $\triangle ABC$. Let $Q$ be the second intersection of $\odot(BME)$ and $\odot(CMF)$.
+We first prove the following well-known properties of $Q$.
+\begin{claim*}
+$Q$ is the Miquel point of $BCEF$. In particular, $Q$ lies on both $\odot(AEF)$ and $\odot(ABC)$.
+\end{claim*}
+
+\begin{proof}
+  Follows since $BCEF$ is cyclic with $M$ being the circumcenter.
+\end{proof}
+
+\begin{claim*}
+  $A(Q,H;B, C) = -1$.
+\end{claim*}
+
+\begin{proof}
+By the radical center theorem on $\odot(AEF)$, $\odot(ABC)$, and $\odot(BCEF)$,
+we get that $AQ$, $EF$, and $BC$ are concurrent. Now, the result follows from a
+well-known harmonic property.
+\end{proof}
+
+Now, we get to the meat of the solution. Let the circumcircle of
+$\odot(QMK)$ meet $BC$ again at $T\neq M$. The key claim is the following.
+\begin{claim*}
+$QT$ is tangent to $\odot(BQC)$.
+\end{claim*}
+\begin{proof}
+    We use the ``forgotten coaxiality lemma".
+    \begin{align*}
+	\frac{BT}{TC} &= \frac{TB\cdot TM}{TC\cdot TM} \\
+		      &= \frac{\operatorname{pow}(T, \odot(BME))}
+		      {\operatorname{pow}(T, \odot(CMF))} \\
+		      &= \frac{\operatorname{pow}(K, \odot(BME))}
+		      {\operatorname{pow}(K, \odot(CMF))} \\
+      &= \left(\frac{r_{\odot(BME)}}{r_{\odot(CMF)}}\right)^2 \\
+	&= \left(\frac{BQ/\sin\angle QMB}{CQ/\sin\angle QMC}\right)^2 \\
+	&= \frac{BQ^2}{CQ^2},
+\end{align*}
+implying the result.
+\end{proof}
+
+To finish, let $O$ be the center of $\odot(ABC)$. Then, from the claim, $\angle OQT = 90^\circ = \angle OMT$, so $O$ also lies on $\odot(QMTK)$.
+Thus, $\angle OKT=90^\circ$, so $KT$ is also tangent to $\odot(ABC)$ as well. This implies that $QBKC$ is harmonic quadrilateral, and the result follows from the second claim.
+
+\paragraph{Solution by Luke Robitaille.}
+Let $Q$ be the second intersection of $\odot(BME)$ and
+$\odot(CMF)$. We use the first two claims of the previous solution.
+In particular, $Q\in\odot(ABC)$. We have the following claim.
+\begin{claim*}[Also appeared in ISL 2017 G7]
+We have $\measuredangle QKM = \measuredangle QBM + \measuredangle QCM$.
+\end{claim*}
+\begin{proof}
+    Let $KQ$ and $KM$ meet $\odot(BME)$ again at $Q'$ and $M'$. Then, by homothety, $\measuredangle Q'QM' = \measuredangle QCM$, so
+    \begin{align*}
+        \measuredangle QKM
+	&= \measuredangle Q'QM' + \measuredangle QM'M \\
+	&= \measuredangle QCM + \measuredangle QBM,
+    \end{align*}
+    as desired.
+\end{proof}
+Now, we extend $KM$ to meet $\odot(ABC)$ again at $Q_1$. We have
+\begin{align*}
+    \measuredangle Q_1QB
+    = \measuredangle Q_1KB
+    &= \measuredangle Q_1KQ + \measuredangle QCB \\
+    &= \measuredangle MKQ + \measuredangle QKB \\
+    &= (\measuredangle MBQ + \measuredangle MCQ)
+	+ \measuredangle QCB \\
+    &= \measuredangle CBQ,
+\end{align*}
+implying that $QQ_1\parallel BC$. This implies that $QBKC$ is harmonic quadrilateral, so we are done.
+
+\paragraph{Synthetic solution due to Andrew Gu (Harvard 2026).}
+Define $O_1$ and $O_2$ as the circumcenters of $(BME)$ and $(CMF)$.
+Let $T$ be the point on $(ABC)$ such that $\ol{AT} \perp \ol{BC}$.
+Denote by $L$ the midpoint of minor arc $\arc{BC}$.
+
+We are going to ignore the condition that $K$ lies on the circumcircle of $ABC$,
+and prove the following unconditional result:
+\begin{proposition*}
+  The points $T$, $L$, $K$ are collinear.
+\end{proposition*}
+This will solve the problem because if $K$ is on the circumcircle of $ABC$,
+it follows $K = T$ or $K = L$; but $K = L$ can never occur
+since $O_1$ and $O_2$ are obviously on different sides of line $LM$
+so line $LM$ must meet $O_1 O_2$ inside segment $O_1 O_2$,
+and $K$ lies outside this segment.
+
+\begin{center}
+\begin{asy}
+size(14cm);
+
+pair B = dir(200);
+pair C = dir(340);
+pair A = dir(113);
+pair L = dir(270);
+
+pair T = -B*C/A;
+pair E = foot(B, C, A);
+pair F = foot(C, A, B);
+draw(B--E, lightred);
+draw(C--F, lightred);
+draw(A--T, lightred);
+
+pair M = midpoint(B--C);
+filldraw(unitcircle, opacity(0.1)+yellow, red);
+filldraw(A--B--C--cycle, opacity(0.1)+yellow, red);
+pair Q = foot(A, M, -A);
+filldraw(circumcircle(B, M, Q), opacity(0.1)+cyan, grey);
+filldraw(circumcircle(C, M, Q), opacity(0.1)+cyan, grey);
+
+pair O_2 = circumcenter(C, M, F);
+pair O_1 = circumcenter(B, M, E);
+pair P_2 = 2*O_2-M;
+pair P_1 = 2*O_1-M;
+draw(P_2--M--P_1, lightcyan);
+
+pair O = circumcenter(A, B, C);
+pair Q_2 = extension(A, B, M, O);
+pair Q_1 = extension(A, C, M, O);
+draw(L--Q_2--A, lightred);
+
+draw(B--Q_1, lightcyan);
+draw(C--Q_2, lightcyan);
+draw(B--P_1--Q_1, blue);
+draw(C--P_2--Q_2, blue);
+
+pair K = extension(L, T, O_1, O_2);
+pair K_u = IP(CP(midpoint(K--O_2), K), CP(O_2, M));
+pair K_v = OP(CP(midpoint(K--O_2), K), CP(O_2, M));
+draw(K_u--K--K_v, grey);
+draw(K--L, deepgreen);
+draw(K--O_2, grey);
+
+pair N = dir(90);
+draw(K--M, deepgreen);
+draw(A--N, deepgreen);
+
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$A$", A, dir(A));
+dot("$L$", L, dir(L));
+dot("$T$", T, dir(T));
+dot("$E$", E, dir(80));
+dot("$F$", F, dir(35));
+dot("$M$", M, dir(285));
+dot("$Q$", Q, dir(150));
+dot("$O_2$", O_2, dir(350));
+dot("$O_1$", O_1, dir(315));
+dot("$P_2$", P_2, dir(P_2));
+dot("$P_1$", P_1, dir(130));
+dot("$Q_2$", Q_2, dir(Q_2));
+dot("$Q_1$", Q_1, dir(45));
+dot("$K$", K, dir(K));
+dot("$N$", N, dir(45));
+
+/* -----------------------------------------------------------------+
+|                 TSQX: by CJ Quines and Evan Chen                  |
+| https://github.com/vEnhance/dotfiles/blob/main/py-scripts/tsqx.py |
++-------------------------------------------------------------------+
+!size(16cm);
+B = dir 200
+C = dir 340
+A = dir 113
+L = dir 270
+T = -B*C/A
+E 80 = foot B C A
+F 35 = foot C A B
+B--E lightred
+C--F lightred
+A--T lightred
+M 285 = midpoint B--C
+unitcircle / 0.1 yellow / red
+A--B--C--cycle / 0.1 yellow / red
+Q 150 = foot A M -A
+circumcircle B M Q / 0.1 cyan / grey
+circumcircle C M Q / 0.1 cyan / grey
+O_2 350 = circumcenter C M F
+O_1 315 = circumcenter B M E
+P_2 = 2*O_2-M
+P_1 130 = 2*O_1-M
+P_2--M--P_1 / lightcyan
+O := circumcenter A B C
+Q_2 = extension A B M O
+Q_1 45 = extension A C M O
+L--Q_2--A / lightred
+B--Q_1 / lightcyan
+C--Q_2 / lightcyan
+B--P_1--Q_1 / blue
+C--P_2--Q_2 / blue
+K = extension L T O_1 O_2
+K_u := IP (CP (midpoint K--O_2) K) (CP O_2 M)
+K_v := OP (CP (midpoint K--O_2) K) (CP O_2 M)
+K_u--K--K_v / grey
+K--L deepgreen
+K--O_2 / grey
+N 45 = dir 90
+K--M deepgreen
+A--N deepgreen
+*/
+\end{asy}
+\end{center}
+
+We now turn to the proof of the main lemma.
+Let $P_1$ and $P_2$ be the antipodes of $M$ on these circles.
+\begin{claim*}
+  Lines $AC$ and $LM$ meet at the antipode $Q_1$ of $B$ on $(BME)$,
+  so that $BP_1Q_1M$ is a rectangle.
+  Similarly,
+  lines $AB$ and $LM$ meet at the antipode $Q_2$ of $C$ on $(CMF)$,
+  so that $CP_2Q_2M$ is a rectangle.
+\end{claim*}
+\begin{proof}
+  Let $Q_1' = \omega_1 \cap AC \neq E$.
+  Then $\dang BMQ_1' = \dang BEQ_1' = 90^\circ$ hence $Q_1' \in LM$.
+  The other half of the lemma follows similarly.
+\end{proof}
+From this, it follows that $P_1Q_1 = BM = \half BC = MC = P_2Q_2$.
+Letting $r_1$ denote the radius of $\omega_1$
+(and similarly for $\omega_2$), we deduce that $CQ_1 = BQ_1 =  2r_1$.
+
+\begin{claim*}
+  $KM = KL$.
+\end{claim*}
+\begin{proof}
+  I first claim that $\ol{CL}$ is the external bisector of $\angle Q_1 C Q_2$;
+  this follows from
+  \[ \dang Q_1 C L = \dang ACL = \dang ABL = \dang Q_2 B L = \dang Q_2 C L. \]
+  The external angle bisector theorem then gives an equality of directed ratios
+  \[ \frac{LQ_1}{LQ_2} = \frac{|CQ_1|}{|CQ_2|} = \frac{|BQ_1|}{|CQ_2|}
+    = \frac{2r_1}{2r_2} = \frac{r_1}{r_2} \]
+  Let the reflection of $M$ over $K$ be $P$; then $P$ lies on $\ol{P_1P_2}$ and
+  \[ \frac{PP_1}{PP_2} = \frac{2KO_1}{2KO_2} = \frac{KO_1}{KO_2}
+    = \frac{r_1}{r_2} = \frac{LQ_1}{LQ_2} \]
+  where again the ratios are directed.
+  Projecting everything onto line $LM$, so that $P_1$ lands at $Q_1$
+  and $P_2$ lands at $Q_2$,
+  we find that the projection of $P$ must land exactly at $L$.
+\end{proof}
+
+\begin{claim*}
+  Line $KM$ is an external angle bisector of $\angle O_1MO_2$.
+\end{claim*}
+\begin{proof}
+  Because $\frac{KO_1}{KO_2} = \frac{r_1}{r_2} = \frac{MO_1}{MO_2}$.
+\end{proof}
+
+To finish, note that we know that
+$\ol{MP_1} \parallel \ol{CQ_1} \equiv \ol{AC}$
+and $\ol{MP_2} \parallel \ol{BQ_2} \equiv \ol{AB}$,
+meaning the angles $\angle O_1 M O_2$ and $\angle CAB$ have parallel legs.
+Hence, if $N$ is the antipode of $L$,
+it follows that $\ol{MK} \parallel \ol{AN}$.
+Now from $MK = KL$ and the fact that $ANLT$ is an isosceles trapezoid,
+we deduce that $\ol{LT}$ and $\ol{LK}$ are lines in the same direction
+(namely, the reflection of $MK \parallel AN$ across $\ol{BC}$), as needed.
+
+\paragraph{Complex numbers approach with Apollonian circles, by Carl Schildkraut.}
+We use complex numbers.
+As in the first approach, we will ignore the hypothesis that $K$ lies on $(ABC)$.
+
+Let $Q \coloneqq (AH) \cap (ABC) \cap (AEF) \neq A$
+be the Miquel point of $BFEC$ again.
+Construct the point $T$ on $(ABC)$ for which $AT\perp BC$;
+note that $T=-\frac{bc}a$.
+This time the unconditional result is:
+\begin{proposition*}
+  We have $Q$, $M$, $T$, $K$ are concyclic (or collinear)
+  on an Apollonian circle of $\ol{O_1O_2}$.
+\end{proposition*}
+This will solve the original problem since once $K$ lies on $(ABC)$
+it must be either $Q$ or $T$.
+But since $K$ is not on $(BME)$, $K\neq Q$, it will have to be $T$.
+
+We now prove the proposition.
+Suppose $(ABC)$ is the unit circle and let $A=a$, $B=b$, $C=c$.
+Let $H=a+b+c$ be the orthocenter of $\triangle ABC$.
+By the usual formulas,
+\[ E \coloneqq \half\left(a+b+c-\frac{bc}{a}\right). \]
+Let $O_1$ be the center of $(BME)$ and $O_2$ be the center of $(CMF)$.
+
+\begin{claim*}
+  [Calculation of the Miquel point]
+  We have $Q = \frac{2a+b+c}{a\left( \frac 1a + \frac 1b + \frac 1c \right)+1}$.
+\end{claim*}
+\begin{proof}
+  We now compute that $Q=q$ satisfies $\ol q=1/q$
+  (since $Q$ is on the unit circle)
+  and $\frac{q-h}{q-a}\in i\RR$ (since $AQ\perp QH$),
+  which expands to
+  \[0=\frac{q-h}{q-a}+\frac{1/q-\ol h}{1/q-1/a}
+    =\frac{q-h}{q-a}-\frac{a(1-q\ol h)}{q-a}.\]
+  This solves to $q=\frac{h+a}{a\ol h+1}=\frac{2a+b+c}{a\ol h+1}$.
+\end{proof}
+
+\begin{claim*}
+  [Calculation of $O_1$ and $O_2$]
+  We have $O_1 = \frac{b(2a+b+c)}{2(a+b)}$
+  and $O_2 = \frac{c(2a+b+c)}{2(a+c)}$.
+\end{claim*}
+\begin{proof}
+  We now compute $O_1$ and $O_2$.
+  For $x,y,z\in\CC$, let $\opname{Circum}(x,y,z)$
+  denote the circumcenter of the triangle
+  defined by vertices $x$, $y$, and $z$ in $\CC$. We have
+  \begin{align*}
+  O_1&=\opname{Circum}(B,M,E)\\
+  &=b+\frac12\opname{Circum}\left(0,c-b,\frac{(a-b)(b-c)}b\right)\\
+  &=b-\frac{b-c}{2b}\opname{Circum}\left(0,b,b-a\right)\\
+  &=b-\frac{b-c}{2b}\left(b-\opname{Circum}\left(0,b,a\right)\right)\\
+  &=b-\frac{b-c}{2b}\left(b-\frac{ab}{a+b}\right)=b-\frac{b(b-c)}{2(a+b)}=\frac{b(2a+b+c)}{2(a+b)}.
+  \end{align*}
+  Similarly, $O_2=\frac{c(2a+b+c)}{2(a+c)}$.
+\end{proof}
+
+We are now going to prove the following:
+\begin{claim*}
+  We have
+  \[\frac{TO_1}{TO_2}=\frac{MO_1}{MO_2}=\frac{QO_1}{QO_2}.\]
+\end{claim*}
+\begin{proof}
+  We now compute
+  \[MO_1=BO_1=\left|b-\frac{b(2a+b+c)}{2(a+b)}\right|
+    =\left|\frac{b(b-c)}{2(a+b)}\right|=\frac12\left|\frac{b-c}{a+b}\right|\]
+  and
+  \[QO_1=\left|r-\frac{b(2a+b+c)}{2(a+b)}\right|
+    =\left|1-\frac{b(a+h)}{2(a+b)r}\right|=\left|1-\frac{b(a\ol h+1)}{2(a+b)}\right|
+    =\left|\frac{a-\frac{ab}c}{2(a+b)}\right|=\frac12\left|\frac{b-c}{a+b}\right|.\]
+  This implies both (by symmetry) that
+  $\frac{MO_1}{MO_2}=\frac{QO_1}{QO_2}=\big|\frac{a+c}{a+b}\big|$
+  and that $Q$ is on $(BME)$ and $(CMF)$.
+  Also,
+  \[\frac{TO_1}{TO_2}
+    =\frac{\left|\frac{b(2a+b+c)}{2(a+b)}+\frac{bc}a\right|}%
+    {\left|\frac{c(2a+b+c)}{2(a+c)}+\frac{bc}a\right|}
+    =\left|\frac{\frac{b(2a^2+ab+ac+2ac+2bc)}{2a(a+b)}}{\frac{c(2a^2+ab+ac+2ab+2bc)}{2a(a+c)}}\right|
+    =\left|\frac{a+c}{a+b}\right|\cdot\left|\frac{2a^2+2bc+ab+3ac}{2a^2+2bc+3ab+ac}\right|;\]
+  if $z=2a^2+2bc+ab+3ac$, then $a^2bc\ol z=2a^2+2bc+3ab+ac$, so the second
+  term has magnitude $1$.
+  This means $\frac{TO_1}{TO_2}=\frac{MO_1}{MO_2}=\frac{QO_1}{QO_2}$, as desired.
+\end{proof}
+
+To finish, note that this common ratio is the ratio between the radii
+of these two circles, so it is also $\frac{KO_1}{KO_2}$.
+By Apollonian circles the points $\{Q,M,T,K\}$ lie on a circle or a line.
+
+---
+
+%\paragraph{Sketch of approach by author.}
+%It is not difficult to prove that $(BME)$ and $(CMF)$
+%intersect at $M$ and the Miquel Point $Q$ of $BCEF$.
+%Use the same point definitions as in the first solutions and set $QL$ to
+%intersect $(BME)$, $(CMF)$ at $U,V \neq Q$. With some work, one can show
+%that $BU \parallel CV$ and $\frac{BU}{CV} = \frac{r_1}{r_2}$. It follows via an
+%easy configuration analysis that in fact $BU$ maps to $CV$ under the natural
+%homothety centered at $K$. The desired statement then follows from a combination
+%of phantom points and ratio calculations via parallel lines and Menelaus (note
+%that $BU \parallel CV \parallel LT$)
+%which proves both the main claims as in the first solution.

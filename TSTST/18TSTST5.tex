@@ -1,0 +1,189 @@
+author: Ankan Bhattacharya, Evan Chen
+desc: Show that $E_1 F_1 = E_2 F_2$
+source: TSTST 2018/5
+tags: [2018-06, anglechase, spiralsim, pop, criticalclaim, rich, nice, dalet]
+hardness: 20
+url: https://aops.com/community/p10571000
+
+---
+
+Let $ABC$ be an acute triangle with circumcircle $\omega$,
+and let $H$ be the foot of the altitude from $A$ to $\ol{BC}$.
+Let $P$ and $Q$ be the points on $\omega$ with $PA = PH$ and $QA = QH$.
+The tangent to $\omega$ at $P$ intersects lines $AC$ and $AB$
+at $E_1$ and $F_1$ respectively; the tangent to $\omega$ at $Q$
+intersects lines $AC$ and $AB$ at $E_2$ and $F_2$ respectively.
+Show that the circumcircles of $\triangle AE_1F_1$ and $\triangle AE_2F_2$
+are congruent, and the line through their centers
+is parallel to the tangent to $\omega$ at $A$.
+
+---
+
+Let $O$ be the center of $\omega$,
+and let $M = \ol{PQ} \cap \ol{AB}$ and $N = \ol{PQ} \cap \ol{AC}$
+be the midpoints of $\ol{AB}$ and $\ol{AC}$ respectively.
+Refer to the diagram below.
+
+\begin{center}
+\begin{asy}
+size(9cm);
+pair A, B, C, O, M, N, P, Q, E1, F1, E2, F2, O1, O2;
+A = dir(105); B = dir(190); C = dir(350);
+//A = dir(160); B = dir(250); C = dir(290);
+O = origin;
+M = (A + B)/2; N = (A + C)/2;
+P = point(unitcircle, intersections(unitcircle, M, N)[1]);
+Q = point(unitcircle, intersections(unitcircle, M, N)[0]);
+E1 = extension(A, C, P, rotate(90, P) * origin);
+F1 = extension(A, B, P, rotate(90, P) * origin);
+E2 = extension(A, C, Q, rotate(90, Q) * origin);
+F2 = extension(A, B, Q, rotate(90, Q) * origin);
+O1 = circumcenter(A, E1, F1);
+O2 = circumcenter(A, E2, F2);
+fill(O--P--E1--cycle^^O--Q--E2--cycle, lightblue + opacity(0.5));
+fill(O--P--F1--cycle^^O--Q--F2--cycle, lightred + opacity(0.5));
+draw(A--E1^^A--F2^^B--F1^^C--E2, gray(0.5));
+draw(O--P^^O--Q^^O--M^^O--N, gray(0.5));
+draw(E1--F1^^E2--F2);
+draw(arc(O1, F1, E1)^^arc(O2, F2, E2), dashed);
+draw(unitcircle);
+draw(A--B--C--cycle);
+draw(P--Q);
+
+dot("$A$", A, dir(60));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$O$", O, dir(200));
+dot("$M$", M, dir(120));
+dot("$N$", N, dir(60));
+dot("$P$", P, dir(P));
+dot("$Q$", Q, dir(Q));
+dot("$E_1$", E1, dir(P));
+dot("$F_1$", F1, dir(P));
+dot("$E_2$", E2, dir(Q));
+dot("$F_2$", F2, dir(Q));
+\end{asy}
+\end{center}
+
+The main idea is to prove two key claims involving $O$,
+which imply the result:
+\begin{enumerate}[(i)]
+  \ii quadrilaterals $AOE_1F_1$ and $AOE_2F_2$ are cyclic
+  (giving the radical axis is $\ol{AO}$),
+  \ii $\triangle OE_1F_1 \cong \triangle OE_2F_2$
+  (giving the congruence of the circles).
+\end{enumerate}
+We first note that (i) and (ii) are equivalent.
+Indeed, because $OP = OQ$, (ii)
+is equivalent to just the similarity $\triangle OE_1F_1 \sim \triangle OE_2F_2$,
+and then by the spiral similarity lemma
+(or even just angle chasing) we have (i) $\iff$ (ii).
+
+We now present five proofs, two of (i) and three of (ii).
+Thus, we are essentially presenting five different solutions.
+%Thus the line through the centers mentioned in the problem
+%is the perpendicular bisector of $\ol{AO}$.
+%We provide two solutions below.
+
+\paragraph{Proof of (i) by angle chasing.}
+Note that
+\[ \dang F_2E_2O = \dang QE_2O = \dang QNO = \dang MNO
+  = \dang MAO = \dang F_2AO \]
+and hence $E_2OAF_2$ is cyclic.
+Similarly, $E_1OAF_1$ is cyclic.
+
+\paragraph{Proof of (i) by Simson lines.}
+Since $P$, $M$, $N$ are collinear,
+we see that $\ol{PMN}$ is the Simson line of $O$
+with respect to $\triangle AE_1F_1$.
+
+\paragraph{Proof of (ii) by butterfly theorem.}
+By using the \textbf{Butterfly Theorem}
+on the three chords $\ol{AC}$, $\ol{PQ}$, $\ol{PQ}$ concurring at the midpoint $N$
+of $\ol{AC}$, it follows that $E_1N = NE_2$
+(since $E_1 = \ol{PP} \cap \ol{AC}$, $E_2 = \ol{QQ} \cap \ol{AC}$).
+Thus \[ E_1P = \sqrt{E_1A \cdot E_1C} = \sqrt{E_2A \cdot E_2C} = E_2P. \]
+But also $OP = OQ$ and hence
+$\triangle OPE_1 \cong \triangle OQE_2$.
+Similarly for the other pair.
+
+\paragraph{Proof of (ii) by projective geometry.}
+Let $T = \ol{PP} \cap \ol{QQ}$.
+Let $S$ be on $\ol{PQ}$ with $\ol{ST} \parallel \ol{AC}$;
+then $\ol{TS} \perp \ol{ON}$,
+and it follows $\ol{ST}$ is the polar of $N$
+(it passes through $T$ by La Hire).
+
+Now, \[ -1 = (PQ;NS) \overset{T}{=} (E_1E_2;N\infty) \]
+with $\infty = \ol{AC} \cap \ol{ST}$ the point at infinity.
+Hence $E_1 N = N E_2$ and we can proceed as in the previous solution.
+
+%Note that $\angle E_1PO = \angle E_1NO = 90^{\circ}$; hence $O \in \odot(E_1PN)$. Similarly $O \in \odot(E_2QN)$; by the spiral similarity lemma, $\triangle OPE_1 \stackrel{+}{\sim} \triangle OQE_2$. Since $OP = OQ$, $\triangle OPE_1 \stackrel{+}{\cong} \triangle OQE_2$. Similarly $\triangle OPF_1 \stackrel{+}{\cong} \triangle OQF_2$, so $\triangle OE_1F_1 \stackrel{+}{\cong} \triangle OE_2F_2$.
+%
+%By the converse of the spiral similarity lemma, $O$ lies on $\odot(AE_1F_1)$ and $\odot(AE_2F_2)$. Since $\triangle OE_1F_1 \cong \triangle OE_2F_2$, the circumcircles are congruent. The circumcircles share common chord $\ol{AO}$; thus the line joining their centers is parallel to the tangent to $\omega$ at $A$.
+
+\begin{remark*}
+The assumption that $\triangle ABC$ is acute is not necessary; it is only present to ensure that $P$ lies on segment $E_1F_1$ and $Q$ lies on segment $E_2F_2$, which may be helpful for contestants. The argument presented above is valid in all configurations. When one of $\angle B$ and $\angle C$ is a right angle, some of the points $E_1$, $F_1$, $E_2$, $F_2$ lie at infinity; when one of them is obtuse, both $P$ and $Q$ lie outside segments $E_1F_1$ and $E_2F_2$ respectively.
+\end{remark*}
+
+\paragraph{Proof of (ii) by complex numbers.}
+We will give using complex numbers on $\triangle ABC$
+a proof that $|E_1P| = |E_2Q|$.
+
+We place $APBCQ$ on the unit circle.
+Since $\ol{PQ} \parallel \ol{BC}$, we have $pq = bc$.
+Also, the midpoint of $\ol{AB}$ lies on $\ol{PQ}$, so
+\begin{align*}
+  p+q
+  &= \frac{a+b}{2} + \ol{\left( \frac{a+b}{2} \right)} \cdot pq \\
+  &= \frac{a+b}{2} + \frac{a+b}{2ab} \cdot bc \\
+  &= \frac{a(a+b)}{2a} + \frac{c(a+b)}{2a} \\
+  &= \frac{(a+b)(a+c)}{2a}.
+\end{align*}
+Now,
+\begin{align*}
+  p-e_1 &= p - \frac{pp(a+c)-ac(p+p)}{pp-ac} \\
+  &= \frac{p(p^2-p(a+c)+ac)}{pp-ac} = \frac{(p-a)(p-c)}{p^2-ac}. \\
+  |PE_1|^2 &= (p-e_1) \cdot \ol{p-e_1} =
+  \frac{(p-a)(p-c)}{p^2-ac} \cdot
+  \frac{(\frac1p-\frac1a)(\frac1p-\frac1c)}{\frac{1}{p^2}-\frac{1}{ac}} \\
+  &= -\frac{(p-a)^2(p-c)^2}{(p^2-ac)^2}. \\
+  \intertext{Similarly,}
+  |QE_2|^2 &= -\frac{(q-a)^2(q-c)^2}{(q^2-ac)^2}.
+\end{align*}
+But actually, we claim that
+\[ \frac{(p-a)(p-c)}{p^2-ac} = \frac{(q-a)(q-c)}{q^2-ac}. \]
+One calculates
+\[ (p-a)(p-c)(q^2-ac)
+  = p^2q^2 - pq^2a - pq^2c + q^2ac
+  - p^2ac + pa^2c + pac^2 - (ac)^2 \]
+Thus $(p-a)(p-c)(q^2-ac) - (q-a)(q-c)(p^2-ac)$
+is equal to
+\begin{align*}
+  -(a+c)(pq) &(q-p) + (q^2-p^2)ac - (p^2-q^2)ac + ac(a+c)(p-q) \\
+  &= (p-q)
+  \left[ (a+c)pq - 2(p+q)ac + ac(a+c) \right] \\
+  &= (p-q)
+  \left[ (a+c)bc - 2 \cdot \frac{(a+b)(a+c)}{2a} \cdot ac + ac(a+c) \right] \\
+  &= (p-q)(a+c) \left[ bc - c(a+b) + ac \right] = 0.
+\end{align*}
+This proves $|E_1P| = |E_2Q|$.
+Together with the similar $|F_1P| = |F_2Q|$, we have proved (ii).
+
+\paragraph{Authorship comments.}
+Ankan provides an extensive
+dialogue at \url{https://aops.com/community/c6h1664170p10571644}
+of how he came up with this problem,
+which at first was intended just to be an AMC-level question
+about an equilateral triangle.
+Here, we provide just the change-log of the versions of this problem.
+\begin{enumerate}
+  \ii[0.] (\emph{Original version}) Let $ABC$ be an equilateral triangle with side 2 inscribed in circle $\omega$, and let $P$ be a point on small arc $AB$ of its circumcircle. The tangent line to $\omega$ at $P$ intersects lines $AC$ and $AB$ at $E$ and $F$. If $PE = PF$, find $EF$.
+  (Answer: $4$.)
+  \ii (\emph{Generalize to isosceles triangle}) Let $ABC$ be an isosceles triangle with $AB = AC$, and let $M$ be the midpoint of $\ol{BC}$. Let $P$ be a point on the circumcircle with $PA = PM$. The tangent to the circumcircle at $P$ intersects lines $AC$ and $AB$ at $E$ and $F$, respectively. Show that $PE = PF$.
+  \ii (\emph{Block coordinate bashes}) Let $ABC$ be an isosceles triangle with $AB = AC$ and circumcircle $\omega$, and let $M$ be the midpoint of $\ol{BC}$. Let $P$ be a point on $\omega$ with $PA = PM$. The tangent to $\omega$ at $P$ intersects lines $AC$ and $AB$ at $E$ and $F$, respectively. Show that the circumcircle of $\triangle AEF$ passes through the center of $\omega$.
+  \ii (\emph{Delete isosceles condition}) Let $ABC$ be a triangle with circumcircle $\omega$, and let $H$ be the foot of the altitude from $A$ to $\ol{BC}$. Let $P$ be a point on $\omega$ with $PA = PH$. The tangent to $\omega$ at $P$ intersects lines $AC$ and $AB$ at $E$ and $F$, respectively. Show that the circumcircle of $\triangle AEF$ passes through the center of $\omega$.
+  \ii (\emph{Add in both tangents}) Let $ABC$ be an acute triangle with circumcircle $\omega$, and let $H$ be the foot of the altitude from $A$ to $\ol{BC}$. Let $P$ and $Q$ be the points on $\omega$ with $PA = PH$ and $QA = QH$. The tangent to $\omega$ at $P$ intersects lines $AC$ and $AB$ at $E_1$ and $F_1$ respectively; the tangent to $\omega$ at $Q$ intersects lines $AC$ and $AB$ at $E_2$ and $F_2$ respectively. Show that $E_1F_1 = E_2F_2$.
+  \ii (\emph{Merge v3 and v4}) Let $ABC$ be an acute triangle with circumcircle $\omega$, and let $H$ be the foot of the altitude from $A$ to $\ol{BC}$. Let $P$ and $Q$ be the points on $\omega$ with $PA = PH$ and $QA = QH$. The tangent to $\omega$ at $P$ intersects lines $AC$ and $AB$ at $E_1$ and $F_1$ respectively; the tangent to $\omega$ at $Q$ intersects lines $AC$ and $AB$ at $E_2$ and $F_2$ respectively. Show that the circumcircles of $\triangle AE_1F_1$ and $\triangle AE_2F_2$ are congruent, and the line through their centers is parallel to the tangent to $\omega$ at $A$.
+\end{enumerate}
+The problem bears Evan's name only because he suggested the changes v2 and v5.

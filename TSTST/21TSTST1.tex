@@ -1,0 +1,416 @@
+author: Holden Mui
+desc: $OX=OY$
+source: TSTST 2021/1
+tags: [2021-11, nice, anglechase, pop, aleph]
+url: https://aops.com/community/p23586650
+
+---
+
+Let $ABCD$ be a quadrilateral inscribed in a circle with center $O$.
+Points $X$ and $Y$ lie on sides $AB$ and $CD$, respectively.
+Suppose the circumcircles of $ADX$ and $BCY$
+meet line $XY$ again at $P$ and $Q$, respectively.
+Show that $OP=OQ$.
+
+---
+
+We present many solutions.
+
+\paragraph{First solution, angle chasing only (Ankit Bisain).}
+Let lines $BQ$ and $DP$ meet $(ABCD)$ again at $D'$ and $B'$, respectively.
+\begin{center}
+\begin{asy}[width = 0.5\textwidth]
+path omega = circle((0, 0), 1);
+pair A = dir(70);
+pair B = dir(180);
+pair C = dir(200);
+pair D = dir(340);
+pair O = (0, 0);
+
+real x = 0.2;
+real y = 0.3;
+pair X = (1-x) * A + x * B;
+pair Y = (1-y) * C + y * D;
+
+pair P = 2 * foot(circumcenter(A, D, X), X, Y) - X;
+pair Q = 2 * foot(circumcenter(B, C, Y), X, Y) - Y;
+
+dot("$A$", A, A);
+dot("$B$", B, B);
+dot("$C$", C, C);
+dot("$D$", D, D);
+dot("$O$", O, -dir(A+B+C+D));
+dot("$X$", X, dir(A+B));
+dot("$Y$", Y, dir(C+D));
+dot("$P$", P, dir(30));
+dot("$Q$", Q, dir(-60));
+
+draw(omega);
+draw(A -- B -- C -- D -- cycle);
+draw(circumcircle(A, D, X));
+draw(circumcircle(B, C, Y));
+draw(X -- Y);
+draw(P -- O -- Q, dotted);
+
+pair Bp = 2 * foot(B, O, foot(O, X, Y)) - B;
+dot("$B'$", Bp, dir(Bp));
+pair Dp = 2 * foot(D, O, foot(O, X, Y)) - D;
+dot("$D'$", Dp, dir(300));
+
+draw(B -- Dp -- D -- Bp -- cycle, dashed);
+\end{asy}
+\end{center}
+Then $BB' \parallel PX$ and $DD' \parallel QY$ by Reim's theorem. Segments
+$BB', DD'$, and $PQ$ share a perpendicular bisector which passes through $O$, so
+$OP=OQ$.
+
+\paragraph{Second solution via isosceles triangles (from contestants).}
+Let $T = \ol{BQ} \cap \ol{DP}$.
+\begin{center}
+\begin{asy}
+  size(200);
+  path omega = circle((0, 0), 1);
+  pair A = dir(70);
+  pair B = dir(180);
+  pair C = dir(200);
+  pair D = dir(340);
+  pair O = (0, 0);
+
+  real x = 0.2;
+  real y = 0.3;
+  pair X = (1-x) * A + x * B;
+  pair Y = (1-y) * C + y * D;
+
+  pair P = 2 * foot(circumcenter(A, D, X), X, Y) - X;
+  pair Q = 2 * foot(circumcenter(B, C, Y), X, Y) - Y;
+
+  pair T = extension(B, Q, D, P);
+
+  dot("$A$", A, A);
+  dot("$B$", B, dir(135));
+  dot("$C$", C, C);
+  dot("$D$", D, 2*dir(5));
+  dot("$O$", O, dir(60));
+  dot("$X$", X, dir(A+B));
+  dot("$Y$", Y, dir(C+D));
+  dot("$P$", P, dir(30));
+  dot("$Q$", Q, dir(-60));
+  dot("$T$", T, dir(240));
+
+  draw(omega);
+  draw(A -- B -- C -- D -- cycle);
+  draw(circumcircle(A, D, X));
+  draw(circumcircle(B, C, Y));
+  draw(X -- Y);
+  draw(P -- O -- Q, dotted);
+  draw(B -- T -- P, dashed);
+
+  pair O1 = circumcenter(B, O, D);
+  real r = abs(O1 - O);
+  draw(arc(O1, r, 45, 120), dashed);
+\end{asy}
+\end{center}
+Note that $PQT$ is isosceles because
+\[ \dang PQT = \dang YQB = \dang BCD = \dang BAD = \dang XPD = \dang TPQ.  \]
+Then $(BODT)$ is cyclic because
+\[\dang BOD = 2 \dang BCD = \dang PQT + \dang TPQ = \dang BTD.\]
+Since $BO=OD$, $\ol{TO}$ is an angle bisector of $\dang BTD$. Since $\triangle PQT$ is isosceles, $\ol{TO} \perp \ol{PQ}$, so $OP = OQ$.
+
+\paragraph{Third solution using a parallelogram (from contestants).}
+Let $(BCY)$ meet $\ol{AB}$ again at $W$ and let $(ADX)$ meet $\ol{CD}$ again at $Z$. Additionally, let $O_1$ be the center of $(ADX)$ and $O_2$ be the center of $(BCY)$.
+\begin{center}
+\begin{asy}
+size(200);
+path omega = circle((0, 0), 1);
+pair A = dir(70);
+pair B = dir(180);
+pair C = dir(200);
+pair D = dir(340);
+pair O = (0, 0);
+
+real x = 0.2;
+real y = 0.3;
+pair X = (1-x) * A + x * B;
+pair Y = (1-y) * C + y * D;
+
+pair P = 2 * foot(circumcenter(A, D, X), X, Y) - X;
+pair Q = 2 * foot(circumcenter(B, C, Y), X, Y) - Y;
+
+pair T = extension(B, Q, D, P);
+
+draw(omega);
+
+draw(A -- B ^^ C -- D);
+draw(circumcircle(A, D, X));
+draw(circumcircle(B, C, Y));
+draw(X -- Y);
+
+pair W = 2 * foot(circumcenter(B, C, Y), A, B) - B;
+pair Z = 2 * foot(circumcenter(A, D, X), C, D) - D;
+
+pair O1 = circumcenter(A, D, X);
+pair O2 = circumcenter(B, C, Y);
+pair Op = circumcenter(X, Y, Z);
+
+draw(W -- Z);
+draw(circumcircle(X, Y, Z), dashed);
+
+dot("$A$", A, A);
+dot("$B$", B, B);
+dot("$C$", C, C);
+dot("$D$", D, D);
+dot("$X$", X, dir(A+B));
+dot("$Y$", Y, dir(C+D));
+dot("$P$", P, dir(-45));
+dot("$Q$", Q, dir(0));
+dot("$W$", W, dir(A+B));
+dot("$Z$", Z, dir(C+D));
+
+dot("$O$", O, dir(300));
+dot("$O_1$", O1, dir(O1));
+dot("$O_2$", O2, dir(O2));
+dot("$O'$", Op, dir(300));
+
+draw(O -- O1 -- Op -- O2 -- cycle, dotted);
+\end{asy}
+\end{center}
+Note that $(WXYZ)$ is cyclic since
+\[\dang XWY + \dang YZX = \dang YWB + \dang XZD = \dang YCB + \dang XAD = 0^\circ,\]
+so let $O'$ be the center of $(WXYZ)$. Since $\ol{AD} \parallel \ol{WY}$ and $\ol{BC} \parallel \ol{XZ}$ by Reim's theorem, $OO_1O'O_2$ is a parallelogram.
+
+To finish the problem, note that projecting $O_1$, $O_2$, and $O'$ onto
+$\ol{XY}$ gives the midpoints of $\ol{PX}$, $\ol{QY}$, and
+$\ol{XY}$. Since $OO_1O'O_2$ is a parallelogram, projecting $O$ onto
+$\ol{XY}$ must give the midpoint of $\ol{PQ}$, so $OP=OQ$.
+
+\paragraph{Fourth solution using congruent circles (from contestants).}
+Let the angle bisector of $\dang BOD$ meet $\ol{XY}$ at $K$.
+\begin{center}
+\begin{asy}
+  size(200);
+  path omega = circle((0, 0), 1);
+  pair A = dir(70);
+  pair B = dir(180);
+  pair C = dir(200);
+  pair D = dir(340);
+  pair O = (0, 0);
+
+  real x = 0.2;
+  real y = 0.3;
+  pair X = (1-x) * A + x * B;
+  pair Y = (1-y) * C + y * D;
+
+  pair P = 2 * foot(circumcenter(A, D, X), X, Y) - X;
+  pair Q = 2 * foot(circumcenter(B, C, Y), X, Y) - Y;
+
+  pair T = extension(B, Q, D, P);
+  dot("$A$", A, A);
+  dot("$B$", B, B);
+  dot("$C$", C, C);
+  dot("$D$", D, D);
+  dot("$O$", O, 2*dir(15));
+  dot("$X$", X, 1/3*dir(A+B));
+  dot("$Y$", Y, dir(C+D));
+  dot("$P$", P, dir(0));
+  dot("$Q$", Q, dir(-30));
+
+
+  pair K = extension(O, foot(O, B, D), X, Y);
+  dot("$K$", K, 2*dir(K));
+  draw(X -- K -- O);
+  draw(B -- O -- D);
+
+  draw(omega);
+  draw(A -- B -- C -- D -- cycle);
+  draw(circumcircle(A, D, X));
+  draw(circumcircle(B, C, Y));
+  draw(X -- Y);
+
+  draw(circumcircle(O, P, D), dotted);
+  draw(circumcircle(O, Q, B), dotted);
+\end{asy}
+\end{center}
+Then $(BQOK)$ is cyclic because $\dang KOD = \dang BAD = \dang KPD$, and $(DOPK)$ is cyclic similarly.
+By symmetry over $KO$, these circles have the same radius $r$, so
+\[ OP = 2r \sin \angle OKP = 2r \sin \angle OKQ = OQ \]
+by the Law of Sines.
+
+\paragraph{Fifth solution by ratio calculation (from contestants).}
+Let $\ol{XY}$ meet $(ABCD)$ at $X'$ and $Y'$.
+\begin{center}
+\begin{asy}
+size(200);
+path omega = circle((0, 0), 1);
+pair A = dir(70);
+pair B = dir(180);
+pair C = dir(200);
+pair D = dir(340);
+pair O = (0, 0);
+
+real x = 0.2;
+real y = 0.3;
+pair X = (1-x) * A + x * B;
+pair Y = (1-y) * C + y * D;
+
+pair P = 2 * foot(circumcenter(A, D, X), X, Y) - X;
+pair Q = 2 * foot(circumcenter(B, C, Y), X, Y) - Y;
+
+pair T = extension(B, Q, D, P);
+
+pair Xp = intersectionpoints(circumcircle(A,B,C), Y + (Y-X)*10 -- X + (X-Y)*10)[0];
+pair Yp = intersectionpoints(circumcircle(A,B,C), Y + (Y-X)*10 -- X + (X-Y)*10)[1];
+
+fill(D -- P -- Xp -- cycle, lightblue+opacity(0.5));
+fill(B -- Yp -- D -- cycle, lightblue+opacity(0.5));
+
+// fill(B -- D -- X -- cycle, lightgreen+opacity(0.5));
+//fill(B -- Xp -- D -- cycle, lightgreen+opacity(0.5));
+
+dot("$A$", A, A);
+dot("$B$", B, B);
+dot("$C$", C, C);
+dot("$D$", D, D);
+dot("$O$", O, -dir(A+B+C+D));
+dot("$X$", X, dir(A+B));
+dot("$Y$", Y, dir(-45));
+dot("$P$", P, dir(0));
+dot("$Q$", Q, dir(-30));
+
+draw(omega);
+draw(A -- B -- C -- D -- cycle);
+draw(circumcircle(A, D, X));
+draw(circumcircle(B, C, Y));
+
+draw(Xp -- Yp);
+
+dot("$X'$", Xp, dir(Xp));
+dot("$Y'$", Yp, dir(Yp));
+\end{asy}
+\end{center}
+Since $\dang Y'BD = \dang PX'D$ and $\dang BY'D = \dang BAD = \dang X'PD$,
+\[ \triangle BY'D \sim \triangle XP'D \implies PX' = BY' \cdot \frac{DX'}{BD}.\]
+Similarly,
+\[ \triangle BX'D \sim \triangle BQY' \implies QY' = DX' \cdot \frac{BY'}{BD}.\]
+Thus $PX' = QY'$, which gives $OP=OQ$.
+
+\paragraph{Sixth solution using radical axis (from author).}
+Without loss of generality, assume $\ol{AD} \nparallel \ol{BC}$, as this case holds by continuity. Let $(BCY)$ meet $\ol{AB}$ again at $W$, let $(ADX)$ meet $\ol{CD}$ again at $Z$, and let $\ol{WZ}$ meet $(ADX)$ and $(BCY)$ again at $R$ and $S$.
+\begin{center}
+\begin{asy}
+size(200);
+path omega = circle((0, 0), 1);
+pair A = dir(70);
+pair B = dir(180);
+pair C = dir(200);
+pair D = dir(340);
+pair O = (0, 0);
+
+real x = 0.2;
+real y = 0.3;
+pair X = (1-x) * A + x * B;
+pair Y = (1-y) * C + y * D;
+
+pair P = 2 * foot(circumcenter(A, D, X), X, Y) - X;
+pair Q = 2 * foot(circumcenter(B, C, Y), X, Y) - Y;
+
+pair T = extension(B, Q, D, P);
+
+draw(omega);
+
+draw(A -- B ^^ C -- D);
+draw(circumcircle(A, D, X));
+draw(circumcircle(B, C, Y));
+draw(X -- Y);
+
+pair W = 2 * foot(circumcenter(B, C, Y), A, B) - B;
+pair Z = 2 * foot(circumcenter(A, D, X), C, D) - D;
+pair R = 2 * foot(circumcenter(A, D, X), W, Z) - Z;
+pair S = 2 * foot(circumcenter(B, C, Y), W, Z) - W;
+
+draw(W -- Z);
+draw(circumcircle(P, Q, R), dashed);
+draw(circumcircle(X, Y, Z), dashed);
+
+dot("$A$", A, A);
+dot("$B$", B, B);
+dot("$C$", C, C);
+dot("$D$", D, D);
+dot("$X$", X, dir(A+B));
+dot("$Y$", Y, dir(C+D));
+dot("$P$", P, dir(-45));
+dot("$Q$", Q, dir(0));
+dot("$W$", W, dir(A+B));
+dot("$Z$", Z, dir(C+D));
+dot("$R$", R, dir(90));
+dot("$S$", S, dir(210));
+\end{asy}
+\end{center}
+Note that $(WXYZ)$ is cyclic since
+\[\dang XWY + \dang YZX = \dang YWB + \dang XZD = \dang YCB + \dang XAD = 0^\circ\]
+and $(PQRS)$ is cyclic since
+\[\dang PQS = \dang YQS = \dang YWS = \dang PXZ = \dang PRZ = \dang SRP.\]
+Additionally, $\ol{AD} \parallel \ol{PR}$ since
+\[\dang DAX + \dang AXP + \dang XPR = \dang YWX + \dang WXY + \dang XYW = 0^\circ,\]
+and $\ol{BC} \parallel \ol{SQ}$ similarly.
+
+Lastly, $(ABCD)$ and $(PQRS)$ are concentric; if not, using the radical axis theorem twice shows that their radical axis must be parallel to both $\ol{AD}$ and $\ol{BC}$, contradiction.
+
+\paragraph{Seventh solution using Cayley-Bacharach (author).}
+Define points $W, Z, R, S$ as in the previous solution.
+\begin{center}
+\begin{asy}[width = 0.5\textwidth]
+path omega = circle((0, 0), 1);
+pair A = dir(70);
+pair B = dir(180);
+pair C = dir(200);
+pair D = dir(340);
+pair O = (0, 0);
+
+real x = 0.2;
+real y = 0.3;
+pair X = (1-x) * A + x * B;
+pair Y = (1-y) * C + y * D;
+
+pair P = 2 * foot(circumcenter(A, D, X), X, Y) - X;
+pair Q = 2 * foot(circumcenter(B, C, Y), X, Y) - Y;
+draw(omega, green);
+
+draw(A -- B ^^ C -- D, red);
+draw(circumcircle(A, D, X), blue);
+draw(circumcircle(B, C, Y), blue);
+draw(X -- Y, green);
+
+pair W = 2 * foot(circumcenter(B, C, Y), A, B) - B;
+pair Z = 2 * foot(circumcenter(A, D, X), C, D) - D;
+pair R = 2 * foot(circumcenter(A, D, X), W, Z) - Z;
+pair S = 2 * foot(circumcenter(B, C, Y), W, Z) - W;
+
+draw(W -- Z, green);
+draw(circumcircle(P, Q, R), red+dashed);
+
+dot("$A$", A, A);
+dot("$B$", B, B);
+dot("$C$", C, C);
+dot("$D$", D, D);
+dot("$X$", X, dir(A+B));
+dot("$Y$", Y, dir(C+D));
+dot("$P$", P, dir(-45));
+dot("$Q$", Q, dir(0));
+dot("$W$", W, dir(A+B));
+dot("$Z$", Z, dir(C+D));
+dot("$R$", R, dir(90));
+dot("$S$", S, dir(210));
+\end{asy}
+\end{center}
+The quartics $(ADXZ) \cup (BCWY)$ and $\ol{XY} \cup \ol{WZ} \cup (ABCD)$ meet at the 16 points
+\[A, B, C, D, W, X, Y, Z, P, Q, R, S, I, I, J, J,\]
+where $I$ and $J$ are the circular points at infinity. Since $\ol{AB} \cup \ol{CD} \cup (PQR)$ contains the 13 points
+\[A,B,C,D,P,Q,R,W,X,Y,Z,I,J,\]
+it must contain $S$, $I$, and $J$ as well, by quartic Cayley-Bacharach.
+Thus, $(PQRS)$ is cyclic and intersects $(ABCD)$ at $I$, $I$, $J$, and $J$, implying that the two circles are concentric, as desired.
+
+\begin{remark*}
+  [Author comments]
+  Holden says he came up with this problem via the Cayley-Bacharach solution,
+  by trying to get two quartics to intersect.
+\end{remark*}

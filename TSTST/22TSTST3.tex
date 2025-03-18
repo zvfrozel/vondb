@@ -1,0 +1,126 @@
+desc: Super strange sequence
+source: TSTST 2022/3
+url: https://aops.com/community/p25517008
+tags: [2023-08, todo]
+
+---
+
+Determine all positive integers $N$ for which there exists a strictly
+increasing sequence of positive integers $s_0 < s_1 < s_2 < \dotsb$
+satisfying the following properties:
+\begin{itemize}
+  \item the sequence $s_1-s_0$, $s_2-s_1$, $s_3-s_2$, \dots\ is periodic; and
+  \item $s_{s_n} - s_{s_{n-1}} \le N < s_{1+s_n} - s_{s_{n-1}}$ for all
+    positive integers $n$.
+\end{itemize}
+
+---
+
+\paragraph{Answer.}
+All $N$ such that $t^2 \le N < t^2+t$ for some positive integer $t$.
+
+\paragraph{Solution 1 (local).}
+If $t^2\le N < t^2+t$ then the sequence $s_n = tn+1$
+satisfies both conditions.
+It remains to show that no other values of $N$ work.
+
+Define $a_n \coloneqq s_n - s_{n-1}$,
+and let $p$ be the minimal period of $\{a_n\}$.
+For each $k \in \ZZ_{\ge0}$,
+let $f(k)$ be the integer such that
+\[ s_{f(k)} - s_k \le N < s_{f(k)+1} - s_k. \]
+Note that $f(s_{n-1}) = s_{n}$ for all $n$.
+Since $\{a_n\}$ is periodic with period $p$, $f(k+p) = f(k) + p$ for all $k$,
+so $k\mapsto f(k)-k$ is periodic with period $p$.
+We also note that $f$ is nondecreasing:
+if $k < k'$ but $f(k') < f(k)$ then
+\[ N < s_{f(k')+1} - s_{k'} < s_{f(k)} - s_k \le N, \]
+which is absurd.
+We now claim that
+\[ \max_{k} (f(k)-k) < p + \min_{k} (f(k)-k). \]
+Indeed, if $f(k') - k' \ge p + f(k) - k$
+then we can shift $k$ and $k'$ so that $0 \le k-k' < p$,
+and it follows that $k \le k' \le f(k') < f(k)$,
+violating the fact that $f$ is nondecreasing.
+Therefore $\max_{k} (f(k)-k) < p + \min_{k} (f(k)-k)$,
+so $f(k)-k$ is uniquely determined by its value modulo $p$.
+In particular, since $a_n = f(s_{n-1}) - s_{n-1}$,
+$a_n$ is also uniquely determined by its value modulo $p$,
+so $\{a_n\bmod p\}$ also has minimal period $p$.
+
+Now work in $\ZZ/p\ZZ$ and consider the sequence
+$s_0, f(s_0), f(f(s_0)), \dots$.
+This sequence must be eventually periodic;
+suppose it has minimal period $p'$, which must be at most $p$.
+Then, since
+\[ f^{n}(s_0) - f^{n-1}(s_0) = s_{n} - s_{n-1} = a_n, \]
+and $\{a_n\bmod p\}$ has minimal period $p$, we must have $p' = p$.
+Therefore the directed graph $G$ on $\ZZ/p\ZZ$
+given by the edges $k\to f(k)$ is simply a $p$-cycle,
+which implies that the map $k\mapsto f(k)$ is a bijection on $\ZZ/p\ZZ$.
+Therefore, $f(k+1)\neq f(k)$ for all $k$
+(unless $p=1$, but in this case the following holds anyways), hence
+\[ f(k) < f(k+1) < \dotsb < f(k+p) = f(k) + p. \]
+This implies $f(k+1) = f(k)+1$ for all $k$, so $f(k)-k$ is constant,
+therefore $a_n = f(s_{n-1})-s_{n-1}$ is also constant.
+Let $a_n\equiv t$. It follows that $t^2\le N < t^2+t$ as we wanted.
+
+\paragraph{Solution 2 (global).}
+Define $\{a_n\}$ and $f$ as in the previous solution.
+We first show that $s_i \not\equiv s_j\pmod p$ for all $i < j < i+p$.
+Suppose the contrary, i.e.\ that $s_i \equiv s_j\pmod p$
+for some $i,j$ with $i < j < i+p$.
+Then $a_{s_i+k} = a_{s_j+k}$ for all $k \ge 0$,
+therefore $s_{s_i+k} - s_{s_i} = s_{s_j+k} - s_{s_j}$ for all $k\ge 0$,
+therefore
+\[ a_{i+1} = f(s_i) - s_i = f(s_j) - s_j = a_{j+1}
+  \quad\text{ and }\quad
+  s_{i+1} = f(s_i)\equiv f(s_j) = s_{j+1}\pmod p. \]
+Continuing this inductively, we obtain $a_{i+k} = a_{j+k}$ for all $k$,
+so $\{a_n\}$ has period $j-i < p$, which is a contradiction.
+Therefore $s_i \not\equiv s_j\pmod p$ for all $i < j < i+p$,
+and this implies that $\{s_i, \dots, s_{i+p-1}\}$ forms a
+complete residue system modulo $p$ for all $i$.
+Consequently we must have $s_{i+p} \equiv s_i\pmod p$ for all $i$.
+
+Let $T = s_p - s_0 = a_1 + \dotsb + a_p$.
+Since $\{a_n\}$ is periodic with period $p$, and $\{i+1,\dots,i+kp\}$
+contains exactly $k$ values of each residue class modulo $p$,
+\[ s_{i+kp} - s_i = a_{i+1} + \dotsb + a_{i+kp} = kT \] for all $i,k$.
+Since $p\mid T$, it follows that
+$s_{s_p} - s_{s_0} = \frac Tp\cdot T = \frac{T^2}{p}$.
+Summing up the inequalities
+\[ s_{s_n} - s_{s_{n-1}}
+  \le N < s_{s_n+1} - s_{s_{n-1}} = s_{s_n} - s_{s_{n-1}} + a_{s_n+1} \]
+for $n\in\{1,\dots,p\}$ then implies
+\[ \frac{T^2}{p} = s_{s_p} - s_{s_0} \le Np
+  < \frac{T^2}{p} + a_{s_1+1} + a_{s_2+1} + \dotsb + a_{s_p+1}
+  = \frac{T^2}{p} + T, \]
+where the last equality holds because $\{s_1+1,\dots,s_p+1\}$
+is a complete residue system modulo $p$.
+Dividing this by $p$ yields $t^2\le N < t^2+t$ for
+$t \coloneqq \frac Tp\in\ZZ^+$.
+
+\begin{remark*}
+  [Author comments]
+  There are some similarities between this problem and IMO 2009/3,
+  mainly that they both involve terms of the form $s_{s_n}$ and $s_{s_n+1}$
+  and the sequence $s_0, s_1,\dots$ turns out to be an arithmetic progression.
+  Other than this, I don't think knowing about IMO 2009/3 will
+  be that useful on this problem, since in this problem the fact
+  that $\{s_{n+1}-s_n\}$ is periodic is fundamentally important.
+
+  The motivation for this problem comes from the following scenario:
+  assume we have boxes that can hold some things of total size $\le N$,
+  and a sequence of things of size $a_1, a_2, \dots$
+  (where $a_i \coloneqq s_{i+1} - s_i$).
+  We then greedily pack the things in a sequence of boxes,
+  `closing' each box when it cannot fit the next thing.
+  The number of things we put in each box gives a sequence $b_1, b_2, \dots$.
+  This problem asks when we can have $\{a_n\} = \{b_n\}$,
+  assuming that we start with a sequence $\{a_n\}$ that is periodic.
+
+  (Extra motivation: I first thought about this scenario
+  when I was pasting some text repeatedly into the Notes app and noticed that
+  the word at the end of lines are also (eventually) periodic.)
+\end{remark*}

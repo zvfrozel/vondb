@@ -1,0 +1,254 @@
+author: Yannick Yao, Evan Chen
+desc: Yannick Euclidea
+source: TSTST 2018/3
+tags: [2018-06, rich, anglechase, mine, gimel]
+hardness: 30
+url: https://aops.com/community/p10570988
+
+---
+
+Let $ABC$ be an acute triangle with incenter $I$, circumcenter $O$, and circumcircle $\Gamma$.
+Let $M$ be the midpoint of $\ol{AB}$.
+Ray $AI$ meets $\ol{BC}$ at $D$.
+Denote by $\omega$ and $\gamma$ the circumcircles of $\triangle BIC$ and $\triangle BAD$, respectively.
+Line $MO$ meets $\omega$ at $X$ and $Y$, while line $CO$ meets $\omega$ at $C$ and $Q$.
+Assume that $Q$ lies inside $\triangle ABC$ and $\angle AQM = \angle ACB$.
+
+Consider the tangents to $\omega$ at $X$ and $Y$ and the tangents to $\gamma$ at $A$ and $D$.
+Given that $\angle BAC \neq 60\dg$, prove that these four lines are concurrent on $\Gamma$.
+
+---
+
+
+Henceforth assume $\angle A \neq 60\dg$; we prove the concurrence.
+Let $L$ denote the center of $\omega$, which is the midpoint of minor arc $BC$.
+
+\begin{claim*}
+  Let $K$ be the point on $\omega$ such that
+  $\ol{KL} \parallel \ol{AB}$ and $\ol{KC} \parallel \ol{AL}$.
+  Then $\ol{KA}$ is tangent to $\gamma$, and we may put
+  \[ x = KA = LB = LC = LX = LY = KX = KY. \]
+\end{claim*}
+\begin{proof}
+  By construction, $KA = LB = LC$.
+  Also, $\ol{MO}$ is the perpendicular bisector of $\ol{KL}$
+  (since the chords $\ol{KL}$, $\ol{AB}$ of $\omega$ are parallel)
+  and so $KXLY$ is a rhombus as well.
+
+  Moreover, $\ol{KA}$ is tangent to $\gamma$ as well since
+  \[ \dang KAD = \dang KAL = \dang KAC + \dang CAL
+    = \dang KBC + \dang ABK = \dang ABC. \qedhere \]
+\end{proof}
+
+\begin{center}
+\begin{asy}
+size(9cm);
+pair L = dir(270);
+pair B = dir(196);
+pair C = L*L/B;
+real r = 2**0.5 * abs(C-L);
+
+pair A = IP(unitcircle, CR(C, r));
+filldraw(unitcircle, opacity(0.1)+lightcyan, lightblue);
+draw(A--B--C--cycle, lightblue);
+
+pair M = midpoint(A--B);
+pair N = midpoint(A--C);
+pair O = origin;
+pair E = extension(M, O, B, C);
+pair K = 2*E-L;
+pair X = IP(M--O, CP(L, B));
+pair Y = 2*E-X;
+
+filldraw(CP(L, X), opacity(0.1)+lightgreen, heavygreen);
+
+clip(box((-1.4,-1.4),(1.4,1.4)));
+pair D = extension(A, L, B, C);
+filldraw(X--L--Y--K--cycle, opacity(0.15)+lightred, red+0.8);
+
+draw(A--K, red+dashed);
+draw(B--L, red+dashed);
+draw(K--D, red+dashed);
+draw(C--L, red+dashed);
+
+draw(A--L, heavycyan);
+draw(K--C, heavycyan);
+pair Q = foot(A, C, O);
+draw(A--Q--C, orange);
+draw(N--L, orange);
+draw(M--Y, purple);
+draw(K--L, purple);
+
+dot("$L$", L, dir(L));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$A$", A, dir(A));
+dot("$M$", M, dir(M));
+dot("$N$", N, dir(N));
+dot("$O$", O, dir(45));
+dot("$E$", E, dir(270));
+dot("$K$", K, dir(K));
+dot("$X$", X, dir(100));
+dot("$Y$", Y, dir(Y));
+dot("$D$", D, dir(315));
+dot("$Q$", Q, dir(Q));
+
+/* TSQ Source:
+
+!size(9cm);
+L = dir 270
+B = dir 196
+C = L*L/B
+!real r = 2**0.5 * abs(C-L);
+
+A = IP unitcircle CR C r
+unitcircle 0.1 lightcyan / lightblue
+A--B--C--cycle lightblue
+
+M = midpoint A--B
+N = midpoint A--C
+O = origin R45
+E = extension M O B C R270
+K = 2*E-L
+X = IP M--O CP L B R100
+Y = 2*E-X
+
+CP L X 0.1 lightgreen / heavygreen
+
+!clip(box((-1.4,-1.4),(1.4,1.4)));
+D = extension A L B C R315
+X--L--Y--K--cycle 0.15 lightred / red+0.8
+
+A--K red dashed
+B--L red dashed
+K--D red dashed
+C--L red dashed
+
+A--L heavycyan
+K--C heavycyan
+Q = foot A C O
+A--Q--C orange
+N--L orange
+M--Y purple
+K--L purple
+
+*/
+\end{asy}
+\end{center}
+
+Up to now we have not used the existence of $Q$; we henceforth do so.
+
+Note that $Q \neq O$, since $\angle A \neq 60\dg \implies O \notin \omega$.
+Moreover, we have $\angle AOM = \angle ACB$ too.
+Since $O$ and $Q$ both lie inside $\triangle ABC$,
+this implies that $A$, $M$, $O$, $Q$ are concyclic.
+As $Q \neq O$ we conclude $\angle CQA = 90\dg$.
+
+The main claim is now:
+\begin{claim*}
+  Assuming $Q$ exists, the rhombus $LXKY$ is a square.
+  In particular, $\ol{KX}$ and $\ol{KY}$ are tangent to $\omega$.
+\end{claim*}
+
+\begin{proof}
+  [First proof of Claim, communicated by Milan Haiman]
+  Observe that $\triangle QLC \sim \triangle LOC$
+  since both triangles are isosceles and share a base angle.
+  Hence, $CL^2 = CO \cdot CQ$.
+
+  Let $N$ be the midpoint of $\ol{AC}$, which lies on $(AMOQ)$.
+  Then,
+  \[ x^2 = CL^2 = CO \cdot CQ = CN \cdot CA = \half CA^2 = \half LK^2 \]
+  where we have also used the fact $AQON$ is cyclic.
+  Thus $LK = \sqrt2 x$ and so the rhombus $LXKY$ is actually a square.
+\end{proof}
+
+\begin{proof}
+  [Second proof of Claim, Evan Chen]
+  Observe that $Q$ lies on the circle with diameter $\ol{AC}$, centered at $N$, say.
+  This means that $O$ lies on the radical axis of $\omega$ and $(N)$,
+  hence $\ol{NL} \perp \ol{CO}$ implying
+  \begin{align*}
+    NO^2 + CL^2 &= NC^2 + LO^2
+    = NC^2 + OC^2 = NC^2 + NO^2 + NC^2 \\
+    \implies x^2 &= 2NC^2 \\
+    \implies x &= \sqrt 2 NC = \frac{1}{\sqrt2} AC = \frac{1}{\sqrt2} LK.
+  \end{align*}
+  So $LXKY$ is a rhombus with $LK = \sqrt2 x$.
+  Hence it is a square.
+\end{proof}
+
+\begin{proof}
+  [Third proof of Claim]
+  A solution by trig is also possible.
+  As in the previous claims, it suffices to show that $AC = \sqrt 2 x$.
+
+  First, we compute the length $CQ$ in two ways; by angle chasing one can show
+  $\angle CBQ = 180\dg - (\angle BQC + \angle QCB) = \half \angle A$,
+  and so
+  \begin{align*}
+    AC \sin B = CQ &= \frac{BC}{\sin(90\dg+\half\angle A)} \cdot \sin\half\angle A \\
+    \iff \sin^2 B &= \frac{\sin A \cdot \sin \half \angle A}{\cos \half \angle A} \\
+    \iff \sin^2 B &= 2\sin^2 \half \angle A \\
+    \iff \sin B &= \sqrt 2 \sin \half \angle A \\
+    \iff 2R \sin B &= \sqrt 2 \left(2R \sin \half \angle A\right) \\
+    \iff AC &= \sqrt 2 x
+  \end{align*}
+  as desired (we have here used the fact $\triangle ABC$ is acute to take square roots).
+
+  It is interesting to note that $\sin^2 B = 2 \sin^2 \half \angle A$
+  can be rewritten as \[ \cos A = \cos^2 B \]
+  since $\cos^2 B = 1 - \sin^2 B = 1 - 2 \sin^2 \half \angle A = \cos A$;
+  this is the condition for the existence of the point $Q$.
+\end{proof}
+
+We finish by proving that
+\[ KD = KA \]
+and hence line $\ol{KD}$ is tangent to $\gamma$.
+Let $E = \ol{BC} \cap \ol{KL}$.
+Then
+\[ LE \cdot LK = LC^2 = LX^2 = \half LK^2 \]
+and so $E$ is the midpoint of $\ol{LK}$.
+Thus $\ol{MXOY}$, $\ol{BC}$, $\ol{KL}$ are concurrent at $E$.
+As $\ol{DL} \parallel \ol{KC}$, we find that $DLCK$ is a parallelogram,
+so $KD = CL = KA$ as well.
+Thus $\ol{KD}$ and $\ol{KA}$ are tangent to $\gamma$.
+
+\begin{remark*}
+  The condition $\angle A \neq 60\dg$ cannot be dropped, since if $Q = O$ the problem is not true.
+
+  On the other hand, nearly all solutions begin by observing $Q \neq O$ and then obtaining $\angle AQO = 90\dg$.
+  This gives a way to construct the diagram by hand with ruler and compass.
+  One draws an arbitrary chord $\ol{BC}$ of a circle $\omega$ centered at $L$,
+  and constructs $O$ as the circumcenter of $\triangle BLC$ (hence obtaining $\Gamma$).
+  Then $Q$ is defined as the intersection of ray $CO$ with $\omega$,
+  and $A$ is defined by taking the perpendicular line through $Q$ on the circle $\Gamma$.
+  In this way we can draw a triangle $ABC$ satisfying the problem conditions.
+\end{remark*}
+
+\paragraph{Authorship comments.}
+In the notation of the present points,
+the question originally sent to me by Yannick Yao read:
+\begin{quote}
+  Circles $(L)$ and $(O)$ are drawn,
+  meeting at $B$ and $C$, with $L$ on $(O)$.
+  Ray $CO$ meets $(L)$ at $Q$,
+  and $A$ is on $(O)$ such that $\angle CQA = 90\dg$.
+  The angle bisector of $\angle AOB$ meets $(L)$ at $X$ and $Y$.
+  Show that $\angle XLY = 90\dg$.
+\end{quote}
+Notice the points $M$ and $K$ are absent from the problem.
+I am told this was found as part of the computer game ``Euclidea''.
+Using this as the starting point,
+I constructed the TSTST problem by recognizing the significance
+of that special point $K$, which became the center of attention.
+
+---
+
+Yannick sent me
+\url{https://github.com/MathsFans/Euclidea/blob/master/v1/solving/d12.6.1.png}
+asking me if this could become a reasonable TSTST problem
+(not knowing how to prove the coincidence).
+It took me about an hour and a half before I figured out a way to do it;
+then I took those ideas and extended them to arrive at a
+more traditional-looking problem over the next 90 minutes.

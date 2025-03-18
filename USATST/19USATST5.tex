@@ -1,0 +1,191 @@
+source: USA TST 2019/5
+desc: Tasty and Stacy
+author: Yannick Yao
+tags: [2018-10, process, understand, algorithm, invariant, smallcases, nice, zayin]
+hardness: 30
+url: https://aops.com/community/p11625809
+
+---
+
+Let $n$ be a positive integer.
+Tasty and Stacy are given a circular necklace
+with $3n$ sapphire beads and $3n$ turquoise beads,
+such that no three consecutive beads have the same color.
+They play a cooperative game where they alternate turns
+removing three consecutive beads, subject to the following conditions:
+\begin{itemize}
+   \ii Tasty must remove three consecutive beads
+   which are turquoise, sapphire, and turquoise, in that order,
+   on each of his turns.
+   \ii Stacy must remove three consecutive beads
+   which are sapphire, turquoise, and sapphire, in that order,
+   on each of her turns.
+\end{itemize}
+They win if all the beads are removed in $2n$ turns.
+Prove that if they can win with Tasty going first,
+they can also win with Stacy going first.
+
+---
+
+In the necklace, we draw a \emph{divider}
+between any two beads of the same color.
+Unless there are no dividers,
+this divides the necklace into several \emph{zigzags}
+in which the beads in each zigzag alternate.
+Each zigzag has two \emph{endpoints}
+(adjacent to dividers).
+
+Observe that the condition about not having
+three consecutive matching beads is equivalent
+to saying there are no zigzags of lengths $1$.
+
+\begin{center}
+\begin{asy}
+  size(7cm);
+  string[] s = {"T", "S", "S", "T", "T", "S", "T", "T", "S", "T", "T", "S", "S", "T", "S", "T", "S", "S", "T", "S", "S", "T", "S", "T"};
+  pen[] colors = {white, red, deepgreen, blue, heavygreen, grey,
+    purple, orange, deepcyan};
+  int j = 0;
+  for (int i=0; i<24; ++i) {
+    if ((i == 0) || (s[i] == s[i-1])) {
+      ++j;
+      draw(0.9*dir(187.5-15*i)--1.1*dir(187.5-15*i), black+1.5);
+    }
+    label(s[i], dir(180-15*i), dir(180-15*i), colors[j]);
+  }
+  draw(unitcircle);
+\end{asy}
+\end{center}
+
+The main claim is that
+the game is winnable (for either player going first)
+if and only if there are at most $2n$ dividers.
+We prove this in two parts,
+the first part not using the hypothesis about three consecutive letters.
+
+\begin{claim*}
+  The game cannot be won with Tasty going first
+  if there are more than $2n$ dividers.
+\end{claim*}
+\begin{proof}
+  We claim each move removes at most one divider,
+  which proves the result.
+
+  Consider removing a $TST$ in some zigzag
+  (necessarily of length at least $3$).
+  We illustrate the three possibilities in the following table,
+  with Tasty's move shown in red.
+  \begin{center}
+  \begin{tabular}{ccl}
+    Before & After & Change \\ \hline
+    % ------------
+    $\dots \mathtt{ST} \mid \mathtt{\color{red} TST}
+      \mid \mathtt{TS}\dots$
+      & $\dots \mathtt{ST} \mid \mathtt{TS} \dots$
+      & One less divider; two zigzags merge \\
+    $\dots \mathtt{ST} \mid \mathtt{\color{red} TST}
+      \mathtt{ST}\dots$
+      & $\dots \mathtt{STST} \dots$
+      & One less divider; two zigzags merge \\
+    $\dots \mathtt{S} \mathtt{\color{red} TST} \mathtt{S} \dots$
+      & $\dots \mathtt{S} \mid \mathtt{S} \dots$
+      & One more divider; a zigzag splits in two
+  \end{tabular}
+  \end{center}
+  The analysis for Stacy's move is identical.
+\end{proof}
+
+\begin{claim*}
+  If there are at most $2n$ dividers
+  and there are no zigzags of length $1$
+  then the game can be won (with either player going first).
+\end{claim*}
+\begin{proof}
+  By symmetry it is enough to prove Tasty wins going first.
+
+  At any point if there are no dividers at all,
+  then the necklace alternates $TSTST\dots$
+  and the game can be won.
+  So we will prove that on each of Tasty's turns,
+  if there exists at least one divider,
+  then Tasty and Stacy can each make a move
+  at an endpoint of some zigzag
+  (i.e.\ the first two cases above).
+  As we saw in the previous proof, such moves will
+  (a) decrease the number of dividers by exactly one,
+  (b) not introduce any singleton zigzags
+  (because the old zigzags merge, rather than split).
+  Since there are fewer than $2n$ dividers,
+  our duo can eliminate all dividers and then win.
+
+  Note that as the number of $S$ and $T$'s are equal,
+  there must be an equal number of
+  \begin{itemize}
+    \ii zigzags of odd length ($\ge 3$) with $T$ at the endpoints
+    (i.e.\ one more $T$ than $S$), and
+    \ii zigzags of odd length ($\ge 3$) with $S$ at the endpoints
+    (i.e.\ one more $S$ than $T$).
+  \end{itemize}
+  Now iff there is at least one of each,
+  then Tasty removes a $TST$ from the end of such a zigzag
+  while Stacy removes an $STS$ from the end of such a zigzag.
+
+  Otherwise suppose all zigzags have even size.
+  Then Tasty finds any zigzag of length $\ge 4$
+  (which must exist since the \emph{average} zigzag length is $3$)
+  and removes $TST$ from the end containing $T$.
+  The resulting merged zigzag is odd and hence $S$ endpoints,
+  hence Stacy can move as well.
+\end{proof}
+
+\begin{remark*}
+  There are many equivalent ways to phrase the solution.
+  For example, the number of dividers is equal to the
+  number of pairs of two consecutive letters
+  (rather than singleton letters).
+  So the win condition can also be phrased in terms
+  of the number of adjacent pairs of letters being at least $2n$,
+  or equivalently the number of differing pairs being at least $4n$.
+
+  If one thinks about the game as a process,
+  this is a natural ``monovariant'' to consider anyways,
+  so the solution is not so unmotivated.
+\end{remark*}
+
+\begin{remark*}
+  The constraint of no three consecutive identical beads is actually
+  needed: a counterexample without this constraint is
+  $\mathtt{TTSTSTSTTSSS}$.
+  (They win if Tasty goes first and lose if Stacy goes first.)
+\end{remark*}
+
+\begin{remark*}
+  [Why induction is unlikely to work]
+  Many contestants attempted induction.
+  However, in doing so they often implicitly proved
+  a different problem: ``prove that if they can win
+  with Tasty going first \emph{without ever creating a triplet},
+  they can also win in such a way with Stacy going first''.
+  This essentially means nearly all induction attempts fail.
+
+  Amusingly, even the modified problem
+  (which is much more amenable to induction)
+  sill seems difficult without \emph{some} sort of global argument.
+  Consider a position in which Tasty wins going first,
+  with the sequence of winning moves being Tasty's first move in red
+  below and Stacy's second move in blue below:
+  \[
+    \dots \mathtt{TTSSTT}
+    \underbrace{\mathtt{\color{blue}S}
+    \overbrace{\mathtt{\color{red}TST}}^{\text{Tasty}}
+    \mathtt{\color{blue}TS}}_{\text{Stacy}}
+    \mathtt{STTSST} \dots.
+  \]
+  There is no ``nearby'' $STS$ that Stacy can remove
+  instead on her first turn,
+  without introducing a triple-$T$ and also
+  preventing Tasty from taking a $TST$.
+  So it does not seem possible to easily change
+  a Tasty-first winning sequence to a Stacy-first one,
+  even in the modified version.
+\end{remark*}

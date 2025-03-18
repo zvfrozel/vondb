@@ -1,0 +1,103 @@
+author: Carl Schildkraut
+desc: Iterated polynomial orbits mod n
+hardness: 25
+source: USA TST 2020/5
+tags: [2020-01, mods, find, hardanswer, polynomial, arrows, dalet]
+url: https://aops.com/community/p13913769
+
+---
+
+Find all integers $n \ge 2$ for which there exists an integer $m$ and
+a polynomial $P(x)$ with integer coefficients satisfying the following three conditions:
+\begin{itemize}
+  \item $m > 1$ and $\gcd(m,n) = 1$;
+  \item the numbers $P(0)$, $P^2(0)$, \dots, $P^{m-1}(0)$ are not divisible by $n$; and
+  \item $P^m(0)$ is divisible by $n$.
+\end{itemize}
+Here $P^k$ means $P$ applied $k$ times, so $P^1(0) = P(0)$, $P^2(0) = P(P(0))$, etc.
+
+---
+
+The answer is that this is possible if and only if
+there exists primes $p' < p$ such that $p \mid n$ and $p' \nmid n$.
+(Equivalently, the radical $\opname{rad}(n)$
+must not be the product of the first several primes.)
+
+For a polynomial $P$, and an integer $N$, we introduce the notation
+\[ \mathbf{zord}(P \bmod N)
+  \coloneqq \min \left\{ e > 0 \mid P^e(0) \equiv 0 \bmod N \right\} \]
+where we set $\min\varnothing=0$ by convention.
+Note that in general we have
+\[ \mathbf{zord}(P \bmod N) = \opname*{lcm}_{q \mid N}
+  \left( \mathbf{zord}(P \bmod q)  \right) \qquad (\dagger) \]
+where the index runs over all prime powers
+$q \mid N$ (by Chinese remainder theorem).
+This will be used in both directions.
+
+\textbf{Construction}:
+First, we begin by giving a construction.
+The idea is to first use the following prime power case.
+\begin{claim*}
+  Let $p^e$ be a prime power, and $1 \le k < p$.
+  Then
+  \[ f(X) = X+1 - k \cdot \frac{X(X-1)(X-2) \dots (X-(k-2))}{(k-1)!} \]
+  viewed as a polynomial in $(\ZZ/p^e)[X]$ satisfies $\mathbf{zord}(f \bmod{p^e}) = k$.
+\end{claim*}
+\begin{proof}
+  Note $f(0) = 1$, $f(1) = 2$, \dots, $f(k-2) = k-1$, $f(k-1) = 0$ as needed.
+\end{proof}
+This gives us a way to do the construction now.
+For the prime power $p^e \mid n$, we choose $1 \le p' < p$ and require
+$\mathbf{zord}(P \bmod{p^e}) = p'$ and
+$\mathbf{zord}(P \bmod{q}) = 1$ for every other prime power $q$ dividing $n$.
+Then by $(\dagger)$ we are done.
+\begin{remark*}
+  The claim can be viewed as a special case of Lagrange interpolation
+  adapted to work over $\ZZ/p^e$ rather than $\ZZ/p$.
+  Thus the construction of the polynomial $f$ above is quite natural.
+\end{remark*}
+
+\textbf{Necessity}: by $(\dagger)$ again,
+it will be sufficient to prove the following claim.
+\begin{claim*}
+  For any prime power $q = p^e$, and any polynomial $f(x) \in \ZZ[x]$,
+  if the quantity $\mathbf{zord}(f \bmod q)$ is nonzero
+  then it has all prime factors at most $p$.
+\end{claim*}
+\begin{proof}
+  This is by induction on $e \ge 1$.
+  For $e=1$, the pigeonhole principle immediately
+  implies that $\mathbf{zord}(P \bmod p) \le p$.
+
+  Now assume $e \ge 2$.
+  Let us define
+  \[ k \coloneqq \mathbf{zord}(P \bmod{p^{e-1}}),
+    \qquad Q \coloneqq P^k. \]
+  Since being periodic modulo $p^e$ requires periodic modulo $p^{e-1}$,
+  it follows that
+  \[ \mathbf{zord}(P \bmod{p^e}) = k \cdot \mathbf{zord}(Q \bmod{p^e}). \]
+  However since $Q(0) \equiv 0\bmod p^{e-1}$, it follows $\{Q(0), Q^2(0), \dots\}$
+  are actually all multiples of $p^{e-1}$.
+  There are only $p$ residues modulo $p^e$ which are also multiples of $p^{e-1}$,
+  so $\mathbf{zord}(Q \bmod{p^e}) \le p$, as needed.
+\end{proof}
+
+\begin{remark*}
+  One reviewer submitted the following test-solving comments:
+
+  This is one of these problems where you can make many useful natural observations,
+  and if you make enough of them eventually they cohere into a solution.
+  For example, here are some things I noticed while solving:
+  \begin{itemize}
+  \ii The polynomial $1-x$ shows that $m=2$ works for any odd $n$.
+  \ii In general, if $\zeta$ is a primitive $m$th root of unity
+  modulo $n$, then $\zeta(x+1)-1$ has the desired property (assuming $\gcd(m,n) = 1$).
+  We can extend this using the Chinese remainder theorem
+  to find that if $p \mid n$, $m \mid p-1$, and $\gcd(m,n)=1$, then $n$ works.
+  So by this point I already have something
+  about the prime factors of $n$ being sort-of closed downwards.
+  \ii By iterating $P$ we see it is enough to consider $m$ prime.
+  \ii In the case where $n=2^k$,
+  it is not too difficult to show that no odd prime $m$ works.
+  \end{itemize}
+\end{remark*}

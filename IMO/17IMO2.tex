@@ -1,0 +1,169 @@
+desc: Reasonably okay FE, cancel trick, triple involution
+author: Dorlir Ahmeti (ALB)
+source: IMO 2017/2
+tags: [FE, 2017-07, cancel, instructive, good, neatness, zayin]
+hardness: 40
+url: https://aops.com/community/p8633190
+
+---
+
+Solve over $\RR$ the functional equation
+\[ f\left( f(x)f(y) \right) + f(x+y) = f(xy). \]
+
+---
+
+The only solutions are $f(x) = 0$, $f(x) = x-1$ and $f(x)=1-x$,
+which clearly work.
+
+Note that
+\begin{itemize}
+  \ii If $f$ is a solution, so is $-f$.
+  \ii Moreover, if $f(0)=0$ then setting $y=0$ gives $f\equiv0$.
+  So henceforth we assume $f(0)>0$.
+\end{itemize}
+
+\begin{claim*}
+  We have $f(z) = 0 \iff z =1$.
+  Also, $f(0)=1$ and $f(1)=0$.
+\end{claim*}
+\begin{proof}
+  For the forwards direction, if $f(z)=0$ and $z \neq 1$
+  one may put $(x,y) = \left( z, z(z-1)\inv \right)$
+  (so that $x+y=xy$) we deduce $f(0) = 0$
+  which is a contradiction.
+
+  For the reverse, $f(f(0)^2)=0$ by setting $x=y=0$,
+  and use the previous part.
+  We also conclude $f(1) = 0$, $f(0) = 1$.
+\end{proof}
+
+\begin{claim*}
+  If $f$ is injective, we are done.
+\end{claim*}
+\begin{proof}
+  Setting $y=0$ in the original equation
+  gives $f(f(x)) = 1-f(x)$.
+  We apply this three times on the expression $f^3(x)$:
+  \[ f(1-f(x)) = f(f(f(x))) = 1 - f(f(x)) = f(x). \]
+  Hence $1-f(x) = x$ or $f(x) = 1-x$.
+\end{proof}
+\begin{remark*}
+  The result $f(f(x)) + f(x) = 1$ also implies that surjectivity
+  would solve the problem.
+\end{remark*}
+
+\begin{claim*}
+  $f$ is injective.
+\end{claim*}
+\begin{proof}
+  Setting $y=1$ in the original equation gives
+  $f(x+1) = f(x)-1$, and by induction
+  \begin{equation}
+    f(x+n) = f(x)-n.
+    \label{eq:linshift}
+  \end{equation}
+  Assume now $f(a) = f(b)$.
+  By using \eqref{eq:linshift} we may shift $a$ and $b$
+  to be large enough that
+  we may find $x$ and $y$ obeying $x+y=a+1$, $xy=b$.
+  Setting these gives
+  \begin{align*}
+    f(f(x)f(y)) &= f(xy) - f(x+y) = f(b) - f(a+1) \\
+    &= f(b) + 1 - f(a) = 1
+  \end{align*}
+  from which we conclude
+  \[ f\left( f(x)f(y) + 1 \right) = 0. \]
+  Hence by the first claim
+  we have $f(x)f(y) + 1 = 1$, so $f(x)f(y) = 0$.
+  Applying the first claim again gives $1 \in \{x,y\}$.
+  But that implies $a=b$.
+\end{proof}
+
+\begin{remark*}
+  Jessica Wan points out that
+  for any $a \neq b$, at least one of $a^2 > 4(b-1)$
+  and $b^2 > 4(a-1)$ is true.
+  So shifting via \eqref{eq:linshift}
+  is actually unnecessary for this proof.
+\end{remark*}
+
+\begin{remark*}
+  One can solve the problem over $\QQ$
+  using only \eqref{eq:linshift} and the easy parts.
+  Indeed, that already implies $f(n) = 1-n$ for all $n$.
+  Now we induct to show $f(p/q) = 1-p/q$ for all $0 < p < q$ (on $q$).
+  By choosing $x = 1+p/q$, $y = 1+q/p$,
+  we cause $xy = x+y$,
+  and hence $0 = f\left( f(1+p/q)f(1+q/p) \right)$
+  or $1 = f(1+p/q)f(1+q/p)$.
+
+  By induction we compute $f(1+q/p)$
+  and this gives $f(p/q+1) = f(p/q)-1$.
+\end{remark*}
+
+---
+
+This problem is sort of divided into two parts.
+One is the ``standard'' part, which is not easy \emph{per se},
+but which experienced contestants won't find surprising.
+However, the argument in the final part is quite nice and conceptual,
+and much less run-of-the-mill.
+
+We begin with some standard plug/chug.
+\begin{walk}
+  \ii Find all three linear solutions
+  and convince yourself there are no other polynomial solutions.
+  \ii Check that if $f$ is a solution, then so is $-f$.
+  \ii Show there exists $z$ such that $f(z) = 0$.
+  (We'll find the exact value later;
+  for now just show it exists.)
+  \ii Show that if $f(0) = 0$ then $f \equiv 0$.
+  So we henceforth assume $f(0) \neq 0$.
+  \ii Using the cancellation trick, prove that if $f(z) = 0$
+  (and $f(0) \neq 0$) for some $z$, then $z = 1$.
+  Then show that $f(0) = \pm 1$.
+\end{walk}
+From (b) and (e), we assume $f(0) = 1$, $f(1) = 0$ in what follows,
+and will try to show $f(x) \equiv 1-x$.
+This lets us plug in some more stuff.
+\begin{walk}[resume]
+  \ii Show that $f(x+1) = f(x)-1$
+  and compute $f$ on all integer values.
+  \ii Show that $f(f(x)) = 1-f(x)$.
+  Thus if $f$ was surjective we would be done.
+  However, this seems hard to arrange,
+  since the original equation has everything wrapped in $f$'s.
+  \ii Using the triple involution trick,
+  prove that $f(1-f(x)) = f(x)$.
+  Thus if $f$ was injective, we would also be done.
+\end{walk}
+So we will now prove $f$ is injective: this is the nice part.
+Assume $f(a) = f(b)$; we will try to prove $a = b$.
+\begin{walk}[resume]
+  \ii Show that if $N$ is a sufficiently large integer,
+  then we can find $x$ and $y$ such that $x+y = a+N$
+  and $xy = b+N$.
+  Use this to prove that $f(f(x) f(y)) = 0$ for that
+  pair $(x,y)$ and hence
+  thus $f(x) f(y) = 1$.
+  \ii The previous part shows us how we might think
+  about using the cancellation trick.
+  However, it is basically useless since $f(x) f(y) = 1$
+  is not really a useful condition.
+
+  However, modify the approach of (i) so that
+  instead the conclusion
+  ends up as $f(x)f(y) = 0$ instead.
+  Deduce that $1 \in \{x,y\}$ in that case.
+  \ii Using the argument in (j) prove that $a = b$.
+\end{walk}
+Some historical lore about this problem:
+this was shortlisted as A6,
+and in my opinion too hard for the P2 position,
+despite being nice for a functional equation.
+Most countries did poorly, with USA and China having only two solves,
+but the Korean team had an incredibly high five solves.
+However, an unreasonably generous 4 points was awarded
+for progress up to part (h),
+thus cancelling a lot of the advantage from the Korean team.
+Thus I was relieved that the Korean team still finished first.

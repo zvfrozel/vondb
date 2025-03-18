@@ -1,0 +1,197 @@
+desc: Monge troll with incircles
+author: Ray Li
+source: TSTST 2017/5
+tags: [2017-06, harmonic, nice, bary, homothety, criticalclaim, instructive, aleph]
+hardness: 15
+url: https://aops.com/community/p8526136
+
+---
+
+Let $ABC$ be a triangle with incenter $I$.
+Let $D$ be a point on side $BC$ and let $\omega_B$ and $\omega_C$
+be the incircles of $\triangle ABD$ and $\triangle ACD$, respectively.
+Suppose that $\omega_B$ and $\omega_C$ are tangent to segment $BC$
+at points $E$ and $F$, respectively.
+Let $P$ be the intersection of segment $AD$ with the
+line joining the centers of $\omega_B$ and $\omega_C$.
+Let $X$ be the intersection point of lines $BI$ and $CP$
+and let $Y$ be the intersection point of lines $CI$ and $BP$.
+Prove that lines $EX$ and $FY$ meet on the incircle of $\triangle ABC$.
+
+---
+
+\paragraph{First solution (homothety).}
+Let $Z$ be the diametrically opposite point on the incircle.
+We claim this is the desired intersection.
+
+\begin{center}
+\begin{asy}
+pair A = dir(110);
+pair B = dir(210);
+pair C = dir(330);
+
+filldraw(A--B--C--cycle, opacity(0.1)+lightred, red);
+filldraw(incircle(A, B, C), opacity(0.1)+lightcyan, lightblue);
+
+pair D = 0.35*B+0.65*C;
+draw(A--D, red);
+
+pair I_B = incenter(A, B, D);
+pair I_C = incenter(A, C, D);
+pair E = foot(I_B, B, C);
+pair F = foot(I_C, B, C);
+
+filldraw(incircle(A, B, D), opacity(0.1)+green, heavygreen);
+filldraw(incircle(A, C, D), opacity(0.1)+green, heavygreen);
+pair I = incenter(A, B, C);
+
+pair P = extension(I_B, I_C, A, D);
+draw(I_B--I_C, heavygreen);
+
+pair X = extension(B, I, C, P);
+pair Y = extension(C, I, B, P);
+pair Z = extension(E, X, F, Y);
+draw(B--I--C, red);
+draw(X--C, dotted+heavygreen);
+draw(Y--B, dotted+heavygreen);
+draw(E--Z--F, dashed+heavygreen);
+
+pair T = extension(B, C, I_B, I_C);
+draw(I_C--T, dotted+heavygreen);
+draw(C--T, dotted+red);
+pair W = foot(I, B, C);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(270));
+dot("$C$", C, dir(270));
+dot("$D$", D, dir(D));
+dot("$I_B$", I_B, dir(170));
+dot("$I_C$", I_C, dir(30));
+dot("$E$", E, dir(E));
+dot("$F$", F, dir(F));
+dot("$I$", I, dir(90));
+dot("$P$", P, dir(250));
+dot("$X$", X, dir(160));
+dot("$Y$", Y, dir(20));
+dot("$Z$", Z, dir(140));
+dot("$T$", T, dir(T));
+dot("$W$", W, dir(W));
+
+/* TSQ Source:
+
+A = dir 110
+B = dir 210 R270
+C = dir 330 R270
+
+A--B--C--cycle 0.1 lightred / red
+incircle A B C 0.1 lightcyan / lightblue
+
+D = 0.35*B+0.65*C
+A--D red
+
+I_B = incenter A B D R170
+I_C = incenter A C D R30
+E = foot I_B B C
+F = foot I_C B C
+
+incircle A B D 0.1 green / heavygreen
+incircle A C D 0.1 green / heavygreen
+I = incenter A B C R90
+
+P = extension I_B I_C A D R250
+I_B--I_C heavygreen
+
+X = extension B I C P R160
+Y = extension C I B P R20
+Z = extension E X F Y R140
+B--I--C red
+X--C dotted heavygreen
+Y--B dotted heavygreen
+E--Z--F dashed heavygreen
+
+T = extension B C I_B I_C
+I_C--T dotted heavygreen
+C--T dotted red
+W = foot I B C
+
+*/
+\end{asy}
+\end{center}
+
+Note that:
+\begin{itemize}
+  \ii $P$ is the insimilicenter of $\omega_B$ and $\omega_C$
+  \ii $C$ is the exsimilicenter of $\omega$ and $\omega_C$.
+\end{itemize}
+Thus by Monge theorem, the insimilicenter of $\omega_B$ and $\omega$
+lies on line $CP$.
+
+This insimilicenter should also lie on the line joining the
+centers of $\omega$ and $\omega_B$, which is $\ol{BI}$,
+hence it coincides with the point $X$.
+So $X \in \ol{EZ}$ as desired.
+
+\paragraph{Second solution (harmonic).}
+Let $T = \ol{I_B I_C} \cap \ol{BC}$, and $W$ the foot from $I$ to $\ol{BC}$.
+Define $Z = \ol{FY} \cap \ol{IW}$.
+Because $\angle I_B D I_C = 90\dg$, we have
+\[ -1 = (I_B I_C; PT) \overset{B}{=} (I I_C; YC)
+  \overset{F}{=} (I\infty; ZW) \]
+So $I$ is the midpoint of $\ol{ZW}$ as desired.
+
+\paragraph{Third solution (outline, barycentric, Andrew Gu).}
+Let $AD = t$, $BD = x$, $CD = y$, so $a=x+y$ and by Stewart's theorem we have
+\begin{equation}
+  (x+y)(xy+t^2) = b^2x+c^2y.
+  \label{eq:17TSTST5stewart}
+\end{equation}
+We then have $D = (0:y:x)$ and so
+\[ \ol{AI_B} \cap \ol{BC} = \left( 0 : y + \frac{tx}{c+t} : \frac{cx}{c+t} \right) \]
+hence intersection with $BI$ gives
+\begin{align*}
+  I_B &= (ax : cy+at : cx).
+  \intertext{Similarly,}
+  I_C &= (ay : by : bx+at).
+\end{align*}
+
+Then, we can compute
+\[ P = \left( 2axy : y(at+bx+cy) : x(at+bx+cy) \right) \]
+since $P \in \ol{I_B I_C}$, and clearly $P \in \ol{AD}$.
+Intersection now gives
+\begin{align*}
+  X &= \left( 2ax : at+bx+cy : 2cx \right) \\
+  Y &= \left( 2ay : 2by : at+bx+cy \right).
+\end{align*}
+
+Finally, we have $BE = \half(c+x-t)$, and similarly for $CF$.
+Now if we reflect
+$D = (0, \frac{s-c}{a}, \frac{s-b}{a})$ over
+$I = (\frac{a}{2s}, \frac{b}{2s}, \frac{c}{2s})$, we get the antipode
+\[ Q \coloneqq \left( 4a^2 : -a^2+2ab-b^2+c^2 : -a^2+2ac-c^2+b^2 \right). \]
+We may then check $Q$ lies on each of lines $EX$ and $FY$
+(by checking $\det(Q,E,X)=0$ using the equation \eqref{eq:17TSTST5stewart}).
+
+---
+
+%%fakesection Walkthrough
+Let $\omega$ denote the incircle of $\triangle ABC$.
+\begin{walk}
+  \ii Identify the point $Z = \ol{EX} \cap \ol{FY}$ in a good diagram.
+  (This was worth a point! Despite this, many contestants were unable to find it.)
+  \ii Consider the positive homothety sending $\omega$ to $\omega_C$.
+  Determine its center.
+  \ii Consider the negative homothety sending $\omega_C$ to $\omega_B$.
+  Determine its center.
+  \ii The composition of the previous two homotheties
+  in (b) and (c) is a negative homothety
+  sending $\omega$ to $\omega_B$.
+  Determine with proof the center of this homothety.
+
+  This is not as simple as the previous two parts;
+  you will need to \emph{use} (b) and (c) to do this part,
+  as well as the simple observation that the center
+  should lie on the $\angle B$ bisector.
+  \ii Conclude that $\ol{FY}$ passes through the point you claimed in (a).
+\end{walk}
+Experts may notice that this walkthrough gives what is essentially
+a proof of Monge d'Alembert theorem.

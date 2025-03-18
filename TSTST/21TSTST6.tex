@@ -1,0 +1,555 @@
+author: Nikolai Beluhov
+desc: Bicentric triangle pair
+hardness: 50
+source: TSTST 2021/6
+tags: [2021-12, yod]
+url: https://aops.com/community/p23864189
+
+---
+
+Triangles $ABC$ and $DEF$ share circumcircle $\Omega$ and incircle $\omega$
+so that points $A$, $F$, $B$, $D$, $C$, and $E$ occur in this order along $\Omega$.
+Let $\Delta_A$ be the triangle formed by lines $AB$, $AC$, and $EF$,
+and define triangles $\Delta_B$, $\Delta_C, \dots, \Delta_F$ similarly.
+Furthermore, let $\Omega_A$ and $\omega_A$ be the circumcircle and incircle
+of triangle $\Delta_A$, respectively, and define circles
+$\Omega_B$, $\omega_B, \dots, \Omega_F$, $\omega_F$ similarly.
+\begin{enumerate}[(a)]
+  \item Prove that the two common external tangents to circles $\Omega_A$ and $\Omega_D$
+    and the two common external tangents to circles $\omega_A$ and $\omega_D$
+    are either concurrent or pairwise parallel.
+
+  \item Suppose that these four lines meet at point $T_A$,
+    and define points $T_B$ and $T_C$ similarly.
+    Prove that points $T_A$, $T_B$, and $T_C$ are collinear.
+\end{enumerate}
+
+---
+
+\begin{center}
+\begin{asy}
+import geometry;
+
+linemargin = 0;
+
+real R = 120;
+pair O = (0, 0);
+
+pair A = rotate(35, O)*(R, 0);
+pair B = rotate(210, O)*(R, 0);
+pair C = rotate(330, O)*(R, 0);
+
+circle omega = incircle(A, B, C);
+circle k = circle((point) O, R);
+
+pair D = rotate(255, O)*(R, 0);
+line[] ts = tangents(omega, (point) D);
+pair E = 2*(projection(ts[0])*O) - D;
+pair F = 2*(projection(ts[1])*O) - D;
+
+pair K = extension(A, B, E, F);
+pair L = extension(A, B, F, D);
+pair M = extension(B, C, F, D);
+pair N = extension(B, C, D, E);
+pair P = extension(C, A, D, E);
+pair Q = extension(C, A, E, F);
+
+triangle dA = triangle(Q, A, K);
+triangle dB = triangle(L, B, M);
+triangle dC = triangle(N, C, P);
+triangle dD = triangle(M, D, N);
+triangle dE = triangle(P, E, Q);
+triangle dF = triangle(K, F, L);
+
+circle oA = incircle(dA);
+circle oB = incircle(dB);
+circle oC = incircle(dC);
+circle oD = incircle(dD);
+circle oE = incircle(dE);
+circle oF = incircle(dF);
+
+circle kA = circumcircle(dA);
+circle kB = circumcircle(dB);
+circle kC = circumcircle(dC);
+circle kD = circumcircle(dD);
+circle kE = circumcircle(dE);
+circle kF = circumcircle(dF);
+
+point similitude(circle a, circle b) {
+  return extension(a.C, b.C, a.C + (0, a.r), b.C + (0, b.r));
+}
+
+point TA = similitude(oA, oD);
+point TB = similitude(oB, oE);
+point TC = similitude(oC, oF);
+
+
+
+draw(A--B--C..cycle);
+draw(D--E--F..cycle);
+draw(omega);
+draw(k);
+
+pen otp = red+opacity(0.5);
+
+draw(TA--projection(tangents(oD, TA)[0])*oD.C, otp);
+draw(TA--projection(tangents(oD, TA)[1])*oD.C, otp);
+draw(TB--projection(tangents(oB, TB)[0])*oB.C, otp);
+draw(TB--projection(tangents(oB, TB)[1])*oB.C, otp);
+draw(TC--projection(tangents(oF, TC)[0])*oF.C, otp);
+draw(TC--projection(tangents(oF, TC)[1])*oF.C, otp);
+//draw(tangents(oA, TA), otp);
+//draw(tangents(oB, TB), otp);
+//draw(tangents(oC, TC), otp);
+
+pen ktp = lightolive+opacity(0.5);
+
+draw(TA--projection(tangents(kD, TA)[0])*kD.C, ktp);
+draw(TA--projection(tangents(kD, TA)[1])*kD.C, ktp);
+draw(TB--projection(tangents(kB, TB)[0])*kB.C, ktp);
+draw(TB--projection(tangents(kB, TB)[1])*kB.C, ktp);
+draw(TC--projection(tangents(kF, TC)[0])*kF.C, ktp);
+draw(TC--projection(tangents(kF, TC)[1])*kF.C, ktp);
+//draw(tangents(kA, TA), ktp);
+//draw(tangents(kB, TB), ktp);
+//draw(tangents(kC, TC), ktp);
+
+pen op = blue;
+
+draw(oA, op);
+draw(oB, op);
+draw(oC, op);
+draw(oD, op);
+draw(oE, op);
+draw(oF, op);
+
+pen kp = heavygreen;
+
+draw(kA, kp);
+draw(kB, kp);
+draw(kC, kp);
+draw(kD, kp);
+draw(kE, kp);
+draw(kF, kp);
+
+draw(line(TA, TB), 1.0 + heavymagenta);
+
+
+
+dot(A);
+dot(B);
+dot(C);
+dot(D);
+dot(E);
+dot(F);
+dot(TA);
+dot(TB);
+dot(TC);
+
+
+
+label("$A$", A, dir(A));
+label("$B$", B, dir(B));
+label("$C$", C, dir(C));
+label("$D$", D, dir(D));
+label("$E$", E, dir(E));
+label("$F$", F, dir(F));
+label("$T_A$", TA, dir((1, 0)));
+label("$T_B$", TB, dir((1, 0)));
+label("$T_C$", TC, dir((1, 0)));
+
+\end{asy}
+\end{center}
+
+Let $I$ and $r$ be the center and radius of $\omega$, and let $O$ and $R$ be the
+center and radius of $\Omega$. Let $O_A$ and $I_A$ be the circumcenter and
+incenter of triangle $\Delta_A$, and define $O_B$, $I_B, \dots, I_F$
+similarly. Let $\omega$ touch $EF$ at $A_1$, and define $B_1$, $C_1, \dots,
+F_1$ similarly.
+
+\paragraph{Part (a).} All solutions to part (a) will prove the stronger claim
+that
+\[(\Omega_A\cup \omega_A)\sim (\Omega_D\cup \omega_D).\]
+The four lines will concur at the homothetic center of these figures (possibly
+at infinity).
+
+\subparagraph{Solution 1 (author)} Let the second tangent to $\omega$ parallel to $EF$ meet lines $AB$ and $AC$ at $P$ and $Q$, respectively, and let the second tangent to $\omega$ parallel to $BC$ meet lines $DE$ and $DF$ at $R$ and $S$, respectively. Furthermore, let $\omega$ touch $PQ$ and $RS$ at $U$ and $V$, respectively.
+
+Let $h$ be inversion with respect to $\omega$. Then $h$ maps $A$, $B$, and $C$ onto the midpoints of the sides of triangle $D_1E_1F_1$. So $h$ maps $k$ onto the Euler circle of triangle $D_1E_1F_1$.
+
+Similarly, $h$ maps $k$ onto the Euler circle of triangle $A_1B_1C_1$.
+Therefore, triangles $A_1B_1C_1$ and $D_1E_1F_1$ share a common nine-point
+circle $\gamma$. Let $K$ be its center; its radius equals $\frac{1}{2}r$.
+
+Let $H$ be the reflection of $I$ in $K$. Then $H$ is the common orthocenter of triangles $A_1B_1C_1$ and $D_1E_1F_1$.
+
+Let $\gamma_U$ of center $K_U$ and radius $\frac{1}{2}r$ be the Euler circle of
+triangle $UE_1F_1$, and let $\gamma_V$ of center $K_V$ and radius $\frac{1}{2}r$ be
+the Euler circle of triangle $VB_1C_1$.
+
+Let $H_U$ be the orthocenter of triangle $UE_1F_1$. Since quadrilateral
+$D_1E_1F_1U$ is cyclic, vectors $\overrightarrow{HH_U}$ and
+$\overrightarrow{D_1U}$ are equal. Consequently,
+$\overrightarrow{KK_U}=\frac{1}{2}\overrightarrow{D_1U}$. Similarly,
+$\overrightarrow{KK_V}=\frac{1}{2}\overrightarrow{A_1V}$.
+
+Since both of $A_1U$ and $D_1V$ are diameters in $\omega$, vectors
+$\overrightarrow{D_1U}$ and $\overrightarrow{A_1V}$ are equal. Therefore, $K_U$
+and $K_V$ coincide, and so do $\gamma_U$ and $\gamma_V$.
+
+As above, $h$ maps $\gamma_U$ onto the circumcircle of triangle $APQ$ and
+$\gamma_V$ onto the circumcircle of triangle $DRS$. Therefore, triangles $APQ$
+and $DRS$ are inscribed inside the same circle $\Omega_{AD}$.
+
+Since $EF$ and $PQ$ are parallel, triangles $\Delta_A$ and $APQ$ are homothetic,
+and so are figures $\Omega_A \cup \omega_A$ and $\Omega_{AD}\cup \omega$.
+Consequently, we have
+\[(\Omega_A\cup \omega_A)\sim (\Omega_{AD}\cup \omega)\sim (\Omega_D\cup
+\omega_D),\]
+which solves part (a).
+
+%If figures $\omega_A \cup k_A$ and $\omega_D \cup k_D$ are noncongruent, then the two common external tangents to $\omega_A$ and $\omega_D$ and the two common external tangents to $k_A$ and $k_D$ meet at their homothetic center. Otherwise, the two common external tangents to $\omega_A$ and $\omega_D$ and the two common external tangents to $k_A$ and $k_D$ are pairwise parallel.
+
+\subparagraph{Solution 2 (Michael Ren)} As in the previous solution, let the
+second tangent to $\omega$ parallel to $EF$ meet $AB$ and $AC$ at $P$ and $Q$,
+respectively. Let $(APQ)$ meet $\Omega$ again at $D'$, so that $D'$ is the
+Miquel point of $\{AB, AC, BC, PQ\}$. Since the quadrilateral formed by these
+lines has incircle $\omega$, it is classical that $D'I$ bisects $\angle PD'C$
+and $BD'Q$ (e.g. by DDIT).
+
+Let $\ell$ be the tangent to $\Omega$ at $D'$ and $D'I$ meet $\Omega$ again at
+$M$. We have
+\[
+  \measuredangle(\ell, D'B) = \measuredangle D'CB = \measuredangle D'QP =
+  \measuredangle(D'Q, EF).
+\]
+Therefore $D'I$ also bisects the angle between $\ell$ and the line parallel to
+$EF$ through $D'$. This means that $M$ is one of the arc midpoints of $EF$.
+Additionally, $D'$ lies on arc $BC$ not containing $A$, so $D'=D$.
+
+Similarly, letting the second tangent to $\omega$ parallel to $BC$ meet $DE$ and
+$DF$ again at $R$ and $S$, we have $ADRS$ cyclic.
+
+\begin{lemma*}
+  There exists a circle $\Omega_{AD}$ tangent to $\Omega_A$ and $\Omega_D$ at
+  $A$ and $D$, respectively.
+\end{lemma*}
+\begin{proof}
+  (This step is due to Ankan Bhattacharya.) It is equivalent to have
+  $\measuredangle OAO_A = \measuredangle O_DDO$. Taking isogonals with respect
+  to the shared angle of $\triangle ABC$ and $\Delta_A$, we see that
+  \[\measuredangle OAO_A = \measuredangle(\perp EF, \perp BC) = \measuredangle
+  (EF, BC).\]
+  (Here, $\perp EF$ means the direction perpendicular to $EF$.) By symmetry,
+  this is equal to $\measuredangle O_DDO$.
+\end{proof}
+
+The circle $(ADPQ)$ passes through $A$ and $D$, and is tangent to $\Omega_A$ by
+homothety. Therefore it coincides with $\Omega_{AD}$, as does $(ADRS)$. Like the
+previous solution, we finish with
+\[(\Omega_A\cup \omega_A)\sim (\Omega_{AD}\cup \omega)\sim (\Omega_D\cup
+\omega_D).\]
+
+\subparagraph{Solution 3 (Andrew Gu)}
+Construct triangles homothetic to $\Delta_A$ and $\Delta_D$ (with positive ratio) which
+have the same circumcircle; it suffices to show that these copies have the same
+incircle as well. Let $O$ be the center of this common circumcircle, which we
+take to be the origin, and $M_{XY}$ denote the point on the circle such that the
+tangent at that point is parallel to line $XY$ (from the two possible choices,
+we make the choice that corresponds to the arc midpoint on $\Omega$, e.g. $M_{AB}$
+should correspond to the arc midpoint on the internal angle bisector of $ACB$).
+The left diagram below shows the original triangles $ABC$ and $DEF$, while the
+right diagram shows the triangles homothetic to $\Delta_A$ and $\Delta_D$.
+
+\begin{center}
+  \begin{asy}
+    size(6cm);
+    pair O = origin;
+    pair Mbc = dir(-90);
+    pair Mca = dir(40);
+    pair Mab = dir(160);
+    pair A = -Mca*Mab/Mbc;
+    pair B = -Mab*Mbc/Mca;
+    pair C = -Mbc*Mca/Mab;
+    pair I = Mbc+Mca+Mab;
+    pair Mef = dir(75);
+    pair D = 2*foot(O, I, Mef)-Mef;
+    pair X = midpoint(D--I);
+    pair Y = X+5*dir(90)*(X-D);
+    pair Mfd = intersectionpoints(X--Y, unitcircle)[0];
+    pair Mde = 2*foot(O, X, Mfd)-Mfd;
+    pair E = -Mde*Mef/Mfd;
+    pair F = -Mef*Mfd/Mde;
+
+    draw(unitcircle);
+    draw(A--B--C--cycle, red);
+    draw(D--E--F--cycle, blue);
+    draw(incircle(A, B, C));
+
+    string[] names = {"$A$", "$B$", "$C$", "$M_{BC}$", "$M_{CA}$", "$M_{AB}$", "$I$", "$D$", "$E$", "$F$", "$M_{FD}$", "$M_{DE}$", "$M_{EF}$"};
+    pair[] pts = {A, B, C, Mbc, Mca, Mab, I, D, E, F, Mfd, Mde, Mef};
+    pair[] labels = {A, B, C, Mbc, Mca, Mab, I, D, E, F, Mfd, Mde, Mef};
+    for(int i=0; i<names.length; ++i){
+      dot(names[i], pts[i], dir(labels[i]));
+    }
+  \end{asy}
+  \begin{asy}
+    size(6cm);
+    pair O = origin;
+    pair Mbc = dir(-90);
+    pair Mca = dir(40);
+    pair Mab = dir(160);
+    pair Mef = dir(75);
+    pair oldI = Mbc+Mca+Mab;
+    pair I = -Mef+Mca+Mab;
+    pair oldD = 2*foot(O, oldI, Mef)-Mef;
+    pair X = midpoint(oldD--oldI);
+    pair Y = X+5*dir(90)*(X-oldD);
+    pair Mfd = intersectionpoints(X--Y, unitcircle)[0];
+    pair Mde = 2*foot(O, X, Mfd)-Mfd;
+    pair A = Mca*Mab/Mef;
+    pair B = Mab*Mef/Mca;
+    pair C = Mef*Mca/Mab;
+    pair D = Mfd*Mde/Mbc;
+    pair E = Mde*Mbc/Mfd;
+    pair F = Mbc*Mfd/Mde;
+
+    draw(unitcircle);
+    draw(C--A--B, red);
+    draw(B--C, blue);
+    draw(F--D--E, blue);
+    draw(E--F, red);
+    draw(incircle(A, B, C));
+
+    string[] names = {" ", " ", " ", "$M_{BC}$", "$M_{CA}$", "$M_{AB}$", "$I$", " ", " ", " ", "$M_{FD}$", "$M_{DE}$", "$M_{EF}$"};
+    pair[] pts = {A, B, C, Mbc, Mca, Mab, I, D, E, F, Mfd, Mde, Mef};
+    pair[] labels = {A, B, C, Mbc, Mca, Mab, I, D, E, F, Mfd, Mde, Mef};
+    for(int i=0; i<names.length; ++i){
+      dot(names[i], pts[i], dir(labels[i]));
+    }
+  \end{asy}
+\end{center}
+
+Using the fact that the incenter is the orthocenter of the arc midpoints, the
+incenter of $\Delta_A$ in this reference frame is $M_{AB}+M_{AC}-M_{EF}$ and the
+incenter of $\Delta_D$ in this reference frame is $M_{DE}+M_{DF}-M_{BC}$. Since
+$ABC$ and $DEF$ share a common incenter, we have
+\[M_{AB}+M_{BC}+M_{CA}=M_{DE}+M_{EF}+M_{FD}.\]
+Thus the copies of $\Delta_A$ and $\Delta_D$ have the same incenter, and
+therefore the same incircle as well (Euler's theorem determines the inradius).
+
+\paragraph{Part (b).}
+We present several solutions for this part of the problem. Solutions 3 and 4
+require solving part (a) first, while the others do not. Solutions 1, 4, and 5
+define $T_A$ solely as the exsimilicenter of $\omega_A$ and $\omega_D$, whereas
+solutions 2 and 3 define $T_A$ solely as the exsimilicenter of $\Omega_A$ and
+$\Omega_D$.
+
+\subparagraph{Solution 1 (author)}
+
+By Monge's theorem applied to $\omega$, $\omega_A$, and $\omega_D$,
+points $A$, $D$, and $T_A$ are collinear. Therefore, $T_A= AD\cap I_AI_D$.
+
+Let $p$ be pole-and-polar correspondence with respect to $\omega$. Then $p$ maps
+$A$ onto line $E_1F_1$ and $D$ onto line $B_1C_1$. Consequently, $p$ maps line
+$AD$ onto $X_A=B_1C_1\cap E_1F_1$.
+
+Furthermore, $p$ maps the line that bisects the angle formed by lines $AB$ and
+$EF$ and does not contain $I$ onto the midpoint of segment $A_1F_1$. Similarly,
+$p$ maps the line that bisects the angle formed by lines $AC$ and $EF$ and does
+not contain $I$ onto the midpoint of segment $A_1E_1$. So $p$ maps $I_A$ onto
+the midline of triangle $A_1E_1F_1$ opposite $A_1$. Similarly, $p$ maps $I_D$
+onto the midline of triangle $D_1B_1C_1$ opposite $D_1$. Consequently, $p$ maps
+line $I_AI_D$ onto the intersection point $Y_A$ of this pair of midlines, and
+$p$ maps $T_A$ onto line $X_AY_A$.
+
+As in the solution to part (a), let $H$ be the common orthocenter of triangles
+$A_1B_1C_1$ and $D_1E_1F_1$. Let $H_A$ be the foot of the altitude from $A_1$ in
+triangle $A_1B_1C_1$ and let $H_D$ be the foot of the altitude from $D_1$ in
+triangle $D_1E_1F_1$. Furthermore, let $L_A=HA_1\cap E_1F_1$ and $L_D=HD_1\cap
+B_1C_1$.
+
+Since the reflection of $H$ in line $B_1C_1$ lies on $\omega$, $A_1H \cdot HH_A$ equals half the power of $H$ with respect to $\omega$. Similarly, $D_1H \cdot HH_D$ equals half the power of $H$ with respect to $\omega$.
+
+Then $A_1H \cdot HH_A = D_1H \cdot HH_D$ and $A_1HH_D\sim D_1HH_A$. Since
+$\angle HH_DL_A = 90^\circ = \angle HH_AL_D$, figures $A_1HH_DL_A$ and
+$D_1HH_AL_D$ are similar as well. Consequently,
+\[
+  \frac{HL_A}{L_AA_1}=\frac{HL_D}{L_DD_1}=s
+\]
+as a signed ratio.
+%$L_A$ divides segment $HA_1$ in
+%the same signed ratio $s$ as $L_D$ divides segment $HD_1$.
+
+Let the line through $A_1$ parallel to $E_1F_1$ and the line through $D_1$
+parallel to $B_1C_1$ meet at $Z_A$. Then $HX_A/X_AZ_A=s$
+%$X_A$ divides segment $HZ_A$ in signed ratio $s$
+and $Y_A$ is the midpoint of segment $X_AZ_A$. Therefore, $H$ lies on
+line $X_AY_A$. This means that $T_A$ lies on the polar of $H$ with respect to
+$\omega$, and by symmetry so do $T_B$ and $T_C$.
+
+
+\subparagraph{Solution 2 (author)}
+
+As in the first solution to part (a), let
+$h$ be inversion with respect to $\omega$, let $\gamma$ of center $K$ be the common
+Euler circle of triangles $A_1B_1C_1$ and $D_1E_1F_1$, and let $H$ be their
+common orthocenter.
+
+Again as in the solution to part (a), $h$ maps $\Omega_A$ onto the nine-point
+circle $\gamma_A$ of triangle $A_1E_1F_1$ and $\Omega_D$ onto the nine-point
+circle $\gamma_D$ of triangle $D_1B_1C_1$.
+
+Let $K_A$ and $K_D$ be the centers of $\gamma_A$ and $\gamma_D$, respectively,
+and let $\ell_A$ be the perpendicular bisector of segment $K_AK_D$. Since
+$\gamma_A$ and $\gamma_D$ are congruent (both of them are of radius
+$\frac{1}{2}r$), they are reflections of each other across $\ell_A$.
+
+Inversion $h$ maps the two common external tangents of $\Omega_A$ and $\Omega_D$
+onto the two circles $\alpha$ and $\beta$ through $I$ that are tangent to both
+of $\gamma_A$ and $\gamma_D$ in the same way. (That is, either internally to both or
+externally to both.) Consequently, $\alpha$ and $\beta$ are reflections of each
+other in $\ell_A$ and so their second point of intersection $S_A$, which $h$
+maps $T_A$ onto, is the reflection of $I$ in $\ell_A$.
+
+Define $\ell_B$, $\ell_C$, $S_B$, and $S_C$ similarly. Then $S_B$ is the reflection of $I$ in $\ell_B$ and $S_C$ is the reflection of $I$ in $\ell_C$.
+
+As in the solution to part (a),
+$\overrightarrow{KK_A}=\frac{1}{2}\overrightarrow{D_1A_1}$ and
+$\overrightarrow{KK_D}=\frac{1}{2}\overrightarrow{A_1D_1}$. Consequently, $K$ is
+the midpoint of segment $K_AK_D$ and so $K$ lies on $\ell_A$. Similarly, $K$
+lies on $\ell_B$ and $\ell_C$.
+
+Therefore, all four points $I$, $S_A$, $S_B$, and $S_C$ lie on the circle of center $K$ that contains $I$. (This is also the circle on diameter $IH$.) Since points $S_A$, $S_B$, and $S_C$ are concyclic with $I$, their images $T_A$, $T_B$, and $T_C$ under $h$ are collinear, and the solution is complete.
+
+\subparagraph{Solution 3 (Ankan Bhattacharya)}
+
+From either of the first two solutions to part (a), we know that there is a
+circle $\Omega_{AD}$ passing through $A$ and $D$ which is (internally) tangent
+to $\Omega_A$ and $\Omega_D$. By Monge's theorem applied to $\Omega_A,
+\Omega_D$, and $\Omega_{AD}$, it follows that $A, D$, and $T_A$ are collinear.
+
+The inversion at $T_A$ swapping $\Omega_A$ with $\Omega_D$ also swaps $A$ with
+$D$ because $T_A$ lies on $AD$ and $A$ is not homologous to $D$. Let $\Omega_A$
+and $\Omega_D$ meet $\Omega$ again at $L_A$ and $L_D$. Since $ADL_AL_D$ is
+cyclic, the same inversion at $T_A$ also swaps $L_A$ and $L_D$, so $T_A=AD\cap
+L_AL_D$.
+
+By \href{https://aops.com/community/c6h598547p3551881}{Taiwan TST
+2014}, $L_A$ and $L_D$ are the tangency points of the $A$-mixtilinear and
+$D$-mixtilinear incircles, respectively, with $\Omega$. Therefore $AL_A\cap
+DL_D$ is the exsimilicenter $X$ of $\Omega$ and $\omega$. Then $T_A, T_B,$ and
+$T_C$ all lie on the polar of $X$ with respect to $\Omega$.
+
+\subparagraph{Solution 4 (Andrew Gu)}
+
+We show that $T_A$ lies on the radical axis of the point circle at $I$ and
+$\Omega$, which will solve the problem.  Let $I_A$ and $I_D$ be the centers of
+$\omega_A$ and $\omega_D$ respectively. By the Monge's theorem applied to
+$\omega$, $\omega_A$, and $\omega_D$, points $A$, $D$, and $T_A$ are collinear.
+Additionally, these other triples are collinear: $(A, I_A, I), (D, I_D, I),
+(I_A, I_D, T)$.  By Menelaus's theorem, we have
+
+\[\frac{T_AD}{T_AA}=\frac{I_AI}{I_AA}\cdot\frac{I_DD}{I_DI}.\]
+If $s$ is the length of the side opposite $A$ in $\Delta_A$, then we compute
+\begin{align*}
+  \frac{I_AI}{I_AA} &=\frac{s/\cos(A/2)}{r_A/\sin(A/2)} \\
+                    &=\frac{2R_A\sin(A)\sin(A/2)}{\cos(A/2)} \\
+                    &=\frac{4R_A\sin^2(A/2)}{r_A} \\
+                    &=\frac{4R_Ar^2}{r_AAI^2}.
+\end{align*}
+From part (a), we know that $\frac{R_A}{r_A}=\frac{R_D}{r_D}$.
+Therefore, doing a similar calculation for $\frac{I_DD}{I_DI}$, we get
+\begin{align*}
+  \frac{T_AD}{T_AA} &=\frac{I_AI}{I_AA}\cdot\frac{I_DD}{I_DI} \\
+                    &=\frac{4R_Ar^2}{r_AAI^2}\cdot \frac{r_DDI^2}{4R_Dr^2} \\
+                    &=\frac{DI^2}{AI^2}.
+\end{align*}
+Thus $T_A$ is the point where the tangent to $(AID)$ at $I$ meets $AD$ and
+$T_AI^2=T_AA\cdot T_AD$. This shows what we claimed at the start.
+
+\subparagraph{Solution 5 (Ankit Bisain)}
+
+As in the previous solution, it suffices to show that $\frac{I_AI}{AI_A}\cdot
+\frac{DI_D}{I_DI} = \frac{DI^2}{AI^2}$. Let $AI$ and $DI$ meet $\Omega$ again at
+$M$ and $N$, respectively. Let $\ell$ be the line parallel to $BC$ and tangent
+to $\omega$ but different from $BC$. Then
+\[
+  \frac{DI_D}{I_DI}=\frac{d(D, BC)}{d(BC, \ell)} = \frac{DB\cdot DC/2R}{2r} =
+  \frac{MI^2-MD^2}{4Rr}.
+\]
+%(One way to prove $DB\cdot DC=MI^2-MD^2$ is to let $CD$ meet $(BIC)$ again at
+%$B'$, show that $DB=DB'$, and apply power of a point.)
+Since $IDM\sim IAN$, we have
+\[\frac{DI_D}{I_DI}\cdot \frac{I_AI}{AI_A} =
+\frac{MI^2-MD^2}{NI^2-NA^2}=\frac{DI^2}{AI^2},\]
+as desired.
+
+%\begin{remark}
+%The proof of part (a) also shows that lines $I_AO_A$ and $I_DO_D$ are parallel, and similarly for lines $I_BO_B$ and $I_EO_E$ and lines $I_CO_C$ and $I_FO_F$.
+%\end{remark}
+%
+%\bigskip
+%
+%\begin{remark}
+%All proofs of part (b) also show that lines $IO$ and $T_AT_BT_C$ are perpendicular. (Since $h$ maps $k$ onto $e$, the center $K$ of $e$ lies on line $IO$. Therefore, the reflection $H$ of $I$ in $K$ lies on line $IO$ as well.)
+%\end{remark}
+
+\begin{remark*}[Author comments on generalization of part (b) with a
+  circumscribed hexagram]
+Let triangles $ABC$ and $DEF$ be circumscribed about the same circle $\omega$ so that they form a hexagram. However, we do not require anymore that they are inscribed in the same circle.
+
+Define circles $\Omega_A$, $\omega_A, \dots, \omega_F$ as in the problem.
+Let $T^\text{Circ}_A$ be the intersection point of the two common external
+tangents to circles $\Omega_A$ and $\Omega_D$, and define points $T^\text{Circ}_B$
+and $T^\text{Circ}_C$ similarly. Also let $T^\text{In}_A$ be the intersection
+point of the two common external tangents to circles $\omega_A$ and $\omega_D$, and define
+points $T^\text{In}_B$ and $T^\text{In}_C$ similarly.
+
+Then points $T^\text{Circ}_A$, $T^\text{Circ}_B$, and $T^\text{Circ}_C$ are collinear
+and points $T^\text{In}_A$, $T^\text{In}_B$, and $T^\text{In}_C$ are also
+collinear.
+
+The second solution to part (b) of the problem works also for the circumcircles
+part of the generalisation. To see that segments $K_AK_D$, $K_BK_E$, and
+$K_CK_F$ still have a common midpoint, let $M$ be the centroid of points $A$,
+$B$, $C$, $D$, $E$, and $F$. Then the midpoint of segment $K_AK_D$ divides
+segment $OM$ externally in ratio $3 : 1$, and so do the other two midpoints as
+well.
+
+For the incircles part of the generalisation, we start out as in the first
+solution to part (b) of the problem, and eventually we reduce everything to the
+following:
+
+\emph{Let points $A_1$, $B_1$, $C_1$, $D_1$, $E_1$, and $F_1$ lie on circle $\omega$. Let lines $B_1C_1$ and $E_1F_1$ meet at point $X_A$, let the line through $A_1$ parallel to $B_1C_1$ and the line through $D_1$ parallel to $E_1F_1$ meet at point $Z_A$, and define points $X_B$, $Z_B$, $X_C$, and $Z_C$ similarly. Then lines $X_AZ_A$, $X_BZ_B$, and $X_CZ_C$ are concurrent.}
+
+Take $\omega$ as the unit circle and assign complex numbers $u$, $v$, $w$, $x$, $y$, and $z$ to points $A_1$, $F_1$, $B_1$, $D_1$, $C_1$, and $E_1$, respectively, so that when we permute $u$, $v$, $w$, $x$, $y$, and $z$ cyclically the configuration remains unchanged. Then by standard complex bash formulas we obtain that each two out of our three lines meet at $\varphi/\psi$, where \[\varphi = \sum_\text{Cyc} u^2vw(wx - wy + xy)(y - z)\] and \[\psi = {} - u^2w^2y^2 - v^2x^2z^2 - 4uvwxyz + \sum_\text{Cyc} u^2(vwxy - vwxz + vwyz - vxyz + wxyz).\]
+
+(But the calculations were too difficult for me to do by hand, so I used SymPy.)
+\end{remark*}
+
+\bigskip
+
+\begin{remark*}[Author comments on generalization of part (b) with an
+  inscribed hexagram]
+Let triangles $ABC$ and $DEF$ be inscribed inside the same circle $\Omega$ so that they form a hexagram. However, we do not require anymore that they are circumscribed about the same circle.
+
+Define points $T^\text{Circ}_A$, $T^\text{Circ}_B$, \dots, $T^\text{In}_C$ as
+in the previous remark. It looks like once again points $T^\text{Circ}_A$,
+$T^\text{Circ}_B$, and $T^\text{Circ}_C$ are collinear and points $T^\text{In}_A$,
+$T^\text{In}_B$, and $T^\text{In}_C$ are also collinear. However, I do not
+have proofs of these claims.
+\end{remark*}
+
+\begin{remark*}[Further generalization from Andrew Gu]
+  Let $ABC$ and $DEF$ be triangles which share an
+  inconic, or equivalently share a circumconic.  Define points $T^\text{Circ}_A$,
+  $T^\text{Circ}_B, \dots, T^\text{In}_C$ as in the previous remarks. Then
+  it is conjectured that points $T^\text{Circ}_A$, $T^\text{Circ}_B$, and
+  $T^\text{Circ}_C$ are collinear and points $T^\text{In}_A$, $T^\text{In}_B$,
+  and $T^\text{In}_C$ are also collinear. (Note that extraversion may be
+  required depending on the configuration of points, e.g. excircles instead of
+  incircles.) Additionally, it appears that the insimilicenters of the
+  circumcircles lie on a line perpendicular to the line through
+  $T^\text{Circ}_A$, $T^\text{Circ}_B$, and $T^\text{Circ}_C$.
+\end{remark*}

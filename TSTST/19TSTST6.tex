@@ -1,0 +1,126 @@
+author: Nikolai Beluhov
+desc: Decimal digits of $P(n)$ always Fibonacci
+source: TSTST 2019/6
+tags: [2019-07, yesno, polynomial, wishful, nice, mods, gimel]
+hardness: 50
+url: https://aops.com/community/p12608536
+
+---
+
+Suppose $P$ is a polynomial with integer coefficients
+such that for every positive integer $n$,
+the sum of the decimal digits of $|P(n)|$
+is not a Fibonacci number.
+Must $P$ be constant?
+
+---
+
+The answer is yes, $P$ must be constant.
+By $S(n)$ we mean the sum of the decimal digits of $|n|$.
+
+We need two claims.
+\begin{claim*}
+  If $P(x) \in \ZZ[x]$ is nonconstant with
+  positive leading coefficient,
+  then there exists an integer polynomial $F(x)$
+  such that all coefficients of $P \circ F$
+  are positive except for the second one, which is negative.
+\end{claim*}
+\begin{proof}
+  We will actually construct a cubic $F$.
+  We call a polynomial \emph{good} if it has the property.
+
+  First, consider $T_0(x) = x^3+x+1$.
+  Observe that in $T_0^{\deg P}$,
+  every coefficient is strictly positive,
+  except for the second one, which is zero.
+
+  Then, let $T_1(x) = x^3 - \frac1D x^2 + x + 1$.
+  Using continuity as $D \to \infty$,
+  it follows that if $D$ is large enough (in terms of $\deg P$),
+  then $T_1^{\deg P}$ is good,
+  with $-\frac3D x^{3\deg P-1}$ being the only negative coefficient.
+
+  Finally, we can let $F(x) = CT_1(x)$
+  where $C$ is a sufficiently large multiple of $D$
+  (in terms of the coefficients of $P$);
+  thus the coefficients of $(CT_1(x))^{\deg P}$ dominate
+  (and are integers), as needed.
+\end{proof}
+\begin{claim*}
+  There are infinitely many Fibonacci numbers
+  in each residue class modulo $9$.
+\end{claim*}
+\begin{proof}
+  Note the Fibonacci sequence is periodic modulo $9$
+  (indeed it is periodic modulo any integer).
+  Moreover (allowing negative indices),
+  \begin{align*}
+    F_{0} = 0 &\equiv 0 \pmod 9 \\
+    F_{1} = 1 &\equiv 1 \pmod 9 \\
+    F_{3} = 2 &\equiv 2 \pmod 9 \\
+    F_{4} = 3 &\equiv 3 \pmod 9 \\
+    F_{7} = 13 &\equiv 4 \pmod 9 \\
+    F_{5} = 5 &\equiv 5 \pmod 9 \\
+    F_{-4} = -3 &\equiv 6 \pmod 9 \\
+    F_{9} = 34 &\equiv 7 \pmod 9 \\
+    F_{6} = 8 &\equiv 8 \pmod 9. \qedhere
+  \end{align*}
+\end{proof}
+
+We now show how to solve the problem with the two claims.
+WLOG $P$ satisfies the conditions of the first claim,
+and choose $F$ as above.
+Let
+\[ P(F(x)) = c_N x^N - c_{N-1} x^{N-1} + c_{N-2} x^{N-2} + \dots + c_0 \]
+where $c_i > 0$ (and $N = 3 \deg P$).
+Then if we select $x = 10^e$ for $e$ large enough
+(say $x > 10\max_i c_i$),
+the decimal representation $P(F(10^e))$ consists of the concatenation of
+\begin{itemize}
+  \ii the decimal representation of $c_N-1$,
+  \ii the decimal representation of $10^e-c_{N-1}$
+  \ii the decimal representation of $c_{N-2}$,
+  with several leading zeros,
+  \ii the decimal representation of $c_{N-3}$,
+  with several leading zeros,
+  \ii \dots
+  \ii the decimal representation of $c_0$, with several leading zeros.
+\end{itemize}
+(For example,
+if $P(F(x)) = 15x^3 - 7x^2 + 4x + 19$,
+then $P(F(1000)) = 14{,}993{,}004{,}019$.)
+Thus, the sum of the digits of this expression
+is equal to
+\[ S(P(F(10^e))) = 9e + k \]
+for some constant $k$ depending only on $P$ and $F$,
+independent of $e$.
+But this will eventually hit a Fibonacci number by the second claim,
+contradiction.
+
+\begin{remark*}
+  It is important to control the number of negative coefficients
+  in the created polynomial.
+  If one tries to use this approach on a polynomial $P$
+  with $m > 0$ negative coefficients,
+  then one would require that the Fibonacci sequence
+  is surjective modulo $9m$ for any $m > 1$,
+  which is not true:
+  for example the Fibonacci sequence avoids all numbers
+  congruent to $4 \mod{11}$ (and thus $4 \mod{99}$).
+
+  In bases $b$ for which surjectivity modulo $b-1$ fails,
+  the problem is false.
+  For example, $P(x) = 11x+4$ will avoid all Fibonacci
+  numbers if we take sum of digits in base $12$,
+  since that base-$12$ sum is necessarily $4 \pmod{11}$,
+  hence not a Fibonacci number.
+\end{remark*}
+
+
+---
+
+
+(A \emph{Fibonacci number} is an element of the sequence
+$F_0$, $F_1$, \dots\ defined recursively by
+$F_0 = 0$, $F_1 = 1$, and $F_{k+2} = F_{k+1} + F_k$ for $k \ge 0$.)

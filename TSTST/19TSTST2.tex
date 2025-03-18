@@ -1,0 +1,253 @@
+author: Merlijn Staps
+desc: Cute angle chase
+source: TSTST 2019/2
+tags: [2019-07, anglechase, rich, good, bet]
+hardness: 20
+url: https://aops.com/community/p12608478
+
+---
+
+Let $ABC$ be an acute triangle with circumcircle $\Omega$
+and orthocenter $H$.
+Points $D$ and $E$ lie on segments $AB$ and $AC$
+respectively, such that $AD = AE$.
+The lines through $B$ and $C$ parallel to $\ol{DE}$
+intersect $\Omega$ again at $P$ and $Q$, respectively.
+Denote by $\omega$ the circumcircle of $\triangle ADE$.
+\begin{enumerate}[(a)]
+  \ii Show that lines $PE$ and $QD$ meet on $\omega$.
+  \ii Prove that if $\omega$ passes through $H$,
+  then lines $PD$ and $QE$ meet on $\omega$ as well.
+\end{enumerate}
+
+---
+
+We will give one solution to (a),
+then several solutions to (b).
+
+\paragraph{Solution to (a).}
+Note that $\dang AQP = \dang ABP = \dang ADE$
+and $\dang APQ = \dang ACQ = \dang AED$,
+so we have a spiral similarity $\triangle ADE \sim \triangle AQP$.
+Therefore, lines $PE$ and $QD$ meet at the second
+intersection of $\omega$ and $\Omega$ other than $A$.
+Call this point $X$.
+% (Note this does not even depend on $\omega$ passing through $H$.)
+
+\paragraph{Solution to (b) using angle chasing.}
+Let $L$ be the reflection of $H$ across $\ol{AB}$,
+which lies on $\Omega$.
+\begin{claim*}
+  Points $L$, $D$, $P$ are collinear.
+\end{claim*}
+\begin{proof}
+  This is just angle chasing:
+  \begin{align*}
+    \dang CLD &= \dang DHL
+    = \dang DHA + \dang AHL = \dang DEA + \dang AHC \\
+    &= \dang ADE + \dang CBA = \dang ABP + \dang CBA
+    = \dang CBP = \dang CLP. \qedhere
+  \end{align*}
+\end{proof}
+
+\begin{center}
+\begin{asy}
+size(7cm);
+
+pair A = dir(125);
+pair B = dir(210);
+pair C = dir(-30);
+pair O = (0,0);
+
+pair H =orthocenter(A,B,C);
+pair I = incenter(A,B,C);
+
+pair J = 2*foot(H,A,I) - H;
+
+pair D = intersectionpoints(A--B,circumcircle(A,H,J))[1];
+pair E = intersectionpoints(A--C,circumcircle(A,H,J))[1];
+
+pair S = intersectionpoints(circumcircle(A,B,C),circumcircle(A,H,J))[0];
+
+pair P = extension(S,E,D,J);
+pair Q = extension(S,D,E,J);
+pair X = extension(P,E,Q,D);
+
+draw(B--foot(B,A,C),dotted+gray);
+draw(A--foot(A,B,C),dotted+gray);
+draw(C--foot(C,A,B),dotted+gray);
+
+draw(circumcircle(A,B,C),purple);
+draw(circumcircle(A,H,J),red);
+
+draw(D--E,red);
+draw(B--P,purple);
+draw(C--Q,purple);
+
+pair HH = 1.9*circumcenter(A,D,E)-1.1*D;
+pair BB = -B;
+
+pair K = extension(D,P,E,Q);
+pair L = extension(P,D,C,H);
+
+draw(Q--E,dotted+red);
+draw(P--L,dashed+red);
+draw(H--L, dotted);
+draw(P--X--Q, orange+dashed);
+
+
+draw(A--B--C--A);
+dot("$A$", A, dir(A));
+//dot("$Z$",Z,dir(-90));
+dot("$B$",B,dir(225));
+dot("$C$",C,dir(C));
+dot("$H$",H,dir(225));
+dot("$D$",D,2*dir(56));
+dot("$E$",E,dir(30));
+dot("$P$",P,dir(P));
+dot("$Q$",Q,dir(Q));
+dot("$L$",L,dir(L));
+dot("$K$",K,dir(K-A));
+dot("$X$",X,dir(X), red);
+
+label("$\omega$",HH,red);
+label("$\Omega$",-1.1*B,purple);
+\end{asy}
+\end{center}
+
+Now let $K \in \omega$ such that $DHKE$ is an isosceles trapezoid,
+i.e.\ $\dang BAH = \dang KAE$.
+\begin{claim*}
+  Points $D$, $K$, $P$ are collinear.
+\end{claim*}
+\begin{proof}
+  Using the previous claim,
+  \[ \dang KDE = \dang KAE = \dang BAH = \dang LAB
+    = \dang LPB = \dang DPB = \dang PDE. \qedhere \]
+\end{proof}
+
+By symmetry, $\ol{QE}$ will then pass through the same $K$, as needed.
+\begin{remark*}
+  These two claims imply each other,
+  so guessing one of them allows one to realize the other.
+  It is likely the latter is easiest to guess from the diagram,
+  since it does not need any additional points.
+\end{remark*}
+
+\paragraph{Solution to (b) by orthogonal circles (found by contestants).}
+We define $K$ as in the previous solution,
+but do not claim that $K$ is the desired intersection.
+Instead, we note that:
+
+\begin{claim*}
+  Point $K$ is the orthocenter of isosceles triangle $APQ$.
+\end{claim*}
+\begin{proof}
+  Notice that $AH = AK$ and $BC = PQ$.
+  Moreover from $\ol{AH} \perp \ol{BC}$
+  we deduce $\ol{AK} \perp \ol{PQ}$ by reflection
+  across the angle bisector.
+
+  In light of the formula ``$AH^2 = 4R^2 - a^2$'', this implies the conclusion.
+\end{proof}
+
+Let $M$ be the midpoint of $\ol{PQ}$.
+Since $\triangle APQ$ is isosceles,
+\[ \ol{AKM} \perp \ol{PQ} \implies MK \cdot MA = MP^2 \]
+by orthocenter properties.
+
+So to summarize
+\begin{itemize}
+  \ii The circle with diameter $\ol{PQ}$ is orthogonal to $\omega$.
+  In other words, point $P$ lies on the polar of $Q$ with respect to $\omega$.
+  \ii The point $X = \ol{QD} \cap \ol{PE}$ is on $\omega$.
+\end{itemize}
+On the other hand, if we let $K' = \ol{QE} \cap \omega$,
+then by Brokard theorem on $XDK'E$,
+the polar of $Q = \ol{XD} \cap \ol{K'E}$ pass through $\ol{DK'} \cap \ol{XE}$;
+this point must therefore be $P$ and $K' = K$ as desired.
+
+\paragraph{Solution to (b) by complex numbers (Yang Liu and Michael Ma).}
+Let $M$ be the arc midpoint of $\widehat{BC}$.
+We use the standard arc midpoint configuration.
+We have that
+\[ A = a^2, \; B = b^2, \; C = c^2, \; M = -bc, \;
+H = a^2+b^2+c^2, \; P = \frac{a^2c}{b}, \; Q = \frac{a^2b}{c}, \]
+where $M$ is the arc midpoint of $\widehat{BC}$.
+By direct angle chasing we can verify that $\ol{MB} \parallel \ol{DH}$.
+Also, $D \in \ol{AB}$.
+Therefore, we can compute $D$ as follows.
+\[ d + a^2b^2 \bar{d} = a^2+b^2 \text{ and }
+  \frac{d-h}{\bar{d} - \bar{h}} = -mb^2 = b^3c \implies
+  d = \frac{a^2(a^2c+b^2c+c^3-b^3)}{c(bc+a^2)}. \]
+By symmetry, we have that
+\[ e = \frac{a^2(a^2b+bc^2+b^3-c^3)}{b(bc+a^2)}. \]
+To finish, we want to show that the angle
+between $\ol{DP}$ and $\ol{EQ}$ is angle $A$.
+To show this, we compute
+$\frac{d-p}{e-q} \Big/ \ol{\frac{d-p}{e-q}}$.
+First, we compute
+\begin{align*}
+  d-p &= \frac{a^2(a^2c+b^2c+c^3-b^3)}{c(bc+a^2)} - \frac{a^2c}{b} \\
+  &= a^2 \left(\frac{a^2c+b^2c+c^3-b^3}{c(bc+a^2)} - \frac{c}{b} \right)
+  = \frac{a^2(a^2c-b^3)(b-c)}{bc(bc+a^2)}.
+\end{align*}
+By symmetry,
+\[ \frac{d-p}{e-q} = -\frac{a^2c-b^3}{a^2b-c^3}
+  \implies \frac{d-p}{e-q} \Big/ \ol{\frac{d-p}{e-q}}
+  = \frac{a^2b^3c}{a^2bc^3} = \frac{b^2}{c^2} \]
+as desired.
+
+\paragraph{Solution to (b) using untethered moving points (Zack Chroman).}
+We work in the real projective plane $\mathbb{RP}^2$,
+and animate $C$ linearly on a fixed line through $A$.
+
+Recall:
+\begin{lemma*}
+  [Zack's lemma]
+  Suppose points $A$, $B$ have degree $d_1$, $d_2$,
+  and there are $k$ values of $t$ for which $A=B$.
+  Then line $AB$ has degree at most $d_1+d_2-k$.
+  Similarly, if lines $\ell_1$, $\ell_2$ have degrees $d_1$, $d_2$,
+  and there are $k$ values of $t$ for which $\ell_1=\ell_2$,
+  then the intersection $\ell_1 \cap \ell_2$ has degree at most $d_1+d_2-k$.
+\end{lemma*}
+
+Now, note that $H$ moves linearly in $C$ on line $BH$.
+Furthermore, angles $\angle AHE$, $\angle AHF$ are fixed,
+we get that $D$ and $E$ have degree $2$.
+One way to see this is using the lemma; $D$ lies on line $AB$,
+which is fixed, and line $HD$ passes through a point at infinity
+which is a constant rotation of the point at infinity on line $AH$,
+and therefore has degree $1$.
+Then $D$, $E$ have degree at most $1+1-0=2$.
+
+Now, note that $P,Q$ move linearly in $C$.
+Both of these are because the circumcenter $O$ moves linearly in $C$,
+and $P$, $Q$ are reflections of $B$, $C$ in a
+line through $O$ with fixed direction, which also moves linearly.
+
+So by the lemma, the lines $PD$, $QE$ have degree at most $3$.
+I claim they actually have degree $2$;
+to show this it suffices to give an example of a choice of $C$
+for which $P=D$ and one for which $Q=E$.
+But an easy angle chase shows that in the unique case when $P=B$,
+we get $D=B$ as well and thus $P=D$. Similarly when $Q=C$, $E=C$.
+It follows from the lemma that lines $PD$, $QE$ have degree at most $2$.
+
+Let $\ell_\infty$ denote the line at infinity.
+I claim that the points $P_1=PD \cap \ell_\infty$,
+$P_2=QE \cap \ell_\infty$ are projective in $C$.
+Since $\ell_\infty$ is fixed, it suffices to show by the lemma that there
+exists some value of $C$ for which $QE=\ell_\infty$ and $PD = \ell_\infty$.
+But note that as $C \to \infty$, all four points $P,D,Q,E$ go to infinity.
+It follows that $P_1$, $P_2$ are projective in $C$.
+
+Then to finish,
+recall that we want to show that $\angle (PD, QE)$ is constant.
+It suffices then to show that there's a constant rotation
+sending $P_1$ to $P_2$. Since $P_1$, $P_2$ are projective,
+it suffices to verify this for $3$ values of $C$.
+
+We can take $C$ such that $\angle ABC=90$, $\angle ACB = 90$,
+or $AB=AC$, and all three cases are easy to check.

@@ -1,0 +1,253 @@
+author: Luke Robitaille
+desc: $BD \perp AC$ contrived incenter geo
+source: USA TST 2024/2
+url: https://aops.com/community/p29409083
+tags: [2023-12, trig, contrived, anglechase, dalet]
+
+---
+
+Let $ABC$ be a triangle with incenter $I$.
+Let segment $AI$ intersect the incircle of triangle $ABC$ at point $D$.
+Suppose that line $BD$ is perpendicular to line $AC$.
+Let $P$ be a point such that $\angle BPA = \angle PAI = 90^\circ$.
+Point $Q$ lies on segment $BD$ such that the
+circumcircle of triangle $ABQ$ is tangent to line $BI$.
+Point $X$ lies on line $PQ$ such that $\angle IAX = \angle XAC$.
+Prove that $\angle AXP = 45^\circ$.
+
+---
+
+We show several approaches.
+\paragraph{First solution, by author.}
+\begin{center}
+  \begin{asy}
+    unitsize(1.0inches);
+
+    real eps = 1.15104332322704; /* trololol */
+    real v = 52 + eps;
+    real w = 150 + eps;
+
+    pair V = dir(v);
+    pair W = dir(w);
+    pair A = 2*V*W/(V+W);
+    pair D = dir((v+w)/2);
+    pair B = (D/(V*V)-1/D+2/W)/(1/(V*V)+1/(W*W));
+    pair I = 0;
+    pair U = 2*foot(W,I,B)-W;
+    pair C = 2*U*V/(U+V);
+    pair P = foot(B,A,A+A*dir(90));
+    pair Q = B + dir(D-B)*(P-B)/dir(P-B);
+    pair X = extension(P,Q,A,incenter(A,I,V));
+
+    draw(circumcircle(V,-V,W));
+    draw(A--B--C--cycle);
+    draw(A--I);
+    draw(I--U,linewidth(0.3));
+    draw(B--P--A);
+    draw(B--Q--D);
+    draw(B--I,linewidth(0.3));
+    draw(P--Q--X);
+    draw(A--X,linewidth(0.3));
+
+    pair O = circumcenter(A,Q,B);
+    pair AA = (A-O)*dir(20)+O;
+    pair BB = (B-O)*dir(-20)+O;
+
+    draw(arc(O,BB,AA),linewidth(0.4)+dashed);
+    dot("$A$",A,dir(45));
+    dot("$D$",D,dir(-30));
+    dot("$B$",B,dir(260));
+    dot("$I$",I,dir(0));
+    dot("$E$",U,dir(U));
+    dot("$C$",C,dir(C));
+    dot("$P$",P,dir(P));
+    dot("$Q$",Q,dir(-55));
+    dot("$X$",X,dir(270));
+  \end{asy}
+\end{center}
+
+\begin{claim*}
+  We have $BP=BQ$.
+\end{claim*}
+\begin{proof}
+  For readability, we split the proof into three unconditional parts.
+  \begin{itemize}
+    \ii We translate the condition $\ol{BD} \perp \ol{AC}$.
+    It gives $\angle DBA = 90\dg - A$, so that
+    \begin{align*}
+      \angle DBI &= \left| \frac B2 - (90\dg - A) \right| = \frac{|A-C|}{2} \\
+      \angle BDI &= \angle DBA + \angle BAD = (90\dg-A) + \frac A2 = 90\dg - \frac A2.
+    \end{align*}
+    Hence, letting $r$ denote the inradius, we can translate $\ol{BD} \perp \ol{AC}$
+    into the following trig condition:
+    \[ \sin \frac B2 = \frac{r}{BI} = \frac{DI}{BI}
+      = \frac{\sin \angle DBI}{\sin \angle BDI}
+      = \frac{\sin\frac{|A-C|}{2}}{\sin\left(90\dg-\frac A2\right)}. \]
+    \ii The length of $BP$ is given from right triangle $APB$ as
+    \[ BP = BA \cdot \sin \angle PAB = BA \cdot \sin\left( 90\dg-\frac A2 \right). \]
+    \ii The length of $BQ$ is given from the law of sines on triangle $ABQ$.
+    The tangency gives $\angle BAQ = \angle DBI$ and
+    $\angle BQA = 180\dg - \angle ABI = 180\dg - \angle IBE$ and thus
+    \[ BQ = BA \cdot \frac{\sin \angle BAQ}{\sin \angle AQB}
+      = BA \cdot \frac{\sin \angle DBI}{\sin \angle ABI}
+      = BA \cdot \frac{\sin \frac{|A-C|}{2}}{\sin \frac B2}. \]
+  \end{itemize}
+  The first bullet implies the expressions in the second and third bullet
+  for $BP$ and $BQ$ are equal, as needed.
+\end{proof}
+\begin{remark*}
+  In the above proof, one dos not actually need to compute $\angle DBI = \frac{|A-C|}{2}$.
+  The proof works equally leaving that expression intact as $\sin \angle DBI$
+  in place of $\sin \frac{|A-C|}{2}$.
+\end{remark*}
+
+Now we can finish by angle chasing. We have
+\[ \angle PBQ = \angle PBA + \angle ABD = \frac{A}{2} + 90\dg - A =
+  90\dg - \frac{A}{2}.
+\]
+Then
+\[
+  \angle BPQ = \frac{180\dg - \angle PBQ}{2} = 45\dg + \frac{A}{4},
+\]
+so $\angle APQ = 90\dg - \angle BPQ = 45\dg - \frac{A}{4}$.
+Also, if we let $J$ be the incenter of $IAC$,
+then $\angle PAJ = 90 \dg + \frac{A}{4}$, and clearly $X$ lies on line $AJ$.
+Then $\angle APQ + \angle PAJ = 135 \dg < 180 \dg$,
+so $X$ lies on the same side of $AP$ as $Q$ and $J$ (by the parallel postulate).
+Therefore $\angle AXP = 180 \dg - 135 \dg = 45 \dg$, as desired.
+
+\begin{remark*}
+  The problem was basically written backwards by starting from the $BD \perp AC$
+  condition, turning that into trig, and then contriving $P$ and $Q$ so that the
+  $BD \perp AC$ condition implied $BP=BQ$.
+\end{remark*}
+
+\paragraph{Second solution, by Jeffrey Kwan.}
+We prove the following restatement:
+\begin{quote}
+	Consider isosceles triangle $AEF$ with $AE = AF$ and incenter $D$.
+	Let $B$ be the point on ray $AE$ such that $BD\perp AF$,
+	and let $P$ be the projection of $B$ onto the line through $A$ parallel to $EF$.
+	Let $I$ be the point diametrically opposite $A$ in the circumcircle of $AEF$,
+	and let $Q$ be the point on line $BD$ such that $BI$ is tangent to the circumcircle of
+	$AQB$. Then $\angle APQ = 45^\circ - \angle A / 4$.
+\end{quote}
+
+First note that $\angle DFE = 45^\circ - \angle A / 4$, so it suffices to show that $\ol{PQ}\parallel \ol{DF}$.
+Let $U = \ol{BD} \cap \ol{EF}$, and let $V = BI\cap (AEF)$. Observe that:
+\begin{itemize}
+\item $P$ and $V$ both lie on the circle with diameter $AB$, so $\angle BVP = \angle PAB = 90^\circ - \angle A / 2$.
+\item We have $\angle EVB = \angle EVI = \angle A / 2 = \angle DUF = \angle BUE$.
+Hence $BEUV$ is cyclic.
+\end{itemize}
+Now $\angle BVU = \angle AEU = 90^\circ - \angle A / 2 = \angle BVP$, so $\ol{PUV}$ are collinear.
+\begin{center}
+\begin{asy}
+unitsize(0.9inches);
+size(600);
+pair A, E, F, D, B, I, P, Q, U, V;
+A = dir(90);
+E = dir(191);
+F = dir(349);
+D = incenter(A, E, F);
+I = dir(270);
+B = extension(A, E, D, foot(D, A, F));
+P = foot(B, A, A + E - F);
+Q = extension(B, D, P, P + F - D);
+U = extension(B, D, E, F);
+V = extension(B, I, P, U);
+draw(A--E--F--cycle, orange);
+draw(circumcircle(A, E, F), red);
+draw(incircle(A, E, F), heavyred);
+draw(E--B--foot(D, A, F), orange);
+draw(A--P--B, heavycyan);
+draw(A--Q--B^^P--Q, lightblue);
+draw(P--V, dotted+magenta);
+draw(B--V, dotted+magenta);
+draw(circumcircle(A, P, B), magenta);
+draw(circumcircle(A, P, Q), purple + dashed);
+dot("$A$", A, dir(60));
+dot("$B$", B, dir(B));
+dot("$E$", E, dir(160));
+dot("$F$", F, dir(F));
+dot("$D$", D, dir(330));
+dot("$I$", I, dir(270));
+dot("$P$", P, dir(135));
+dot("$Q$", Q, dir(300));
+dot("$U$", U, dir(270));
+dot("$V$", V, dir(300));
+dot(foot(D, A, F));
+\end{asy}
+\end{center}
+
+From the tangency condition, we have that $\angle AQB = 180^\circ - \angle ABI$, which implies that
+\[\angle AQU + \angle APU = \angle AQB + \angle APV = (180^\circ - \angle ABI) + \angle ABI = 180^\circ,\]
+and so $APUQ$ is cyclic. Finally, note that $D$ is the orthocenter of $\triangle AUF$, which implies that
+\[\angle APQ = \angle AUQ = \angle AUD = \angle AFD = \angle DFE.\]
+This forces $\ol{PQ}\parallel \ol{DF}$, as desired.
+
+\paragraph{Third solution by Pitchayut Saengrungkongka and Maxim Li.}
+We provide yet another proof that $BP = BQ$.
+\begin{center}
+\begin{asy}
+size(8cm);
+import geometry;
+real eps = 1.15104332322704; /* trololol */
+real v = 52 + eps;
+real v = 52 + eps;
+real w = 150 + eps;
+real w = 150 + eps;
+pair V = dir(v);
+pair W = dir(w);
+pair A = 2*V*W/(V+W);
+pair D = dir((v+w)/2);
+pair B = (D/(V*V)-1/D+2/W)/(1/(V*V)+1/(W*W));
+pair I = 0;
+pair U = 2*foot(W,I,B)-W;
+pair C = 2*U*V/(U+V);
+pair P = foot(B,A,A+A*dir(90));
+pair Q = B + dir(D-B)*(P-B)/dir(P-B);
+pair X = extension(P,Q,A,incenter(A,I,V));
+pair T = extension(U,W,D,D+A-P);
+fill(P--A--Q--B--cycle, red+opacity(0.2));
+fill(T--D--I--W--cycle, blue+opacity(0.2));
+draw(A--B--C--cycle, linewidth(1.0));
+draw(incircle(A,B,C), linewidth(0.8));
+draw(A--I, linewidth(0.7));
+draw(P--A--Q--B--cycle, red+linewidth(0.8));
+draw(T--D--I--W--cycle, blue+linewidth(0.8));
+draw(P--X, linewidth(0.7));
+draw(T--U, blue+linewidth(0.8));
+draw(Q--D, red+linewidth(0.7));
+dot("$V$", V, dir(53));
+dot("$W$", W, dir(180));
+dot("$A$", A, dir(77));
+dot("$D$", D, dir(54));
+dot("$B$", B, dir(-130));
+dot("$I$", I, dir(-54));
+dot("$U$", U, dir(-90));
+dot("$C$", C, dir(-19));
+dot("$P$", P, dir(146));
+dot("$Q$", Q, dir(-70));
+dot("$X$", X, dir(-12));
+dot("$T$", T, dir(-141));
+\end{asy}
+\end{center}
+Let the incircle be $\omega$ and touch $BC$ and $AB$ at point $U$ and $W$.
+Let the tangent to $\omega$ at $D$ meet $UW$ at $T$.
+Notice that $T$ is the pole of $BD$ with respect to $\omega$, so $IT\perp BD$.
+Now, we make the following critical claim, which in particular implies $BP = BQ$.
+\begin{claim*}
+  Quadrilaterals $DIWT$ and $PBQA$ are inversely similar.
+\end{claim*}
+\begin{proof}
+  This follows from four angle relations.
+  \begin{itemize}
+  \item $\dang IDT = \dang BPA  = 90^\circ$.
+  \item $\dang TIW = \dang ABQ$.
+  \item $\dang DIT = \dang IAC = \dang BAI = \dang ABP$.
+  \item $\dang ITW = \dang QBI = \dang QAB$. \qedhere
+\end{itemize}
+\end{proof}
+With $BP = BQ$ obtained,
+one finishes with the same angle chasing as in the first solution.

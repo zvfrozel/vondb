@@ -1,0 +1,502 @@
+desc: 100-gon death
+hardness: 55
+source: USA TST 2020/6
+tags: [2020-01, good, weird, anglechase, inversion, kurumi]
+author: Michael Ren
+url: https://aops.com/community/p13913742
+
+---
+
+Let $P_1P_2 \dots P_{100}$ be a cyclic $100$-gon,
+and let $P_i = P_{i+100}$ for all $i$.
+Define $Q_i$ as the intersection of diagonals
+$\ol{P_{i-2}P_{i+1}}$ and $\ol{P_{i-1}P_{i+2}}$ for all integers $i$.
+
+Suppose there exists a point $P$
+satisfying $\ol{PP_i} \perp \ol{P_{i-1}P_{i+1}}$
+for all integers $i$.
+Prove that the points $Q_1$, $Q_2$, \dots, $Q_{100}$
+are concyclic.
+
+---
+
+We show two solutions.
+In addition, Luke Robitaille has a reasonable complex numbers solution
+posted at \url{https://aops.com/community/p26795631}.
+
+\paragraph{Solution to proposed problem.}
+We let $\ol{PP_2}$ and $\ol{P_1P_3}$
+intersect (perpendicularly) at point $K_2$,
+and define $K_\bullet$ cyclically.
+
+\begin{center}
+\begin{asy}
+size(16cm);
+
+pair P_1 = dir(178);
+pair P_2 = dir(136);
+pair P_3 = dir(82);
+pair P_4 = dir(32);
+
+pair K_2 = foot(P_2, P_1, P_3);
+pair K_3 = foot(P_3, P_2, P_4);
+pair P = extension(P_2, K_2, P_3, K_3);
+pair K_4 = foot(P_3, P, P_4);
+pair P_5 = -P_3+2*foot(origin, P_3, K_4);
+pair K_5 = foot(P_4, P, P_5);
+pair P_6 = -P_4+2*foot(origin, P_4, K_5);
+pair K_1 = foot(P_2, P, P_1);
+pair P_0 = -P_2+2*foot(origin, P_2, K_1);
+
+fill(P--P_1--P_2--cycle, opacity(0.1)+paleblue);
+fill(P--P_2--P_3--cycle, opacity(0.1)+lightgreen);
+fill(P--P_3--P_4--cycle, opacity(0.1)+paleblue);
+fill(P--P_4--P_5--cycle, opacity(0.1)+lightgreen);
+
+draw(unitcircle, blue);
+draw(P_0--P_1--P_2--P_3--P_4--P_5--P_6, blue);
+
+draw(P--P_1, red);
+draw(P--P_2, red);
+draw(P--P_3, red);
+draw(P--P_4, red);
+draw(P--P_5, red);
+draw(P_1--P_3--P_5, deepgreen);
+draw(P_0--P_2--P_4--P_6, deepgreen);
+
+draw(P_0--P_3, orange);
+draw(P_1--P_4, orange);
+draw(P_2--P_5, orange);
+draw(P_3--P_6, orange);
+
+pair H_1 = orthocenter(P, P_1, P_2);
+pair H_2 = orthocenter(P, P_2, P_3);
+pair H_3 = orthocenter(P, P_3, P_4);
+pair H_4 = orthocenter(P, P_4, P_5);
+pair Q_2 = extension(P_0, P_3, P_1, P_4);
+pair Q_3 = extension(P_1, P_4, P_2, P_5);
+pair Q_4 = extension(P_2, P_5, P_3, P_6);
+
+pair N = circumcenter(K_1, K_2, K_3);
+draw(CP(N, K_1), deepgreen);
+pair E = 2*N-P;
+pair E_2 = foot(E, P_1, P_3);
+pair E_3 = foot(E, P_2, P_4);
+pair E_4 = foot(E, P_3, P_5);
+
+draw(E_2--E_3--E_4, lightblue+1.5);
+draw(K_2--K_3--K_4, orange+1.5);
+
+draw(P--H_1--E, deepcyan);
+draw(P--H_2--E, deepcyan);
+draw(P--H_3--E, deepcyan);
+draw(P--E);
+draw(E_2--E, brown);
+draw(E_3--E, brown);
+draw(E_4--E, brown);
+pair F_1 = extension(E, H_1, P_0, P_3);
+pair F_2 = extension(E, H_2, P_1, P_4);
+pair F_3 = extension(E, H_3, P_2, P_5);
+
+draw(E_2--E_4, deepgreen+1.5);
+
+dot("$P_1$", P_1, dir(P_1));
+dot("$P_2$", P_2, dir(P_2));
+dot("$P_3$", P_3, dir(P_3));
+dot("$P_4$", P_4, dir(P_4));
+dot("$K_2$", K_2, dir(K_2));
+dot("$K_3$", K_3, dir(K_3));
+dot("$P$", P, dir(P));
+dot("$K_4$", K_4, dir(K_4));
+dot("$P_5$", P_5, dir(P_5));
+dot("$K_5$", K_5, dir(K_5));
+dot(P_6);
+dot("$K_1$", K_1, dir(K_1));
+dot(P_0);
+dot("$H_1$", H_1, dir(H_1));
+dot("$H_2$", H_2, dir(H_2));
+dot("$H_3$", H_3, dir(H_3));
+dot("$H_4$", H_4, dir(H_4));
+dot("$Q_2$", Q_2, dir(Q_2));
+dot("$Q_3$", Q_3, dir(Q_3));
+dot("$Q_4$", Q_4, dir(Q_4));
+dot(N);
+dot("$E$", E, dir(E));
+dot("$E_2$", E_2, dir(E_2));
+dot("$E_3$", E_3, dir(E_3));
+dot("$E_4$", E_4, dir(E_4));
+dot(F_1);
+dot(F_2);
+dot(F_3);
+
+/* TSQ Source:
+
+!size(16cm);
+
+P_1 = dir 178
+P_2 = dir 136
+P_3 = dir 82
+P_4 = dir 32
+
+K_2 = foot P_2 P_1 P_3
+K_3 = foot P_3 P_2 P_4
+P = extension P_2 K_2 P_3 K_3
+K_4 = foot P_3 P P_4
+P_5 = -P_3+2*foot(origin, P_3, K_4)
+K_5 = foot P_4 P P_5
+P_6 .= -P_4+2*foot(origin, P_4, K_5)
+K_1 = foot P_2 P P_1
+P_0 .= -P_2+2*foot(origin, P_2, K_1)
+
+!fill(P--P_1--P_2--cycle, opacity(0.1)+paleblue);
+!fill(P--P_2--P_3--cycle, opacity(0.1)+lightgreen);
+!fill(P--P_3--P_4--cycle, opacity(0.1)+paleblue);
+!fill(P--P_4--P_5--cycle, opacity(0.1)+lightgreen);
+
+unitcircle blue
+P_0--P_1--P_2--P_3--P_4--P_5--P_6 blue
+
+P--P_1 red
+P--P_2 red
+P--P_3 red
+P--P_4 red
+P--P_5 red
+P_1--P_3--P_5 deepgreen
+P_0--P_2--P_4--P_6 deepgreen
+
+P_0--P_3 orange
+P_1--P_4 orange
+P_2--P_5 orange
+P_3--P_6 orange
+
+H_1 = orthocenter P P_1 P_2
+H_2 = orthocenter P P_2 P_3
+H_3 = orthocenter P P_3 P_4
+H_4 = orthocenter P P_4 P_5
+Q_2 = extension P_0 P_3 P_1 P_4
+Q_3 = extension P_1 P_4 P_2 P_5
+Q_4 = extension P_2 P_5 P_3 P_6
+
+N .= circumcenter K_1 K_2 K_3
+CP N K_1 deepgreen
+E = 2*N-P
+E_2 = foot E P_1 P_3
+E_3 = foot E P_2 P_4
+E_4 = foot E P_3 P_5
+
+E_2--E_3--E_4 lightblue+1.5
+K_2--K_3--K_4 orange+1.5
+
+P--H_1--E deepcyan
+P--H_2--E deepcyan
+P--H_3--E deepcyan
+P--E
+E_2--E brown
+E_3--E brown
+E_4--E brown
+F_1 .= extension E H_1 P_0 P_3
+F_2 .= extension E H_2 P_1 P_4
+F_3 .= extension E H_3 P_2 P_5
+
+E_2--E_4 deepgreen+1.5
+
+*/
+\end{asy}
+\end{center}
+
+\begin{claim*}
+  The points $K_\bullet$ are concyclic
+  say with circumcircle $\gamma$.
+\end{claim*}
+\begin{proof}
+  Note that $PP_1 \times PK_1 = PP_2 \times PK_2 = \dots$
+  so the result follows by inversion at $P$.
+\end{proof}
+Let $E_i$ be the second intersection
+of line $\ol{P_{i-1} K_i P_{i+1}}$ with $\gamma$;
+then it follows that the perpendiculars to $\ol{P_{i-1} P_{i+1}}$
+at $E_i$ all concur at a point $E$,
+which is the reflection of $P$ across the center of $\gamma$.
+
+We let $H_2 = \ol{P_1P_3} \cap \ol{P_2P_4}$
+denote the orthocenter of $\triangle PP_2P_3$
+and define $H_\bullet$ cyclically.
+\begin{claim*}
+  We have
+  \[ \ol{EH_2} \perp \ol{P_1 P_4} \parallel \ol{K_2 K_3}
+    \quad\text{and}\quad
+    \ol{PH_2} \perp \ol{E_2 E_3} \parallel \ol{P_2 P_3}.  \]
+\end{claim*}
+\begin{proof}
+  Both parallelisms follow by Reim's theorem through
+  $\angle E_2 H_2 E_3 = \angle K_2 H_2 K_3$,
+  So we need to show the perpendicularities.
+
+  Note that $\ol{H_2 P}$ and $\ol{H_2 E}$
+  are respectively circum-diameters of
+  $\triangle H_2K_2K_3$ and $\triangle H_2E_2E_3$.
+  As $\ol{K_2 K_3}$ and $\ol{E_2 E_3}$ are anti-parallel,
+  it follows $\ol{H_2P}$ and $\ol{H_2E}$ are isogonal
+  and we derive both perpendicularities.
+\end{proof}
+
+\begin{claim*}
+  The points $E$, $Q_3$, $E_3$ are collinear.
+\end{claim*}
+\begin{proof}
+  We use the previous claim.
+  The parallelisms imply that
+  \[ \frac{E_3H_2}{E_3P_2} = \frac{E_2H_2}{E_2P_3}
+    = \frac{E_4H_3}{E_4P_3} = \frac{E_3H_3}{E_3P_4}. \]
+  Now consider a homothety centered at $E_3$ sending $H_2$ to $P_2$
+  and $H_3$ to $P_4$.
+  Then it should send the orthocenter of $\triangle EH_2H_3$ to $Q_3$,
+  proving the result.
+\end{proof}
+
+From all this it follows that $\triangle EQ_2Q_3 \sim \triangle PK_2K_3$
+as the opposite sides are all parallel.
+Repeating this we actually find a homothety of $100$-gons
+\[ Q_1 Q_2 Q_3 \dots \sim K_1 K_2 K_3 \dots \]
+and that concludes the proof.
+
+\begin{remark*}
+  The proposer remarks that in fact,
+  if one lets $s$ be an integer
+  and instead defines $R_i = P_i P_{i+s} \cap P_{i+1} P_{i+s+1}$,
+  then the $R_\bullet$ are concyclic.
+  The present problem is the case $s=3$.
+  We comment on a few special cases:
+  \begin{itemize}
+    \ii There is nothing to prove for $s=1$.
+    \ii If $s=0$, this amounts to proving
+    that poles of $\ol{P_i P_{i+1}}$ are concyclic;
+    by inversion this is equivalent to showing the
+    midpoints of the sides are concyclic.
+    This is an interesting problem but not as difficult.
+    \ii The problem for $s=2$ is to show that our $H_\bullet$
+    are concyclic, which uses the $s=0$ case as a lemma.
+  \end{itemize}
+\end{remark*}
+
+\paragraph{Solution to generalization (Nikolai Beluhov).}
+We are going to need some well-known lemmas.
+
+\begin{lemma*}
+Suppose that $ABCD$ is inscribed in a circle $\Gamma$.
+Let the tangents to $\Gamma$ at $A$ and $B$ meet at $E$,
+let the tangents to $\Gamma$ at $C$ and $D$ meet at $F$,
+and let diagonals $AC$ and $BD$ meet at $P$.
+Then points $E$, $F$, and $P$ are collinear.
+\end{lemma*}
+
+\begin{proof}
+Let the circle of center $E$ and radius $EA = EB$
+meet lines $AC$ and $BD$ for the second time at points $U$ and $V$.
+By a simple angle chase, triangles $EUV$ and $FCD$ are homothetic.
+\end{proof}
+
+\begin{lemma*}
+Suppose that points $X$ and $Y$ are isogonal conjugates
+in polygon $\mathcal{A} = A_1A_2 \dots A_n$.
+(This means that lines $A_iX$ and $A_iY$
+are symmetric with respect to the interior angle bisector of
+$\angle A_{i - 1}A_iA_{i + 1}$ for all $i$,
+where $A_{n + j} \equiv A_j$ for all $j$.)
+Then the $2n$ projections of $X$ and $Y$ on the sides of $\mathcal{A}$ are concyclic.
+\end{lemma*}
+
+\begin{proof}
+By a simple angle chase, for all $i$ we have that
+the four projections on sides
+$A_{i - 1}A_i$ and $A_iA_{i + 1}$ are concyclic.
+Say that they lie on circle $\Gamma_i$.
+Consider the midpoint $M$ of segment $XY$.
+For every side $s$ of $\mathcal{A}$,
+we have that $M$ is equidistant from the projections of $X$ and $Y$ on $s$.
+Therefore, $M$ is the center of $\Gamma_i$ for all $i$,
+and thus all of the $\Gamma_i$ coincide.
+\end{proof}
+
+\begin{lemma*}
+Let $\Gamma'$ and $\Gamma''$ be two circles
+and let $r$ be some fixed real number.
+Then the locus of points $X$ satisfying
+$\opname{Pow}(X, \Gamma') \colon \opname{Pow}(X, \Gamma'') = r$
+is a circle.
+\end{lemma*}
+
+\begin{proof}
+This is a classical result in circle geometry.
+A full proof is given, for example,
+in item 115 of Roger Johnson's \emph{Advanced Euclidean Geometry}.
+\end{proof}
+
+
+We are ready to solve the problem.
+Let $\mathcal{P}$ be our polygon,
+let $O$ be its the circumcenter,
+and let $\Gamma$ be its circumcircle.
+
+Fix any index $i$. In triangle $P_{i - 1}P_iP_{i + 1}$,
+we have that line $P_iP$ contains the altitude through $P_i$
+and line $P_iO$ contains the circumradius through $P_i$.
+Therefore, these two lines are symmetric with respect
+to the interior angle bisector of $\angle P_{i - 1}P_iP_{i + 1}$.
+
+Thus points $P$ and $O$ are isogonal conjugates in $\mathcal{P}$.
+By Lemma 2, it follows that the projections of $O$
+onto the sides of $\mathcal{P}$ are concyclic.
+In other words, the midpoints of the sides of
+$\mathcal{P}$ lie on some circle $\omega$.
+
+Let $M_i$ be the midpoint of segment $P_iP_{i + 1}$
+and let the tangents to $\Gamma$ at points $P_i$ and $P_{i + 1}$ meet at $T_i$.
+Since inversion with respect to $\Gamma$ swaps $M_i$ and $T_i$ for all $i$,
+and also since all of the $M_i$ lie on the same circle $\omega$,
+we obtain that all of the $T_i$ lie on the same circle $\Omega$.
+
+\begin{center}
+\begin{asy}
+import geometry;
+
+pair O = (0, 0);
+real R = 135;
+circle Gamma = circle((point) O, R);
+pair P = (15, 10);
+
+pair[] PP;
+
+PP.push(rotate(95, O)*(R, 0));
+PP.push(rotate(125, O)*(R, 0));
+
+int n = 6;
+
+pair get_next(pair A, pair B) {
+  pair F = projection(line(P, B))*A;
+  pair C = 2*(projection(line(A, F))*O) - A;
+  return C;
+}
+
+for (int i = 2; i <= n - 1; i = i + 1) {
+  PP.push(get_next(PP[i - 2], PP[i - 1]));
+}
+
+pair[] QQ;
+
+QQ.push((0, 0));
+QQ.push((0, 0));
+
+for (int i = 2; i <= n - 3; i = i + 1) {
+  QQ.push(extension(PP[i - 2], PP[i + 1], PP[i - 1], PP[i + 2]));
+}
+
+pair[] TT;
+
+for (int i = 0; i <= n - 2; i = i + 1) {
+  TT.push(extension(PP[i], rotate(90, PP[i])*O, PP[i + 1], rotate(90, PP[i + 1])*O));
+}
+
+circle Omega = circle(TT[2], TT[3], TT[4]);
+draw(arc(Omega.C, Omega.r, 85, 330), 1 + green);
+draw(arc(O, R, 85, 330), 1 + blue);
+
+for (int i = 0; i <= n - 2; i = i + 1) {
+  draw(PP[i]--PP[i + 1], 1 + blue);
+  draw(PP[i]--TT[i]--PP[i + 1], 1 + green);
+}
+
+for (int i = 0; i <= n - 4; i = i + 1) {
+  draw(PP[i]--PP[i + 3], 1 + red);
+}
+
+for (int i = 0; i <= n - 5; i = i + 1) {
+  draw(TT[i]--TT[i + 3], 1 + yellow);
+}
+
+for (int i = 0; i <= n - 1; i = i + 1) {
+  dot(PP[i], UnFill);
+}
+
+for (int i = 2; i <= n - 3; i = i + 1) {
+  dot(QQ[i], UnFill);
+}
+
+for (int i = 0; i <= n - 2; i = i + 1) {
+  dot(TT[i], UnFill);
+}
+
+label("$P_{i - 2}$", PP[0], unit((1, -1)));
+label("$P_{i - 1}$", PP[1], unit((1, -0.5)));
+label("$P_i$", PP[2], unit((1, 0.2)));
+label("$P_{i + 1}$", PP[3], unit((1, 0.5)));
+label("$P_{i + 2}$", PP[4], 2*unit((0.2, 1)));
+label("$P_{i + 3}$", PP[5], 2*unit((-0.2, 1)));
+
+label("$Q_i$", QQ[2], unit(-QQ[2]));
+label("$Q_{i + 1}$", QQ[3], unit(-QQ[3]));
+
+label("$T_{i - 2}$", TT[0], unit(TT[0]));
+label("$T_{i - 1}$", TT[1], unit(TT[1]));
+label("$T_i$", TT[2], unit(TT[2]));
+label("$T_{i + 1}$", TT[3], unit(TT[3]));
+label("$T_{i + 2}$", TT[4], unit(TT[4]));
+\end{asy}
+\end{center}
+
+Again, fix any index $i$.
+By Lemma 1 applied to cyclic quadrilateral $P_{i - 2}P_{i - 1}P_{i + 1}P_{i + 2}$,
+we have that point $Q_i$ lies on line $T_{i - 2}T_{i + 1}$.
+Similarly, point $Q_{i + 1}$ lies on line $T_{i - 1}T_{i + 2}$.
+
+
+Define \[f_i = \frac{\opname{Pow}(Q_i, \Gamma)}{\opname{Pow}(Q_i, \Omega)}.\]
+\begin{claim*}
+  We have $f_i = f_{i + 1}$ for all $i$.
+\end{claim*}
+\begin{proof}
+Note that
+\begin{align*}
+\opname{Pow}(Q_i, \Gamma)
+  &= Q_iP_{i - 1} \cdot Q_iP_{i + 2} \\
+\opname{Pow}(Q_{i + 1}, \Gamma)
+  &= Q_{i + 1}P_{i - 1} \cdot Q_{i + 1}P_{i + 2}. \\
+\opname{Pow}(Q_i, \Omega)
+  &= Q_iT_{i - 2} \cdot Q_iT_{i + 1} \\
+\opname{Pow}(Q_{i + 1}, \Omega)
+  &= Q_{i + 1}T_{i - 1} \cdot Q_{i + 1}T_{i + 2}.
+\end{align*}
+
+Consider cyclic quadrilateral $T_{i - 2}T_{i - 1}T_{i + 1}T_{i + 2}$.
+Since $\Gamma$ touches its opposite sides $T_{i - 2}T_{i - 1}$
+and $T_{i + 1}T_{i + 2}$ at points $P_{i - 1}$ and $P_{i + 2}$,
+we have that line $P_{i - 1}P_{i + 2}$
+makes equal angles with these opposite sides.
+From here, a simple angle chase shows
+that triangles $P_{i - 1}Q_iT_{i - 2}$ and $P_{i + 2}Q_{i + 1}T_{i + 2}$
+are similar.
+Thus
+\[\frac{Q_iP_{i - 1}}{Q_iT_{i - 2}} = \frac{Q_{i + 1}P_{i + 2}}{Q_{i + 1}T_{i + 2}}.\]
+Similarly,
+\[\frac{Q_iP_{i + 2}}{Q_iT_{i + 1}} = \frac{Q_{i + 1}P_{i - 1}}{Q_{i + 1}T_{i - 1}}.\]
+From these, the desired identity $f_i = f_{i + 1}$ follows.
+\end{proof}
+
+Therefore, the power ratio $f_i$ is the same for all $i$.
+By Lemma 3 for circles $\Gamma$ and $\Omega$, the solution is complete.
+
+\begin{remark*}
+  This solution applies to the full generalization (from $3$ to $s$)
+  mentioned in the end of the previous solution,
+  essentially with no change.
+\end{remark*}
+
+\begin{remark*}
+  Polygon $T_1T_2 \dots T_{100}$ is both
+  circumscribed about a circle and inscribed inside a circle.
+  Polygons like that are known as \emph{Poncelet polygons}.
+  See, for example, \url{https://en.wikipedia.org/wiki/Poncelet's_closure_theorem}.
+  This solution borrows a lot from the discussion of
+  Poncelet's closure theorem in \emph{Advanced Euclidean Geometry},
+  referenced above for Lemma 3.
+\end{remark*}

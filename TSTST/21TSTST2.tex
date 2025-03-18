@@ -1,0 +1,200 @@
+author: Merlijn Staps
+desc: Infinite sequence has a unique term
+source: TSTST 2021/2
+tags: [2021-11, nice, maturity, size, analysis, gimel]
+url: https://aops.com/community/p23586635
+
+---
+
+Let $a_1 < a_2 < a_3 < a_4 < \dotsb$ be an
+infinite sequence of real numbers in the interval $(0,1)$.
+Show that there exists a number that occurs exactly once in the sequence
+\[ \frac{a_1}{1}, \; \frac{a_2}{2}, \; \frac{a_3}{3}, \; \frac{a_4}{4}, \; \dots. \]
+
+---
+
+We present three solutions.
+\paragraph{Solution 1 (Merlijn Staps).}
+We argue by contradiction, so suppose that for each $\lambda$ for which the set
+$S_\lambda = \{k : a_k/k = \lambda\}$ is  non-empty, it contains at least two
+elements.  Note that $S_\lambda$ is always a finite set because  $a_k =
+k\lambda$ implies $k < 1/\lambda$.
+
+Write $m_\lambda$ and $M_\lambda$ for the smallest and largest element of
+$S_\lambda$,  respectively, and define $T_\lambda = \{m_\lambda,
+m_\lambda+1,\dots,M_\lambda\}$ as the smallest set of consecutive positive
+integers  that contains $S_\lambda$.  Then all $T_\lambda$ are sets of at least
+two consecutive positive integers, and moreover the $T_\lambda$ cover
+$\NN$. Additionally, each positive integer is covered finitely many times
+because there are only finitely many possible values of $m_{\lambda}$ smaller
+than any fixed integer.
+
+Recall that if three intervals have a point in common then one
+of them is contained in the union of the other two. Thus, if any positive
+integer is covered more than twice by the sets $T_{\lambda}$, we may throw out
+one set while maintaining the property that the $T_{\lambda}$
+cover $\NN$. By using the fact that each positive integer is covered
+finitely many times, we can apply this process so that each positive integer is
+eventually covered at most twice.
+%By repeatedly throwing away some of the $T_\lambda$ we may assume
+%that each positive integer is contained in at most two sets $T_\lambda$, while
+%still maintaining the property that the $T_\lambda$ cover $\NN$; this
+%follows from the fact that  if three intervals have a point in common then one
+%of them is contained in the union of the other two.
+
+Let $\Lambda$ denote the set
+of the $\lambda$-values for which $T_\lambda$ remains in our collection of sets;
+then $\bigcup_{\lambda \in \Lambda} T_\lambda = \NN$ and each positive
+integer is contained in at most two sets $T_\lambda$.
+
+We now obtain
+\[
+\sum_{\lambda \in \Lambda} \sum_{k \in T_\lambda} (a_{k+1}-a_k) \le 2 \sum_{k \ge 1} (a_{k+1} - a_k) \le 2.
+\]
+On the other hand,  because $a_{m_\lambda} = \lambda m_\lambda$ and $a_{M_\lambda} = \lambda M_\lambda$, we have
+\begin{align*}
+  2\sum_{k \in T_\lambda} (a_{k+1} - a_k) &\ge2 \sum_{m_\lambda \le k < M_\lambda}
+  (a_{k+1} - a_k) = 2(a_{M_\lambda}-a_{m_\lambda}) = 2(M_\lambda-m_\lambda)\lambda
+                                        \\
+                                          & = 2(M_\lambda - m_\lambda) \cdot
+                                        \frac{a_{m_\lambda}}{m_\lambda} \ge
+                                        (M_\lambda - m_\lambda + 1) \cdot
+                                        \frac{a_1}{m_\lambda} \ge a_1 \cdot
+                                        \sum_{k \in T_\lambda} \frac1k.
+\end{align*}
+Combining this with our first estimate, and using the fact that the $T_\lambda$ cover $\NN$,  we obtain
+\[
+4 \ge 2 \sum_{\lambda \in \Lambda} \sum_{k \in T_\lambda} (a_{k+1}-a_k) \ge a_1 \sum_{\lambda \in \Lambda} \sum_{k \in T_\lambda} \frac1k \ge a_1 \sum_{k \ge 1} \frac1k,
+\]
+contradicting the fact that the harmonic series diverges.
+
+\paragraph{Solution 2 (Sanjana Das).}
+
+Assume for the sake of contradiction that no number appears exactly once in the
+sequence. For every $i < j$ with $a_i/i = a_j/j$, draw an edge
+between $i$ and $j$, so every $i$ has an edge (and being connected by an edge is
+a transitive property). Call $i$ \emph{good} if it has an edge with some $j > i$.
+
+First, each $i$ has finite degree -- otherwise \[\frac{a_{x_1}}{x_1} = \frac{a_{x_2}}{x_2} = \dotsb\] for an infinite increasing sequence of positive integers $x_i$, but then the $a_{x_i}$ are unbounded.
+
+Now we use the following process to build a sequence of indices whose $a_i$ we can lower-bound:
+\begin{itemize}
+    \item Start at $x_1 = 1$, which is good.
+    \item If we're currently at good index $x_i$, then let $s_i$ be the largest positive integer such that $x_i$ has an edge to $x_i + s_i$. (This exists because the degrees are finite.)
+    \item Let $t_i$ be the smallest positive integer for which $x_i + s_i + t_i$ is good, and let this be $x_{i + 1}$. This exists because if all numbers $k \leq x \leq 2k$ are bad, they must each connect to some number less than $k$ (if two connect to each other, the smaller one is good), but then two connect to the same number, and therefore to each other -- this is the idea we will use later to bound the $t_i$ as well.
+\end{itemize}
+
+Then $x_i = 1 + s_1 + t_1 + \dotsb + s_{i - 1} + t_{i - 1}$, and we have
+\[a_{x_{i + 1}} > a_{x_i + s_i} = \frac{x_i + s_i}{x_i} a_{x_i} = \frac{1 + (s_1
+  + \dotsb + s_{i - 1} + s_i) + (t_1 + \dotsb + t_{i - 1})}{1 + (s_1 + \dotsb +
+s_{i - 1}) + (t_1 + \dotsb + t_{i - 1})}a_{x_i}.\] This means
+\[c_n := \frac{a_{x_n}}{a_1} > \prod_{i = 1}^{n-1} \frac{1 + (s_1 + \dotsb +
+s_{i-1} + s_{i}) + (t_1 + \dotsb + t_{i-1})}{1 + (s_1 + \dotsb + s_{i-1}) + (t_1
++ \dotsb + t_{i-1})}.\]
+
+\begin{lemma*}
+  $t_1 + \dotsb + t_n \leq s_1 + \dotsb + s_n$ for each $n$.
+\end{lemma*}
+
+\begin{proof}
+  Consider $1 \leq i \leq n$. Note that for every $i$, the $t_i - 1$ integers strictly between $x_i + s_i$ and $x_i + s_i + t_i$ are all bad, so each such index $x$ must have an edge to some $y < x$.
+
+  First we claim that if $x \in (x_i + s_i, x_i + s_i + t_i)$, then $x$ cannot
+  have an edge to $x_j$ for any $j \leq i$. This is because $x > x_i + s_i
+  \geq x_j + s_j$, contradicting the fact that $x_j + s_j$ is the largest
+  neighbor of $x_j$.
+
+  This also means $x$ doesn't have an edge to $x_j + s_j$ for any $j \leq i$, since if it did, it would have an edge to $x_j$.
+
+  Second, no two bad values of $x$ can have an edge, since then the smaller
+  one is good. This also means no two bad $x$ can have an edge to the same $y$.
+
+  Then each of the $\sum (t_i - 1)$ values in the intervals $(x_i+s_i,
+  x_i+s_i+t_i)$ for $1 \leq i \leq n$ must have an edge to an unique $y$ in one
+  of the intervals $(x_i, x_i + s_i)$ (not necessarily with the same $i$). Therefore
+  \[\sum (t_i - 1) \leq \sum (s_i - 1)\implies \sum t_i \leq \sum s_i.\qedhere\]
+\end{proof}
+
+Now note that if $a > b$, then $\frac{a + x}{b + x} = 1 + \frac{a - b}{b + x}$
+is decreasing in $x$. This means
+\[c_n > \prod_{i = 1}^{n-1} \frac{1 + 2s_1 + \dotsb + 2s_{i-1} + s_{i}}{1 + 2s_1
+    + \dotsb + 2s_{i-1}} > \prod_{i = 1}^{n-1} \frac{1 + 2s_1 + \dotsb +
+    2s_{i-1} + 2s_{i}}{1 + 2s_1 + \dotsb + 2s_{i-1} + s_{i}},\]
+By multiplying both products, we have a telescoping product, which results in
+\[c_n^2 \geq 1 + 2s_1 + \dotsb + 2s_n + 2s_{n + 1}.\]
+The right hand side is unbounded since the $s_i$ are positive integers, while
+$c_n = a_{x_n}/a_1 < 1/a_1$ is bounded, contradiction.
+
+\paragraph{Solution 3 (Gopal Goel).}
+
+Suppose for sake of contradiction that the problem is false. Call an index $i$ a
+\emph{pin} if
+\[\frac{a_j}{j} = \frac{a_i}{i} \implies j\ge i.\]
+\begin{lemma*}
+There exists $k$ such that if we have $\tfrac{a_i}{i}=\tfrac{a_j}{j}$ with
+$j > i \ge k$, then $j\le 1.1i$.
+\end{lemma*}
+\begin{proof}
+  Note that for any $i$, there are only finitely many $j$ with
+  $\frac{a_j}{j}=\frac{a_i}{i}$, otherwise $a_j=\frac{ja_i}{i}$ is unbounded.
+  Thus it suffices to find $k$ for which $j\leq 1.1i$ when $j > i\geq k$.
+
+  Suppose no such $k$ exists. Then, take a pair $j_1>i_1$ such that
+  $\tfrac{a_{j_1}}{j_1} = \tfrac{a_{i_1}}{i_1}$ and $j_1>1.1i_1$, or
+  $a_{j_1}>1.1a_{i_1}$. Now, since $k=j_1$ can't work, there exists a pair
+  $j_2>i_2\ge i_1$ such that $\tfrac{a_{j_2}}{j_2} = \tfrac{a_{i_2}}{i_2}$ and
+  $j_2>1.1i_2$, or $a_{j_2}>1.1a_{i_2}$. Continuing in this fashion, we see that
+  \[a_{j_\ell}>1.1a_{i_\ell}> 1.1a_{j_{\ell-1}},\]
+  so we have that $a_{j_\ell}>1.1^\ell a_{i_1}$. Taking $\ell>\log_{1.1}(1/a_1)$ gives the desired contradiction.
+\end{proof}
+
+\begin{lemma*}
+For $N>k^2$, there are at most $0.8N$ pins in $[\sqrt{N},N)$.
+\end{lemma*}
+\begin{proof}
+By the first lemma, we see that the number of pins in $[\sqrt{N},\tfrac{N}{1.1})$ is at most the number of non-pins in $[\sqrt{N},N)$. Therefore, if the number of pins in $[\sqrt{N},N)$ is $p$, then we have
+\[p-N\left(1-\frac{1}{1.1}\right)\le N-p,\]
+so $p\le 0.8N$, as desired.
+\end{proof}
+We say that $i$ is the pin of $j$ if it is the smallest index such that
+$\tfrac{a_i}{i}=\tfrac{a_j}{j}$. The pin of $j$ is always a pin.
+
+Given an index $i$, let $f(i)$ denote the largest index less than $i$ that is
+not a pin (we leave the function undefined when no such index exists, as we are
+only interested in the behavior for large $i$). Then $f$ is weakly increasing
+and unbounded by the first lemma. Let $N_0$ be a positive integer such that
+$f(\sqrt{N_0}) > k$.
+
+Take any $N>N_0$ such that $N$ is not a pin. Let $b_0=N$, and $b_1$ be the pin
+of $b_0$. Recursively define $b_{2i}=f(b_{2i-1})$, and $b_{2i+1}$ to be the pin of $b_{2i}$.
+
+Let $\ell$ be the largest odd index such that $b_\ell\ge\sqrt{N}$. We first show
+that $b_\ell\le 100\sqrt{N}$. Since $N > N_0$, we have $b_{\ell+1} > k$. By the
+choice of $\ell$ we have $b_{\ell+2}<\sqrt{N}$, so \[b_{\ell+1}<1.1b_{\ell+2}<
+1.1\sqrt{N}\] by the first lemma. We see
+that all the indices from $b_{\ell+1}+1$ to $b_\ell$ must be pins, so we have
+at least $b_\ell-1.1\sqrt{N}$ pins in $[\sqrt{N},b_\ell)$. Combined with the
+second lemma, this shows that $b_\ell\le 100\sqrt{N}$.
+
+Now, we have that $a_{b_{2i}}=\tfrac{b_{2i}}{b_{2i+1}}a_{b_{2i+1}}$ and
+$a_{b_{2i+1}}> a_{b_{2i+2}}$, so combining gives us
+\[\frac{a_{b_0}}{a_{b_\ell}}> \frac{b_0}{b_1}\frac{b_2}{b_3}\dotsm\frac{b_{\ell-1}}{b_\ell}.\]
+Note that there are at least
+\[(b_1-b_2)+(b_3-b_4)+\dotsb+(b_{\ell-2}-b_{\ell-1})\]
+pins in $[\sqrt{N},N)$, so by the second lemma, that sum is at most $0.8N$. Thus,
+\begin{align*}
+  (b_0-b_1)+(b_2-b_3)+\dotsb+(b_{\ell-1}-b_\ell)
+  &=b_0-[(b_1-b_2)+\dotsb + (b_{\ell-2}-b_{\ell-1})]-b_\ell
+  \\ &\ge 0.2N-100\sqrt{N}.
+\end{align*}
+Then
+\begin{align*}
+\frac{b_0}{b_1}\frac{b_2}{b_3}\dotsm
+\frac{b_{\ell-1}}{b_\ell} &\ge 1+\frac{b_0-b_1}{b_1}+\dotsb+\frac{b_{\ell-1}-b_\ell}{b_\ell} \\
+&> 1 +\frac{b_0-b_1}{b_0} + \dotsb +
+\frac{b_{\ell-1}-b_{\ell}}{b_0} \\
+&\ge 1+\frac{0.2N-100\sqrt{N}}{N},
+\end{align*}
+which is at least $1.01$ if $N_0$ is large enough. Thus, we see that
+\[a_N>1.01 a_{b_{\ell}} \geq 1.01 a_{\lfloor\sqrt{N}\rfloor}\]
+if $N>N_0$ is not a pin. Since there are arbitrarily large non-pins, this implies that the sequence $(a_n)$ is unbounded, which is the desired contradiction.

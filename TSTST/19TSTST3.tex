@@ -1,0 +1,187 @@
+author: Nikolai Beluhov
+desc: Cars running away
+source: TSTST 2019/3
+tags: [2019-07, troll, brave, favorite, grid, algorithm, design, magic, yod]
+hardness: 45
+url: https://aops.com/community/p12608769
+
+---
+
+On an infinite square grid we place finitely many \emph{cars},
+which each occupy a single cell and face in one of the four cardinal directions.
+Cars may never occupy the same cell.
+It is given that the cell immediately in front of each car is empty,
+and moreover no two cars face towards each other
+(no right-facing car is to the left of a left-facing car within a row, etc.).
+In a \emph{move}, one chooses a car and shifts it one cell forward to a vacant cell.
+Prove that there exists an infinite sequence of valid moves
+using each car infinitely many times.
+
+---
+
+Let $S$ be any rectangle containing all the cars.
+Partition $S$ into horizontal strips of height $1$,
+and color them red and green in an alternating fashion.
+It is enough to prove all the cars may exit $S$.
+
+\begin{center}
+\begin{asy}
+size(10cm);
+defaultpen(fontsize(12pt));
+usepackage("amssymb");
+picture base;
+draw(base, box((0,0), (7,5)), black+1);
+
+fill(base, box((0,0), (7,1)), rgb(1,0.9,0.9));
+fill(base, box((0,2), (7,3)), rgb(1,0.9,0.9));
+fill(base, box((0,4), (7,5)), rgb(1,0.9,0.9));
+
+fill(base, box((0,1), (7,2)), rgb(0.9,1,0.9));
+fill(base, box((0,3), (7,4)), rgb(0.9,1,0.9));
+
+for (int i=1; i<7; ++i) {
+  draw(base, (i,0)--(i,5), grey);
+}
+for (int i=1; i<5; ++i) {
+  draw(base, (0,i)--(7,i), grey);
+}
+
+picture phase0;
+add(phase0, base);
+draw(phase0, (1.5,1.5)--(1.5,2.5), dashed+orange, EndArrow(TeXHead));
+draw(phase0, (4.5,3.5)--(4.5,2.5), dashed+orange, EndArrow(TeXHead));
+draw(phase0, (5.5,3.5)--(5.5,2.5), dashed+orange, EndArrow(TeXHead));
+draw(phase0, (6.5,3.5)--(6.5,4.5), dashed+orange, EndArrow(TeXHead));
+label(phase0, "$\blacktriangleright$", (1.5, 4.5));
+label(phase0, "$\bigtriangledown$", (3.5, 4.5));
+label(phase0, "$\blacktriangleright$", (1.5, 3.5));
+label(phase0, "$\bigtriangledown$", (4.5, 3.5));
+label(phase0, "$\bigtriangledown$", (5.5, 3.5));
+label(phase0, "$\bigtriangleup$", (6.5, 3.5));
+label(phase0, "$\blacktriangleright$", (0.5, 2.5));
+label(phase0, "$\blacktriangleright$", (3.5, 2.5));
+label(phase0, "$\bigtriangleup$", (2.5, 2.5));
+label(phase0, "$\bigtriangleup$", (1.5, 1.5));
+label(phase0, "$\blacktriangleleft$", (3.5, 1.5));
+label(phase0, "$\blacktriangleleft$", (5.5, 1.5));
+label(phase0, "$\blacktriangleright$", (6.5, 1.5));
+label(phase0, "$\blacktriangleleft$", (4.5, 0.5));
+label(phase0, "Step 1", (3.5,0), dir(-90));
+
+picture phase1;
+add(phase1, base);
+draw(phase1, (5.5,1.5)--(0,1.5), dashed+orange, EndArrow(TeXHead));
+draw(phase1, (6.5,1.5)--(7,1.5), dashed+orange, EndArrow(TeXHead));
+draw(phase1, (1.5,3.5)--(7,3.5), dashed+orange, EndArrow(TeXHead));
+label(phase1, "$\blacktriangleright$", (1.5, 4.5));
+label(phase1, "$\bigtriangledown$", (3.5, 4.5));
+label(phase1, "$\blacktriangleright$", (1.5, 3.5));
+label(phase1, "$\bigtriangledown$", (4.5, 2.5), blue); // moved down
+label(phase1, "$\bigtriangledown$", (5.5, 2.5), blue); // moved down
+label(phase1, "$\bigtriangleup$", (6.5, 4.5), blue); // moved up
+label(phase1, "$\blacktriangleright$", (0.5, 2.5));
+label(phase1, "$\blacktriangleright$", (3.5, 2.5));
+label(phase1, "$\bigtriangleup$", (2.5, 2.5));
+label(phase1, "$\bigtriangleup$", (1.5, 2.5), blue); // moved up
+label(phase1, "$\blacktriangleleft$", (3.5, 1.5));
+label(phase1, "$\blacktriangleleft$", (5.5, 1.5));
+label(phase1, "$\blacktriangleright$", (6.5, 1.5));
+label(phase1, "$\blacktriangleleft$", (4.5, 0.5));
+label(phase1, "Step 2", (3.5,0), dir(-90));
+
+picture phase2;
+add(phase2, base);
+draw(phase2, (1.5,2.5)--(1.5,3.5), dashed+orange, EndArrow(TeXHead));
+draw(phase2, (2.5,2.5)--(2.5,3.5), dashed+orange, EndArrow(TeXHead));
+draw(phase2, (3.5,4.5)--(3.5,3.5), dashed+orange, EndArrow(TeXHead));
+draw(phase2, (4.5,2.5)--(4.5,1.5), dashed+orange, EndArrow(TeXHead));
+draw(phase2, (5.5,2.5)--(5.5,1.5), dashed+orange, EndArrow(TeXHead));
+draw(phase2, (6.5,4.5)--(6.5,5), dashed+orange, EndArrow(TeXHead));
+label(phase2, "$\blacktriangleright$", (1.5, 4.5));
+label(phase2, "$\bigtriangledown$", (3.5, 4.5));
+label(phase2, "$\bigtriangleup$", (6.5, 4.5));
+label(phase2, "$\bigtriangledown$", (4.5, 2.5));
+label(phase2, "$\bigtriangledown$", (5.5, 2.5));
+label(phase2, "$\blacktriangleright$", (0.5, 2.5));
+label(phase2, "$\blacktriangleright$", (3.5, 2.5));
+label(phase2, "$\bigtriangleup$", (2.5, 2.5));
+label(phase2, "$\bigtriangleup$", (1.5, 2.5));
+label(phase2, "$\blacktriangleleft$", (4.5, 0.5));
+label(phase2, "Step 3", (3.5,0), dir(-90));
+
+picture phase3;
+add(phase3, base);
+draw(phase3, (1.5,4.5)--(7,4.5), dashed+orange, EndArrow(TeXHead));
+draw(phase3, (0.5,2.5)--(7,2.5), dashed+orange, EndArrow(TeXHead));
+draw(phase3, (4.5,0.5)--(0,0.5), dashed+orange, EndArrow(TeXHead));
+label(phase3, "$\blacktriangleright$", (1.5, 4.5));
+label(phase3, "$\bigtriangledown$", (3.5, 3.5), blue);
+label(phase3, "$\bigtriangledown$", (4.5, 1.5), blue);
+label(phase3, "$\bigtriangledown$", (5.5, 1.5), blue);
+label(phase3, "$\blacktriangleright$", (0.5, 2.5));
+label(phase3, "$\blacktriangleright$", (3.5, 2.5));
+label(phase3, "$\bigtriangleup$", (2.5, 3.5), blue);
+label(phase3, "$\bigtriangleup$", (1.5, 3.5), blue);
+label(phase3, "$\blacktriangleleft$", (4.5, 0.5));
+label(phase3, "Step 4", (3.5,0), dir(-90));
+
+add(phase0);
+add(shift(8,0)*phase1);
+add(shift(0,-7)*phase2);
+add(shift(8,-7)*phase3);
+\end{asy}
+\end{center}
+
+To do so, we outline a five-stage plan for the cars.
+\begin{enumerate}
+  \ii All vertical cars in a green cell may advance one cell into a red cell
+  (or exit $S$ altogether),
+  by the given condition.
+  (This is the only place where the hypothesis about empty space is used!)
+
+  \ii All horizontal cars on green cells may exit $S$,
+  as no vertical cars occupy green cells.
+
+  \ii All vertical cars in a red cell
+  may advance one cell into a green cell
+  (or exit $S$ altogether),
+  as all green cells are empty.
+
+  \ii All horizontal cars within red cells may exit $S$,
+  as no vertical car occupy red cells.
+
+  \ii The remaining cars exit $S$, as they are all vertical.
+  The solution is complete.
+\end{enumerate}
+
+\begin{remark*}[Author's comments]
+  The solution I've given for this problem is so short
+  and simple that it might appear at first
+  to be about IMO 1 difficulty. I don't believe that's true!
+  There are very many approaches that look perfectly plausible at first,
+  and then fall apart in this or that twisted special case.
+\end{remark*}
+
+\begin{remark*}[Higher-dimensional generalization by author]
+  The natural higher-dimensional generalization
+  is true, and can be proved in largely the same fashion.
+  For example, in three dimensions,
+  one may let $S$ be a rectangular prism
+  and partition $S$ into horizontal slabs
+  and color them red and green in an alternating fashion.
+  Stages 1, 3, and 5 generalize immediately,
+  and stages 2 and 4 reduce to an application of the two-dimensional problem.
+  In the same way, the general problem is handled by induction on the dimension.
+\end{remark*}
+
+\begin{remark*}
+  [Historical comments]
+  For $k > 1$, we could consider a variant of the problem
+  where cars are $1 \times k$ rectangles (moving parallel to the longer edge)
+  instead of occupying single cells.
+  In that case, if there are $2k-1$ empty spaces in front of each car,
+  the above proof works
+  (with the red and green strips having height $k$ instead).
+  On the other hand, at least $k$ empty spaces are necessary.
+  We don't know the best constant in this case.
+\end{remark*}

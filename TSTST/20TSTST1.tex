@@ -1,0 +1,146 @@
+desc: Ducks in a circle
+hardness: 10
+source: TSTST 2020/1
+tags: [2020-11, invariant, find, bestpossible, aleph]
+author: Ankan Bhattacharya
+url: https://aops.com/community/p18933796
+
+---
+
+Let $a$, $b$, $c$ be fixed positive integers.
+There are $a+b+c$ ducks sitting in a circle, one behind the other.
+Each duck picks either \emph{rock}, \emph{paper}, or \emph{scissors},
+with $a$ ducks picking rock, $b$ ducks picking paper,
+and $c$ ducks picking scissors.
+
+A \emph{move} consists of an operation of one of the following three forms:
+\begin{itemize}
+  \ii If a duck picking rock sits behind a duck
+  picking scissors, they switch places.
+  \ii If a duck picking paper sits behind a duck
+  picking rock, they switch places.
+  \ii If a duck picking scissors sits behind a duck
+  picking paper, they switch places.
+\end{itemize}
+Determine, in terms of $a$, $b$, and $c$,
+the maximum number of moves which could take place,
+over all possible initial configurations.
+
+---
+
+The maximum possible number of moves is $\max(ab, ac, bc)$.
+
+First, we prove this is best possible.
+We define a \emph{feisty triplet} to be an unordered triple of ducks,
+one of each of rock, paper, scissors,
+such that the paper duck is between the rock and scissors duck
+and facing the rock duck, as shown.
+(There may be other ducks not pictured, but the orders are irrelevant.)
+\begin{center}
+\begin{asy}
+size(11cm);
+picture duck;
+pen duckborder = black+1.2;
+
+picture leg;
+draw(leg, (0.5*dir(-70))--(1.6*dir(-70)), duckborder);
+draw(leg, (1.3*dir(-70))--(1.3*dir(-70)+0.3*dir(-95)), duckborder);
+draw(leg, (1.3*dir(-70))--(1.3*dir(-70)+0.3*dir(-50)), duckborder);
+add(duck, leg);
+add(duck, reflect(dir(-90), dir(90))*leg);
+filldraw(duck, (1,0)--(-1,0)..(0,-1)..cycle, rgb("a67b5b"), duckborder); // body of duck
+draw(duck, (0.1,-0.4)..(-0.2,-0.35)..(-0.6,-0.2), duckborder); // part of wing
+draw(duck, (0.1,-0.8)..(-0.2,-0.7)..(-0.6,-0.2), duckborder); // part of wing
+filldraw(duck, (1.2,0.3)--(1.2,0)--(1.7,0.15)--cycle, yellow, duckborder); // beak of duck
+filldraw(duck, circle((0.7,0.3), 0.6), rgb("b9d3a4"), duckborder); // duck head
+fill(duck, ellipse((1.05,0.45), 0.08, 0.12), black);
+fill(duck, ellipse((1.07,0.49), 0.02, 0.03), white);
+draw(duck, (1.6,0.5)--(1.8,0.7)..(2.0,0.75)..(2.4,1.2)..(1.8,1.5)..(1.2,1.2)..(1.6,0.7)--cycle );
+label(duck, "\textsf{quack}", (1.8,1.1), fontsize(9pt));
+
+draw(scale(4)*unitcircle, blue+2);
+pen labelpen = red + fontsize(16pt);
+
+add(shift(5*dir(90))*duck);
+label("Rock", 3*dir(90), labelpen);
+add(rotate(120)*shift(5*dir(90))*duck);
+label("Paper", 3*dir(210), labelpen);
+add(rotate(240)*shift(5*dir(90))*duck);
+label("Scissors", 3*dir(330), labelpen);
+\end{asy}
+\end{center}
+
+\begin{claim*}
+  The number of feisty triplets decreases
+  by $c$ if a paper duck swaps places with a rock duck, and so on.
+\end{claim*}
+\begin{proof}
+  Clear.
+\end{proof}
+Obviously the number of feisty triples is at most $abc$ to start.
+Thus at most $\max(ab,bc,ca)$ moves may occur,
+since the number of feisty triplets should always be nonnegative,
+at which point no moves are possible at all.
+
+To see that this many moves is possible,
+assume WLOG $a = \min(a, b, c)$
+and suppose we have $a$ rocks, $b$ papers, and $c$ scissors
+in that clockwise order.
+\begin{center}
+\begin{asy}
+size(11cm);
+picture duck;
+pen duckborder = black+1.2;
+
+picture leg;
+draw(leg, (0.5*dir(-70))--(1.6*dir(-70)), duckborder);
+draw(leg, (1.3*dir(-70))--(1.3*dir(-70)+0.3*dir(-95)), duckborder);
+draw(leg, (1.3*dir(-70))--(1.3*dir(-70)+0.3*dir(-50)), duckborder);
+add(duck, leg);
+add(duck, reflect(dir(-90), dir(90))*leg);
+filldraw(duck, (1,0)--(-1,0)..(0,-1)..cycle, rgb("a67b5b"), duckborder); // body of duck
+draw(duck, (0.1,-0.4)..(-0.2,-0.35)..(-0.6,-0.2), duckborder); // part of wing
+draw(duck, (0.1,-0.8)..(-0.2,-0.7)..(-0.6,-0.2), duckborder); // part of wing
+filldraw(duck, (1.2,0.3)--(1.2,0)--(1.7,0.15)--cycle, yellow, duckborder); // beak of duck
+filldraw(duck, circle((0.7,0.3), 0.6), rgb("b9d3a4"), duckborder); // duck head
+fill(duck, ellipse((1.05,0.45), 0.08, 0.12), black);
+fill(duck, ellipse((1.07,0.49), 0.02, 0.03), white);
+draw(duck, (1.6,0.5)--(1.8,0.7)..(2.0,0.75)..(2.4,1.2)..(1.8,1.5)..(1.2,1.2)..(1.6,0.7)--cycle );
+label(duck, "\textsf{quack}", (1.8,1.1), fontsize(9pt));
+
+draw(scale(4)*unitcircle, blue+2);
+pen labelpen = red + fontsize(16pt);
+
+add(rotate(-10)*shift(5*dir(90))*duck);
+add(rotate(10)*shift(5*dir(90))*duck);
+label("Rocks", 3*dir(90), labelpen);
+
+add(rotate(100)*shift(5*dir(90))*duck);
+add(rotate(120)*shift(5*dir(90))*duck);
+add(rotate(140)*shift(5*dir(90))*duck);
+label("Papers", 3*dir(210), labelpen);
+
+add(rotate(200)*shift(5*dir(90))*duck);
+add(rotate(220)*shift(5*dir(90))*duck);
+add(rotate(240)*shift(5*dir(90))*duck);
+add(rotate(260)*shift(5*dir(90))*duck);
+label("Scissors", 3*dir(330), labelpen);
+\end{asy}
+\end{center}
+Then, allow the scissors to filter through the papers
+while the rocks stay put.
+Each of the $b$ papers swaps with $c$ scissors,
+for a total of $bc = \max(ab, ac, bc)$ swaps.
+
+\begin{remark*}
+  [Common errors]
+  One small possible mistake:
+  it is not quite k\"{o}sher to say that ``WLOG $a \le b \le c$''
+  because the condition is not symmetric, only cyclic.
+  Therefore in this solution we only assume $a = \min(a,b,c)$.
+
+  It is true here that every pair of ducks swaps at most once,
+  and some solutions make use of this fact.
+  However, this fact implicitly uses the fact that $a,b,c > 0$
+  and is false without this hypothesis.
+\end{remark*}

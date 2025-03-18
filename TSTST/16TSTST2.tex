@@ -1,0 +1,377 @@
+desc: Orthobrokard, radical axis geometry
+author: Evan Chen
+source: TSTST 2016/2
+tags: [well, 2016-08, pop, rich, harmonic, mine, nice, dalet]
+hardness: 30
+url: https://aops.com/community/p6575204
+
+---
+
+Let $ABC$ be a scalene triangle with orthocenter $H$ and circumcenter $O$
+and denote by $M$, $N$ the midpoints of $\ol{AH}$, $\ol{BC}$.
+Suppose the circle $\gamma$ with diameter $\ol{AH}$ meets
+the circumcircle of $ABC$ at $G \neq A$,
+and meets line $\ol{AN}$ at $Q \neq A$.
+The tangent to $\gamma$ at $G$ meets line $OM$ at $P$.
+Show that the circumcircles of $\triangle GNQ$
+and $\triangle MBC$ intersect on $\ol{PN}$.
+
+---
+
+We present two solutions,
+one using essentially only power of a point,
+and the other more involved.
+
+\paragraph{First solution (found by contestants).}
+Denote by $\triangle DEF$ the orthic triangle.
+Observe $\ol{PA}$ and $\ol{PG}$ are tangents to $\gamma$,
+since $\ol{OM}$ is the perpendicular bisector of $\ol{AG}$.
+Also note that $\ol{AG}$, $\ol{EF}$, $\ol{BC}$ are concurrent at some point $R$
+by radical axis on $(ABC)$, $\gamma$, $(BFEC)$.
+
+Now, consider circles $(PAGM)$, $(MFDNE)$, and $(MBC)$.
+We already saw the point $R$ satisfies
+\[ RA \cdot RG = RE \cdot RF = RB \cdot RC \]
+and hence has equal powers to all three circles;
+but since the circles at $M$ already, they must actually be coaxial.
+Assume they meet again at $T \in \ol{RM}$, say.
+Then $\angle PTM$ and $\angle MTN$ are both right angles, hence $T$ lies on $\ol{PN}$.
+
+Finally $H$ is the orthocenter of $\triangle ARN$,
+and thus the circle with diameter $\ol{RN}$ passes through $G$, $Q$, $N$.
+
+\begin{center}
+\begin{asy}
+size(11cm);
+pair A = dir(120);
+pair B = dir(210);
+pair C = dir(330);
+pair N = midpoint(B--C);
+pair H = orthocenter(A, B, C);
+pair M = midpoint(A--H);
+pair O = circumcenter(A, B, C);
+pair P = extension(O, M, A, B-C+A);
+pair T = foot(M, P, N);
+pair D = foot(A, B, C);
+pair E = foot(B, C, A);
+pair F = foot(C, A, B);
+
+filldraw(A--B--C--cycle, opacity(0.1)+lightblue, blue);
+draw(unitcircle, blue);
+
+draw(A--D, heavygreen);
+draw(B--E, heavygreen);
+draw(C--F, heavygreen);
+draw(E--F, heavygreen);
+draw(B--M--C, lightred);
+// filldraw(circumcircle(M, B, C), opacity(0.05)+lightred, red);
+
+filldraw(circumcircle(D, E, F), opacity(0.05)+lightred, red);
+draw(O--P--N, heavycyan);
+draw(A--P, heavycyan);
+
+filldraw(circumcircle(A, E, F), opacity(0.1)+lightgreen, heavygreen);
+pair Q = foot(H, A, N);
+pair G = -A+2*foot(A, M, P);
+
+pair R = extension(E, F, B, C);
+draw(R--F, heavygreen);
+draw(R--B, blue);
+draw(R--Q, heavygreen);
+draw(A--R, heavygreen);
+draw(A--N, blue);
+draw(P--G, heavycyan);
+draw(G--N, blue);
+draw(M--R, heavygreen);
+filldraw(circumcircle(R, G, T), opacity(0.05)+lightred, red);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$N$", N, dir(N));
+dot("$H$", H, dir(H));
+dot("$M$", M, dir(M));
+dot("$O$", O, dir(225));
+dot("$P$", P, dir(P));
+dot("$T$", T, dir(T));
+dot("$D$", D, dir(D));
+dot("$E$", E, dir(E));
+dot("$F$", F, dir(F));
+dot("$Q$", Q, dir(Q));
+dot("$G$", G, dir(G));
+dot("$R$", R, dir(R));
+
+/* TSQ Source:
+
+!size(11cm);
+A = dir 120
+B = dir 210
+C = dir 330
+N = midpoint B--C
+H = orthocenter A B C
+M = midpoint A--H
+O = circumcenter A B C R225
+P = extension O M A B-C+A
+T = foot M P N
+D = foot A B C
+E = foot B C A
+F = foot C A B
+
+A--B--C--cycle 0.1 lightblue / blue
+unitcircle blue
+
+A--D heavygreen
+B--E heavygreen
+C--F heavygreen
+E--F heavygreen
+B--M--C lightred
+// circumcircle M B C 0.05 lightred / red
+
+circumcircle D E F 0.1 lightred / red
+O--P--N heavycyan
+A--P heavycyan
+
+circumcircle A E F 0.1 lightgreen / heavygreen
+Q = foot H A N
+G = -A+2*foot A M P
+
+R = extension E F B C
+R--F heavygreen
+R--B blue
+R--Q heavygreen
+A--R heavygreen
+A--N blue
+P--G heavycyan
+G--N blue
+M--R heavygreen
+circumcircle R G T 0.1 lightred / red
+
+*/
+\end{asy}
+\end{center}
+
+\paragraph{Alternate solution (by proposer).}
+Let $L$ be diametrically opposite $A$ on the circumcircle.
+Denote by $\triangle DEF$ the orthic triangle.
+Let $X = \ol{AH} \cap \ol{EF}$.
+Finally, let $T$ be the second intersection of $(MFDNE)$ and $(MBC)$.
+
+\begin{center}
+\begin{asy}
+size(11cm);
+pair A = dir(120);
+pair B = dir(210);
+pair C = dir(330);
+pair N = midpoint(B--C);
+pair H = orthocenter(A, B, C);
+pair M = midpoint(A--H);
+pair O = circumcenter(A, B, C);
+pair P = extension(O, M, A, B-C+A);
+pair X = extension(P, N, A, H);
+pair T = foot(M, P, N);
+pair D = foot(A, B, C);
+pair E = foot(B, C, A);
+pair F = foot(C, A, B);
+pair L = -A;
+pair K = extension(H, N, A, P);
+
+filldraw(A--B--C--cycle, opacity(0.1)+lightblue, blue);
+filldraw(B--L--C--cycle, opacity(0.1)+lightblue, blue);
+draw(unitcircle, blue);
+draw(A--L, blue);
+
+draw(A--D, heavygreen);
+draw(B--E, heavygreen);
+draw(C--F, heavygreen);
+draw(E--F, heavygreen);
+draw(B--M--C, lightred);
+filldraw(circumcircle(M, B, C), opacity(0.05)+lightred, red);
+
+filldraw(circumcircle(D, E, F), opacity(0.05)+lightred, red);
+draw(A--K--L, heavycyan);
+draw(O--P--N, heavycyan);
+
+filldraw(circumcircle(A, E, F), opacity(0.1)+lightgreen, heavygreen);
+pair Q = foot(H, A, N);
+pair G = -A+2*foot(A, M, P);
+
+pair R = extension(E, F, B, C);
+draw(R--F, heavygreen);
+draw(R--B, blue);
+draw(R--Q, heavygreen);
+draw(A--R, heavygreen);
+draw(A--N, blue);
+draw(P--G, heavycyan);
+draw(M--R, heavygreen);
+filldraw(circumcircle(R, G, T), opacity(0.05)+lightred, red);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$N$", N, dir(N));
+dot("$H$", H, dir(H));
+dot("$M$", M, dir(M));
+dot("$O$", O, dir(225));
+dot("$P$", P, dir(P));
+dot("$X$", X, dir(X));
+dot("$T$", T, dir(T));
+dot("$D$", D, dir(D));
+dot("$E$", E, dir(E));
+dot("$F$", F, dir(F));
+dot("$L$", L, dir(L));
+dot("$K$", K, dir(K));
+dot("$Q$", Q, dir(Q));
+dot("$G$", G, dir(G));
+dot("$R$", R, dir(R));
+
+/* TSQ Source:
+
+!size(11cm);
+A = dir 120
+B = dir 210
+C = dir 330
+N = midpoint B--C
+H = orthocenter A B C
+M = midpoint A--H
+O = circumcenter A B C R225
+P = extension O M A B-C+A
+X = extension P N A H
+T = foot M P N
+D = foot A B C
+E = foot B C A
+F = foot C A B
+L = -A
+K = extension H N A P
+
+A--B--C--cycle 0.1 lightblue / blue
+B--L--C--cycle 0.1 lightblue / blue
+unitcircle blue
+A--L blue
+
+A--D heavygreen
+B--E heavygreen
+C--F heavygreen
+E--F heavygreen
+B--M--C lightred
+circumcircle M B C 0.05 lightred / red
+
+circumcircle D E F 0.05 lightred / red
+A--K--L heavycyan
+O--P--N heavycyan
+
+circumcircle A E F 0.1 lightgreen / heavygreen
+Q = foot H A N
+G = -A+2*foot A M P
+
+R = extension E F B C
+R--F heavygreen
+R--B blue
+R--Q heavygreen
+A--R heavygreen
+A--N blue
+P--G heavycyan
+M--R heavygreen
+circumcircle R G T 0.05 lightred / red
+
+*/
+\end{asy}
+\end{center}
+
+We begin with a few easy observations.
+First, points $H$, $G$, $N$, $L$ are collinear and $\angle AGL = 90\dg$.
+Also, $Q$ is the foot from $H$ to $\ol{AN}$.
+Consequently, lines $AG$, $EF$, $HQ$, $BC$, $TM$
+concur at a point $R$ (radical axis).
+Moreover, we already know $\angle MTN = 90\dg$.
+This implies $T$ lies on the circle with diameter $\ol{RN}$,
+which is exactly the circumcircle of $\triangle GQN$.
+
+Note by Brokard's Theorem on $AFHE$, the point $X$ is the orthocenter of $\triangle MBC$.
+But $\angle MTN = 90\dg$ already, and $N$ is the midpoint of $\ol{BC}$.
+Consequently, points $T$, $X$, $N$ are collinear.
+
+Finally, we claim $P$, $X$, $N$ are collinear, which solves the problem.
+Note $P = \ol{GG} \cap \ol{AA}$.
+Set $K = \ol{HNL} \cap \ol{AP}$.
+Then by noting \[ -1 = (D,X;A,H) \overset{N}{=} (\infty, \ol{NX} \cap \ol{AK}; A, K) \]
+we see that $\ol{NX}$ bisects segment $\ol{AK}$, as desired.
+(A more projective finish is to show that $\ol{PXN}$ is the polar of $R$ to $\gamma$).
+
+\begin{remark*}
+The original problem proposal reads as follows:
+\begin{quote}
+Let $ABC$ be a triangle with orthocenter $H$ and circumcenter $O$
+and denote by $M$, $N$ the midpoints of $\ol{AH}$, $\ol{BC}$.
+Suppose ray $OM$ meets the line parallel to $\ol{BC}$ through $A$ at $P$.
+Prove that the line through the circumcenter of $\triangle MBC$
+and the midpoint of $\ol{OH}$ is parallel to $\ol{NP}$.
+\end{quote}
+The points $G$ and $Q$ were added to the picture later
+to prevent the problem from being immediate by coordinates.
+\end{remark*}
+
+---
+
+%%fakesection Walkthrough
+Let $DEF$ be the orthic triangle of $ABC$.
+\begin{walk}
+  \ii Show that $P$ is really just the intersection
+  of the tangents to $\gamma$ at $A$ and $G$
+  (and thus the line $\ol{OM}$ is just a distraction).
+  \ii Show that lines $\ol{AG}$, $\ol{EF}$, $\ol{BC}$ are concurrent, say at $R$.
+  \ii Prove that $(PAMG)$, $(MBC)$, $(MFDNE)$ are concurrent at a point $T \neq M$.
+  \ii Show that $T = \ol{PN} \cap \ol{MR}$.
+  \ii Show that $R \in \ol{HQ}$.
+  \ii Show that $R$, $G$, $T$, $Q$, $N$ are concyclic, completing the proof.
+\end{walk}
+
+
+---
+
+
+!size(11cm);
+A = dir 120
+B = dir 210
+C = dir 330
+N = midpoint B--C
+H = orthocenter A B C
+M = midpoint A--H
+O = circumcenter A B C R225
+P = extension O M A B-C+A
+X = extension P N A H
+T = foot M P N
+D = foot A B C
+E = foot B C A
+F = foot C A B
+L = -A
+K = extension H N A P
+
+A--B--C--cycle 0.1 lightblue / blue
+B--L--C--cycle 0.1 lightblue / blue
+unitcircle blue
+A--L blue
+
+A--D heavygreen
+B--E heavygreen
+C--F heavygreen
+E--F heavygreen
+B--M--C lightred
+circumcircle M B C 0.05 lightred / red
+
+circumcircle D E F 0.05 lightred / red
+A--K--L heavycyan
+O--P--N heavycyan
+
+circumcircle A E F 0.1 lightgreen / heavygreen
+Q = foot H A N
+G = -A+2*foot A M P
+
+R = extension E F B C
+R--F heavygreen
+R--B blue
+R--Q heavygreen
+A--R heavygreen
+A--N blue
+P--G heavycyan
+M--R heavygreen
+circumcircle R G T 0.05 lightred / red

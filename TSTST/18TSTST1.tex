@@ -1,0 +1,103 @@
+desc: $\theta$ functional equation from polynomials to $\ZZ$
+author: Evan Chen, Yang Liu
+source: TSTST 2018/1
+tags: [2018-06, FE, nice, mine, good, rushdown, rembound, intuitive, divis, induct, aleph]
+hardness: 10
+url: https://aops.com/community/p10570981
+
+---
+
+As usual, let $\ZZ[x]$ denote the set of single-variable
+polynomials in $x$ with integer coefficients.
+Find all functions $\theta \colon \ZZ[x] \to \ZZ$
+such that for any polynomials $p,q \in \ZZ[x]$,
+\begin{itemize}
+  \ii $\theta(p+1) = \theta(p)+1$, and
+  \ii if $\theta(p) \neq 0$
+  then $\theta(p)$ divides $\theta(p \cdot q)$.
+\end{itemize}
+
+---
+
+The answer is $\theta : p \mapsto p(c)$, for each choice of $c \in \ZZ$.
+Obviously these work, so we prove these are the only ones.
+In what follows, $x \in \ZZ[x]$ is the identity polynomial,
+and $c = \theta(x)$.
+
+\paragraph{First solution (Merlijn Staps).}
+Consider an integer $n \neq c$.
+Because $x-n \mid p(x)-p(n)$, we have
+\[ \theta(x-n) \mid \theta(p(x)-p(n))
+  \implies c - n \mid \theta(p(x)) - p(n).
+\]
+On the other hand, $c - n \mid p(c) - p(n)$.
+Combining the previous two gives $c - n \mid \theta(p(x)) - p(c)$,
+and by letting $n$ large we conclude
+$\theta(p(x)) - p(c) = 0$, so $\theta(p(x)) = p(c)$.
+
+\paragraph{Second solution.}
+First, we settle the case $\deg p = 0$.
+In that case, from the second property,
+$\theta(m) = m + \theta(0)$ for every integer $m \in \ZZ$
+(viewed as a constant polynomial).
+Thus $m + \theta(0) \mid 2m + \theta(0)$,
+hence $m + \theta(0) \mid -\theta(0)$,
+so $\theta(0) = 0$ by taking $m$ large.
+Thus $\theta(m) = m$ for $m \in \ZZ$.
+
+Next, we address the case of $\deg p = 1$.
+We know $\theta(x+b) = c+b$ for $b \in \ZZ$.
+Now for each particular $a \in \ZZ$,
+we have
+\[ c+k \mid \theta(x+k) \mid \theta(ax+ak) = \theta(ax) + ak
+  \implies c+k \mid \theta(ax) - ac. \]
+for any $k \neq -c$.
+Since this is true for large enough $k$,
+we conclude $\theta(ax) = ac$.
+Thus $\theta(ax+b) = ac+b$.
+
+We now proceed by induction on $\deg p$.
+Fix a polynomial $p$ and assume it's true
+for all $p$ of smaller degree.
+Choose a large integer $n$ (to be determined later)
+for which $p(n) \neq p(c)$.
+We then have
+\[ \frac{p(c)-p(n)}{c-n}
+  = \theta\left( \frac{p-p(n)}{x-n} \right)
+  \mid \theta\left( p-p(n) \right)
+  = \theta(p) - p(n). \]
+Subtracting off $c-n$ times the left-hand side gives
+\[ \frac{p(c)-p(n)}{c-n}
+  \mid \theta(p) - p(c). \]
+The left-hand side can be made arbitrarily large
+by letting $n \to \infty$, since $\deg p \ge 2$.
+Thus $\theta(p) = p(c)$, concluding the proof.
+
+\paragraph{Authorship comments.}
+I will tell you a story about the creation of this problem.
+Yang Liu and I were looking over the drafts of December and
+January TST in October 2017,
+and both of us had the impression that the test was too difficult.
+This sparked a non-serious suggestion that we should try to
+come up with a problem \emph{now} that would be easy enough to use.
+While we ended up just joking about changing the TST,
+we did get this problem out of it.
+
+Our idea was to come up with a functional equation that
+was different from the usual fare:
+at first we tried $\ZZ[x] \to \ZZ[x]$,
+but then I suggested the idea of using $\ZZ[x] \to \ZZ$,
+with the answer being the ``evaluation'' map.
+Well, what properties does that satisfy?
+One answer was $a-b \mid p(a)-p(b)$;
+this didn't immediately lead to anything,
+but eventually we hit on the form of the problem above off this idea.
+At first we didn't require $\theta(p) \neq 0$ in the bullet,
+but without the condition the problem was too easy,
+since $0$ divides only itself;
+and so the condition was added and we got the functional equation.
+
+I proposed the problem to USAMO 2018, but it was rejected
+(unsurprisingly; I think the problem may be
+too abstract for novice contestants).
+Instead it was used for TSTST, which I thought fit better.

@@ -1,0 +1,475 @@
+desc: Graph with 2017 edges
+author: Evan Chen
+source: USA TST 2018/3
+tags: [2016-10, graph, mine, favorite, local, global, instructive, perturb, algorithm,
+  find, bestpossible, yod]
+hardness: 45
+url: https://aops.com/community/p9513105
+
+---
+
+At a university dinner,
+there are $2017$ mathematicians who each order two distinct entr\'ees,
+with no two mathematicians ordering the same pair of entr\'{e}es.
+The cost of each entr\'ee is equal
+to the number of mathematicians who ordered it,
+and the university pays for each mathematician's
+less expensive entr\'ee (ties broken arbitrarily).
+Over all possible sets of orders,
+what is the maximum total amount the university could have paid?
+
+---
+
+In graph theoretic terms:
+we wish to determine the maximum possible value of
+\[ S(G) \coloneqq \sum_{e = vw} \min \left( \deg v, \deg w \right) \]
+across all graphs $G$ with $2017$ edges.
+We claim the answer is $63 \cdot \binom{64}{2} + 1 = 127009$.
+
+\paragraph{First solution (combinatorial, Evan Chen).}
+First define $L_k$ to consist of a clique on $k$ vertices,
+plus a single vertex connected to exactly one vertex of the clique.
+Hence $L_k$ has $k+1$ vertices, $\binom k2+1$ edges,
+and $S(L_k) = (k-1) \binom k2 + 1$.
+In particular, $L_{64}$ achieves the claimed maximum,
+so it suffices to prove the upper bound.
+
+\begin{lemma*}
+  Let $G$ be a graph such that either
+  \begin{itemize}
+    \ii $G$ has $\binom k2$ edges for some $k \ge 3$ or
+    \ii $G$ has $\binom k2 + 1$ edges for some $k \ge 4$.
+  \end{itemize}
+  Then there exists a graph $G^\ast$ with the same number of edges
+  such that $S(G^\ast) \ge S(G)$, and moreover $G^\ast$ has a universal vertex
+  (i.e.\ a vertex adjacent to every other vertex).
+\end{lemma*}
+
+\begin{proof}
+  Fix $k$ and the number $m$ of edges.
+  We prove the result by induction on the number $n$ of vertices in $G$.
+  Since the lemma has two parts,
+  we will need two different base cases:
+  \begin{enumerate}
+    \item Suppose $n = k$ and $m = \binom k2$.
+    Then $G$ must be a clique so pick $G^\ast = G$.
+
+    \item Suppose $n = k+1$ and $m = \binom k2 + 1$.
+    If $G$ has no universal vertex, we claim we may take $G^\ast = L_k$.
+    Indeed each vertex of $G$ has degree at most $k-1$, and the average degree is
+    \[ \frac{2m}{n} = \frac{k^2-k+2}{k+1} < k-1 \]
+    using here $k \ge 4$.
+    Thus there exists a vertex $w$ of degree $1 \le d \le k-2$.
+    The edges touching $w$ will have label at most $d$ and hence
+    \begin{align*}
+       S(G) &\le (k-1)(m-d) + d^2 = (k-1)m - d(k-1-d) \\
+       &\le (k-1)m - (k-2) = (k-1) \binom k2 + 1 = S(G^\ast).
+    \end{align*}
+  \end{enumerate}
+  Now we settle the inductive step.
+  Let $w$ be a vertex with minimal degree $0 \le d < k-1$, with neighbors $w_1$, \dots, $w_d$.
+  By our assumption, for each $w_i$ there exists a vertex $v_i$ for which $v_i w_i \notin E$.
+  Now, we may delete all edges $ww_i$ and in their place put $v_i w_i$,
+  and then delete the vertex $w$.
+  This gives a graph $G'$, possibly with multiple edges
+  (if $v_i = w_j$ and $w_j = v_i$), and with one fewer vertex.
+
+  \begin{center}
+  \begin{asy}
+    defaultpen(fontsize(11pt));
+    unitsize(1cm);
+
+    dotfactor *= 1.5;
+    pair A = (-1,1);
+    pair B = (0,1);
+    pair X = (-1,0);
+    pair Y = (0,0);
+    pair Z = (1,0);
+    pair W = (0,-1);
+
+    picture[] Gs = new picture[3];
+    Gs[0] = new picture;
+    Gs[1] = new picture;
+    Gs[2] = new picture;
+
+
+    draw(Gs[0], W--X, red);
+    draw(Gs[0], W--Y, red);
+    draw(Gs[0], W--Z, red);
+
+    draw(Gs[1], X--B, red);
+    draw(Gs[1], Y..(0.5, 0.2)..Z, red);
+    draw(Gs[1], Y..(0.5,-0.2)..Z, red);
+
+    draw(Gs[2], X--B, red);
+    draw(Gs[2], Y..(0.5,-0.2)..Z, red);
+    draw(Gs[2], A--Y, blue);
+
+    for (int i=0; i<3; ++i) {
+      dot(Gs[i], A);
+      dot(Gs[i], B);
+      dot(Gs[i], X);
+      dot(Gs[i], Y);
+      dot(Gs[i], Z);
+      draw(Gs[i], A--B--Z--A--X--Y--B);
+    }
+    dot(Gs[0], "$w$", W, dir(-90));
+
+    label(Gs[0], "$G$", B, 2*dir(90));
+    label(Gs[1], "$G'$", B, 2*dir(90));
+    label(Gs[2], "$G''$", B, 2*dir(90));
+
+    add(shift(-3,0) * Gs[0]);
+    add(shift(0,0) * Gs[1]);
+    add(shift(3,0) * Gs[2]);
+  \end{asy}
+  \end{center}
+
+  We then construct a graph $G''$ by taking any pair of double edges,
+  deleting one of them, and adding any missing edge of $G''$ in its place.
+  (This is always possible, since when $m = \binom k2$ we have $n-1 \ge k$
+  and when $m = \binom k2 +1$ we have $n-1 \ge k+1$.)
+
+  Thus we have arrived at a simple graph $G''$ with one fewer vertex.
+  We also observe that we have $S(G'') \ge S(G)$;
+  after all every vertex in $G''$ has degree at least as large as it did in $G$,
+  and the $d$ edges we deleted have been replaced with
+  new edges which will have labels at least $d$.
+  Hence we may apply the inductive hypothesis to the graph $G''$
+  to obtain $G^\ast$ with $S(G^\ast) \ge S(G'') \ge S(G)$.
+\end{proof}
+
+The problem then is completed once we prove the following:
+\begin{claim*}
+  For any graph $G$,
+  \begin{itemize}
+    \ii If $G$ has $\binom k2$ edges for $k \ge 3$,
+    then $S(G) \le \binom k2 \cdot (k-1)$.
+    \ii If $G$ has $\binom k2 + 1$ edges for $k \ge 4$,
+    then $S(G) \le \binom k2 \cdot (k-1) + 1$.
+  \end{itemize}
+\end{claim*}
+
+\begin{proof}
+We prove both parts at once by induction on $k$,
+with the base case $k = 3$ being plain
+(there is nothing to prove in the second part for $k=3$).
+Thus assume $k \ge 4$.
+By the earlier lemma, we may assume $G$ has a universal vertex $v$.
+For notational convenience, we say $G$ has $\binom k2 + \eps$ edges
+for $\eps \in \{0,1\}$, and $G$ has $p+1$ vertices, where $p \ge k-1 + \eps$.
+
+Let $H$ be the subgraph obtained when $v$ is deleted.
+Then $m = \binom k2 + \eps - p$ is the number of edges in $H$;
+from $p \ge k-1+\eps$ we have $m \le \binom{k-1}{2}$
+and so we may apply the inductive hypothesis to $H$ to deduce
+$S(H) \le \binom{k-1}{2} \cdot (k-2)$.
+
+\begin{center}
+\begin{asy}
+defaultpen(fontsize(11pt));
+size(4.5cm);
+
+dotfactor *= 1.5;
+pair V = (0,2);
+
+pair A = (-1.5,0);
+pair B = (-1.0,0);
+pair C = (+1.5,0);
+
+for (real x=-1.5; x<=1.5; x+=0.5) {
+  draw(V--(x,0));
+}
+label("$\dots$", midpoint(B--C));
+dot("$w_1$", A, dir(-90));
+dot("$w_2$", B, dir(-90));
+dot("$w_p$", C, dir(-90));
+dot("$v$", V, dir(90), red);
+
+
+real EX = 2;
+real EY = 0.8;
+draw(ellipse((0,0), EX, EY), dashed);
+label("$H$", (EX, -EY));
+\end{asy}
+\end{center}
+Now the labels of edges $vw_i$ have sum
+\[
+  \sum_{i=1}^p \min \left( \deg_G v, \deg_G w_i \right)
+  = \sum_{i=1}^p \deg_G w_i
+  = \sum_{i=1}^p (\deg_H w_i + 1) =  2m + p.
+\]
+For each of the edges contained in $H$,
+the label on that edge has increased by exactly $1$,
+so those edges contribute $S(H)+m$.
+In total,
+\begin{align*}
+  S(G) &= 2m + p + \left( S(H)+m \right) = (m+p) + 2m + S(H) \\
+  &\le \binom k2 + \eps + 2\binom{k-1}{2} + \binom{k-1}{2}(k-2)
+  = \binom k2 (k-1) + \eps. \qedhere
+\end{align*}
+\end{proof}
+
+\paragraph{Second solution (algebraic, submitted by contestant James Lin).}
+We give a different proof of $S(G) \le 127009$.
+The proof proceeds using the following two claims,
+which will show that $S(G) \le 127010$ for all graphs $G$.
+Then a careful analysis of the equality cases will show
+that this bound is not achieved for any graph $G$.
+Since the example $L_{64}$ earlier has $S(L_{64}) = 127009$,
+this will solve the problem.
+
+\begin{lemma*}
+  [Combinatorial bound]
+  Let $G$ be a graph with $2017$ edges and let
+  $d_1 \ge d_2 \ge \dots \ge d_n$ be the degree sequence of the graph
+  (thus $n \ge 65$).
+  Then \[ S(G) \le d_2 + 2d_3 + 3d_4 + \dots + 63d_{64} + d_{65}. \]
+\end{lemma*}
+\begin{proof}
+  Let $v_1$, \dots, $v_n$ be the corresponding vertices.
+  For any edge $e = \{v_i, v_j\}$ with $i < j$,
+  we consider associating each edge $e$ with $v_j$,
+  and computing the sum $S(G)$ indexing over associated vertices.
+  To be precise, if we let $a_i$ denote the number of edges
+  associated to $v_i$, we now have $a_i \le i-1$, $\sum a_i = 2017$, and
+  \[ S(G) = \sum_{i=1}^n a_i d_i. \]
+  The inequality
+  $\sum a_i d_i \le d_2 + 2d_3 + 3d_4 + \dots + 63d_{64} + d_{65}$
+  then follows for smoothing reasons
+  (by ``smoothing'' the $a_i$), since the $d_i$ are monotone.
+  This proves the given inequality.
+\end{proof}
+
+Once we have this property, we handle the bounding completely algebraically.
+\begin{lemma*}
+  [Algebraic bound]
+  Let $x_1 \ge x_2 \ge \dots \ge x_{65}$ be any nonnegative integers
+  such that $\sum_{i=1}^{65} x_i \le 4034$.
+  Then \[ x_2 + 2x_3 + \dots + 63x_{64} + x_{65} \le 127010. \]
+  Moreover, equality occurs if and only if
+  $x_1 = x_2 = x_3 = \dots = x_{64} = 63$ and $x_{65} = 2$.
+\end{lemma*}
+\begin{proof}
+  Let $A$ denote the left-hand side of the inequality.
+  We begin with a smoothing argument.
+  \begin{itemize}
+    \ii Suppose there are indices $1 \le i < j \le 64$
+    such that $x_i > x_{i+1} \ge x_{j-1} > x_j$.
+    Then replacing $(x_i, x_j)$ by $(x_i-1, x_j+1)$
+    strictly increases $A$ preserving all conditions.
+    Thus we may assume all numbers in $\{x_1, \dots, x_{64}\}$
+    differ by at most $1$.
+    \ii Suppose $x_{65} \ge 4$.
+    Then we can replace $(x_1, x_2, x_3, x_4, x_{65})$
+    by $(x_1+1, x_2+1, x_3+1, x_4+1, x_{65}-4)$
+    and strictly increase $A$.
+    Hence we may assume $x_{65} \le 3$.
+  \end{itemize}
+  We will also tacitly assume $\sum x_i = 4034$,
+  since otherwise we can increase $x_1$.
+  These two properties leave only four sequences to examine:
+  \begin{itemize}
+    \ii $x_1 = x_2 = x_3 = \dots = x_{63} = 63$, $x_{64} = 62$,
+    and $x_{65} = 3$, which gives $A = 126948$.
+    \ii $x_1 = x_2 = x_3 = \dots = x_{63} = x_{64} = 63$ and $x_{65} = 2$,
+    which gives $A = 127010$.
+    \ii $x_1 = 64$, $x_2 = x_3 = \dots = x_{63} = x_{64} = 63$ and $x_{65} = 1$,
+    which gives $A = 127009$.
+    \ii $x_1 = x_2 = 64$, $x_3 = \dots = x_{63} = x_{64} = 63$ and $x_{65} = 0$,
+    which gives $A = 127009$.
+  \end{itemize}
+  This proves that $A \le 127010$.
+  To see that equality occurs only in the second case above,
+  note that all the smoothing operations other than incrementing $x_1$ were strict,
+  and that $x_1$ could not have been incremented in this way
+  as $x_1 = x_2 = 63$.
+\end{proof}
+
+This shows that $S(G) \le 127010$ for all graphs $G$,
+so it remains to show equality never occurs.
+Retain the notation $d_i$ and $a_i$ of the combinatorial bound now;
+we would need to have $d_1 = \dots = d_{64} = 63$ and $d_{65} = 2$
+(in particular, deleting isolated vertices from $G$, we may assume $n=65$).
+In that case, we have $a_i \le i-1$ but also $a_{65} = 2$ by definition
+(the last vertex gets all edges associated to it).
+Finally,
+\begin{align*}
+  S(G) &= \sum_{i=1}^n a_i d_i = 63(a_1 + \dots + a_{64}) + a_{65} \\
+  &= 63(2017-a_{65}) + a_{65} \le 63 \cdot 2015 + 2 = 126947
+\end{align*}
+completing the proof.
+
+\begin{remark*}
+  Another way to finish once $S(G) \le 127010$
+  is note there is a unique graph
+  (up to isomorphism and deletion of universal vertices)
+  with degree sequence
+  $(d_1, \dots, d_{65}) = (63, \dots, 63, 2)$.
+  Indeed, the complement of the graph
+  has degree sequence $(1, \dots, 1, 63)$,
+  and so it must be a $63$-star plus a single edge.
+  One can then compute $S(G)$ explicitly for this graph.
+\end{remark*}
+
+\paragraph{Some further remarks.}
+
+\begin{remark*}
+  Interestingly, the graph $C_4$ has $\binom 32+1 = 4$ edges
+  and $S(C_4) = 8$, while $S(L_3) = 7$.
+  This boundary case is visible in the combinatorial solution
+  in the base case of the first claim.
+  It also explains why we end up with the bound $S(G) \le 127010$
+  in the second algebraic solution,
+  and why it is necessary to analyze the equality cases so carefully;
+  observe in $k=3$ the situation $d_1 = d_2 = d_3 = d_4 = 2$.
+\end{remark*}
+
+\begin{remark*}
+  Some comments about further context for this problem:
+  \begin{itemize}
+  \ii The obvious generalization of $2017$ to any constant
+  was resolved in September 2018 by Mehtaab Sawhney and Ashwin Sah.
+  The relevant paper is
+  \emph{On the discrepancy between two Zagreb indices},
+  published in Discrete Mathematics, Volume 341, Issue 9, pages 2575-2589.
+  The arXiv link is \url{https://arxiv.org/pdf/1801.02532.pdf}.
+
+  \ii The quantity
+  \[ S(G) = \sum_{e = vw} \min \left( \deg v, \deg w \right) \]
+  in the problem has an interpretation:
+  it can be used to provide a bound on the
+  number of triangles in a graph $G$.
+  To be precise, $\# E(G) \le \frac 13 S(G)$,
+  since an edge $e = vw$ is part of at most $\min(\deg v, \deg w)$ triangles.
+
+  \ii For \emph{planar} graphs it is known $S(G) \le 18n-36$
+  and it is conjectured that for $n$ large enough, $S(G) \le 18n-72$.
+  See \url{https://mathoverflow.net/a/273694/70654}.
+  \end{itemize}
+\end{remark*}
+
+\paragraph{Authorship comments.}
+I came up with the quantity $S(G)$
+in a failed attempt to provide a bound on the number of triangles in a graph,
+since this is natural to consider when you do a standard
+double-counting via the edges of the triangle.
+I think the problem was actually APMO 1989,
+and I ended up not solving the problem (the solution is much simpler),
+but the quantity $S(G)$ stuck in my head for a while after that.
+
+Later on that month I was keeping Danielle company while
+she was working on art project (flower necklace),
+and with not much to do except doodle on tables
+I began thinking about $S(G)$ again.
+I did have the sense that $S(G)$ should be maximized
+at a graph close to a complete graph.
+But to my frustration I could not prove it for a long time.
+Finally after many hours of trying various approaches
+I was able to at least show that $S(G)$ was maximized
+for complete graphs if the number of edges was a triangular number.
+
+I had come up with this in March 2016,
+which would have been perfect since $2016$ is a triangular number,
+but it was too late to submit it to any contest
+(the USAMO and IMO deadlines were long past).
+So on December 31, 2016 I finally sat down and solved it for the case $2017$,
+which took another few hours of thought, then submitted it to that year's IMO.
+To my dismay it was rejected, but I passed it along to the USA TST after that,
+thus making it just in time for the close of the calendar year.
+
+---
+
+%%fakesection Walk
+This is a rather detail-oriented problem which requires a lot of care
+in order to get all the arguments to be correct.
+In my opinion, being able to work out a flawless solution
+in the time limit of the exam is an impressive feat.
+
+The original proposed solution is pretty combinatorial,
+and the walkthrough for that is below;
+it uses a \emph{local} smoothing idea in the first half
+and then a \emph{global} idea in the second part.
+(There is also an algebraic solution using
+inequality smoothing instead.)
+
+Viewing the problem in graph theory terms,
+let \[ S(G) \coloneqq \sum_{e = vw} \min \left( \deg v, \deg w \right) \]
+and thus we want to maximize $S(G)$ over simple graphs $G$ with $2017$ edges.
+
+Let's get started.
+\begin{walk}
+  \ii Find an example of a graph achieving $S(G) = 127009$.
+  We will prove this is the maximum value.
+
+  \ii Make a conjecture what the answer is if $2017$
+  is replaced by $\binom k2+1$ where $k \ge 4$.
+
+  \ii Show that the natural extension of (b) does \emph{not} hold when $k = 3$.
+  This edge case will haunt us briefly later on again.
+\end{walk}
+Here is the local half:
+\begin{walk}[resume]
+  \ii Suppose $G$ is a graph with $\binom k2$ edges for $k \ge 3$.
+  Assume $G$ has no universal vertex,
+  and let $w$ denote the vertex of minimal degree.
+
+  Prove that one can delete $w$, and rewire the edges originally adjacent to $w$,
+  to obtain a graph $G^\ast$ with fewer vertices and $S(G^\ast) \ge S(G)$.
+
+  \ii Repeat part (d) where $G$ has $\binom k2 + 1$ edges
+  and $k \ge 4$, and $\#V(G) > k+1$.
+  Then check the existence of $G^\ast$ by hand for $\#V(G) = k+1$.
+
+  \ii Show that (e) is false if $k=3$.
+\end{walk}
+So, we can reduce to the case where $G$ has a universal vertex.
+We will now prove by induction on $k \ge 3$ the following claim:
+\begin{quote}
+  For any graph $G$,
+  \begin{itemize}
+    \ii If $G$ has at most $\binom k2$ edges for $k \ge 3$,
+    then $S(G) \le \binom k2 \cdot (k-1)$.
+    \ii If $G$ has at most $\binom k2 + 1$ edges for $k \ge 4$,
+    then $S(G) \le \binom k2 \cdot (k-1) + 1$.
+  \end{itemize}
+\end{quote}
+This is the global half.
+\begin{walk}[resume]
+  \ii Check the base case $k=3$.
+  (We won't need a base case for the second bullet;
+  it will reduce to the first one.)
+  \ii WLOG, let $v$ be the universal vertex of $G$.
+  Show that if $v$ is deleted,
+  the resulting graph $H$ has at most $\binom{k-1}{2}$ edges
+  (in both cases) and thus we can apply
+  the induction hypothesis to the resulting graph $H$.
+  \ii Prove that $S(G) = S(H) + 3\#E(H) + \#V(H)$.
+  \ii Combine the previous two parts to complete the problem.
+\end{walk}
+
+
+---
+
+For dress-up, I included both the degrees and the edge labels in the average:
+
+There are $100$ marked points on a circle.
+Some pairs of these points are joined by $300$ chords;
+we then label each marked point with the number of chords
+containing it as an endpoint, and each chord
+with the smaller of the two labels at its endpoints.
+What is the largest possible average of these $400$ labels?
+
+Answer: $\frac{39}{2}$.
+
+To achieve this, we take $25$ vertices and join them together.
+In this case, all $25$ vertices and $300$ edges have a label
+of $24$, so the sum of the numbers is $325 \cdot 24 = \frac{39}{2} \cdot 400$.
+
+Let's now prove this is optimal.
+If we take the graph $G = (V,E)$ with vertices the points and edges the chords,
+then the sum in question is equal to
+\[ \sum_v \deg v + \sum_{e = vw} \min \left( \deg v, \deg w \right). \]
+Of course $\sum_v \deg v = 2 \# E = 600$.
+So the core of the problem is the following lemma,
+which will imply the answer.

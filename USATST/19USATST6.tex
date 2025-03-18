@@ -1,0 +1,333 @@
+author: Ankan Bhattachrya
+desc: $AB_1A_1C_1$ is cyclic geometry
+source: USA TST 2019/6
+tags: [2018-10, bary, spiralsim, nice, length, zayin]
+hardness: 40
+url: https://aops.com/community/p11625814
+
+---
+
+Let $ABC$ be a triangle with incenter $I$,
+and let $D$ be a point on line $BC$ satisfying $\angle AID = 90\dg$.
+Let the excircle of triangle $ABC$ opposite the vertex $A$
+be tangent to $\ol{BC}$ at point $A_1$.
+Define points $B_1$ on $\ol{CA}$ and $C_1$ on $\ol{AB}$ analogously,
+using the excircles opposite $B$ and $C$, respectively.
+
+Prove that if quadrilateral $AB_1A_1C_1$ is cyclic,
+then $\ol{AD}$ is tangent to the circumcircle of $\triangle DB_1C_1$.
+
+---
+
+We present two solutions.
+\paragraph{First solution using spiral similarity (Ankan Bhattacharya).}
+First, we prove the part of the problem
+which does not depend on the condition $A B_1 A_1 C_1$ is cyclic.
+
+\begin{lemma*}
+  Let $ABC$ be a triangle and define $I$, $D$, $B_1$, $C_1$
+  as in the problem.
+  Moreover, let $M$ denote the midpoint of $\ol{AD}$.
+  Then $\ol{AD}$ is tangent to $(AB_1C_1)$,
+  and moreover $\ol{B_1 C_1} \parallel \ol{IM}$.
+\end{lemma*}
+\begin{proof}
+  Let $E$ and $F$ be the tangency points of the incircle.
+  Denote by $Z$ the Miquel point of $BFEC$,
+  i.e.\ the second intersection
+  of the circle with diameter $\ol{AI}$ and the circumcircle.
+
+  Note that $A$, $Z$, $D$ are collinear,
+  by radical axis on $(ABC)$, $(AFIE)$, $(BIC)$.
+
+  \begin{center}
+  \begin{asy}
+  size(11cm);
+  pair A = dir(130);
+  pair B = dir(210);
+  pair C = dir(330);
+  pair I = incenter(A, B, C);
+  pair E = foot(I, C, A);
+  pair B_1 = A+C-E;
+  pair F = foot(I, A, B);
+  pair C_1 = A+B-F;
+  pair T = foot(I, B, C);
+  pair Z = foot(A, I, foot(T, E, F));
+
+  filldraw(A--B--C--cycle, opacity(0.1)+lightcyan, blue);
+  draw(circumcircle(A, E, F), orange);
+  pair D = extension(A, Z, B, C);
+  draw(arc(dir(270), C, B), orange);
+  draw(D--B, blue);
+
+  filldraw(A--B_1--C_1--cycle, opacity(0.1)+deepgreen, blue);
+  pair M = midpoint(A--D);
+  filldraw(A--D--I--cycle, opacity(0.1)+lightred, red);
+  draw(I--M, red);
+  filldraw(Z--E--F--cycle, opacity(0.1)+deepgreen, deepgreen);
+  filldraw(unitcircle, opacity(0.1)+lightcyan, blue);
+  draw(incircle(A, B, C), dotted+blue);
+  draw(circumcircle(A, B_1, C_1), dashed+red);
+
+  dot("$A$", A, dir(A));
+  dot("$B$", B, dir(225));
+  dot("$C$", C, dir(315));
+  dot("$I$", I, dir(270));
+  dot("$E$", E, dir(30));
+  dot("$B_1$", B_1, dir(B_1));
+  dot("$F$", F, dir(F));
+  dot("$C_1$", C_1, dir(C_1));
+  dot("$Z$", Z, dir(Z));
+  dot("$D$", D, dir(D));
+  dot("$M$", M, dir(M));
+
+  /* TSQ Source:
+
+  !size(11cm);
+  A = dir 130
+  B = dir 210 R225
+  C = dir 330 R315
+  I = incenter A B C R270
+  E = foot I C A R30
+  B_1 = A+C-E
+  F = foot I A B
+  C_1 = A+B-F
+  T := foot I B C
+  Z = foot A I foot T E F
+
+  A--B--C--cycle 0.1 lightcyan / blue
+  circumcircle A E F orange
+  D = extension A Z B C
+  !draw(arc(dir(270), C, B), orange);
+  D--B blue
+
+  A--B_1--C_1--cycle 0.1 deepgreen / blue
+  M = midpoint A--D
+  A--D--I--cycle 0.1 lightred / red
+  I--M red
+  Z--E--F--cycle 0.1 deepgreen / deepgreen
+  unitcircle 0.1 lightcyan / blue
+  incircle A B C dotted blue
+  circumcircle A B_1 C_1 dashed red
+
+  */
+  \end{asy}
+  \end{center}
+
+  Then the spiral similarity gives us
+  \[ \frac{ZF}{ZE} = \frac{BF}{CE} = \frac{AC_1}{AB_1} \]
+  which together with $\dang FZE = \dang FAE = \dang BAC$
+  implies that $\triangle ZFE$
+  and $\triangle AC_1B_1$ are (directly) similar.
+  (See IMO Shortlist 2006 G9 for a similar application
+  of spiral similarity.)
+
+  Now the remainder of the proof is just angle chasing.
+  First, since
+  \[ \dang DAC_1 = \dang ZAF = \dang ZEF = \dang AB_1C_1 \]
+  we have $\ol{AD}$ is tangent to $(AB_1C_1)$.
+  Moreover, to see that $\ol{IM} \parallel \ol{B_1C_1}$, write
+  \begin{align*}
+    \dang (\ol{AI}, \ol{B_1C_1})
+    &= \dang IAC + \dang AB_1C_1 = \dang BAI + \dang ZEF
+    = \dang FAI + \dang ZAF \\
+    &= \dang ZAI = \dang MAI = \dang AIM
+  \end{align*}
+  the last step since $\triangle AID$ is right with hypotenuse
+  $\ol{AD}$, and median $\ol{IM}$.
+\end{proof}
+
+
+Now we return to the present problem
+with the additional condition.
+
+\begin{center}
+\begin{asy}
+unitsize(100);
+pair A, B, C, I, A1, B1, C1, D, E, F, J, K, Z, M;
+B = dir(193); C = reflect((0, 1), (0, -1)) * B;
+I = intersectionpoints(circle(dir(270), abs(dir(270)-B)),
+-B--(-C))[1];
+A = 2 * foot(origin, I, dir(270)) - dir(270);
+D = extension(B, C, I, rotate(90, I) * A);
+E = foot(I, C, A);
+F = foot(I, A, B);
+A1 = B + C - foot(I, B, C);
+B1 = C + A - E;
+C1 = A + B - F;
+M = (A + D)/2;
+Z = foot(I, A, D);
+K = 2 * foot(circumcenter(A, B1, C1), A, I) - A;
+
+//draw(unitcircle);
+filldraw(circumcircle(A, B1, C1), pink+opacity(0.5), red);
+filldraw(circumcircle(A, E, F), lightcyan+opacity(0.5), heavycyan+dashed);
+draw(incircle(A, B, C), heavycyan+dotted);
+filldraw(circumcircle(A, B, C), lightcyan+opacity(0.2), cyan);
+filldraw(circumcircle(B, I, C), lightcyan+opacity(0.3), heavycyan+dashed);
+draw(arc(circumcenter(D, B1, C1), B1, D), heavyred);
+draw(A--D, heavyred);
+draw(A--B--C--cycle, heavymagenta);
+draw(D--B, lightmagenta);
+draw(A--I--D, heavycyan);
+// draw(I--K, heavyred);
+draw(M--B1, dashed+heavyred);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(10));
+dot("$I$", I, dir(-I));
+dot("$A_1 = V$", A1, dir(A1));
+dot("$B_1$", B1, dir(10));
+dot("$C_1$", C1, dir(130));
+dot("$D$", D, dir(D));
+dot("$E$", E, dir(40));
+dot("$F$", F, dir(170));
+dot("$M$", M, dir(130));
+dot("$Z$", Z, dir(Z));
+// dot("$K$", K, dir(K-circumcenter(A, B1, C1)));
+
+clip(box((-3, -0.4), (1.2, 1.25)));
+\end{asy}
+\end{center}
+
+\begin{claim*}
+  Given the condition, we actually have
+  $\angle AB_1A_1 = \angle AC_1A_1 = 90\dg$.
+\end{claim*}
+\begin{proof}
+  Let $I_A$, $I_B$ and $I_C$ be the excenters of $\triangle ABC$.
+  Then the perpendiculars to $\ol{BC}$, $\ol{CA}$, $\ol{AB}$
+  from $A_1$, $B_1$, $C_1$ respectively meet at
+  the so-called \emph{Bevan point} $V$
+  (which is the circumcenter of $\triangle I_A I_B I_C$).
+
+  Now $\triangle AB_1C_1$ has circumdiameter $\ol{AV}$.
+  We are given $A_1$ lies on this circle,
+  so if $V \neq A_1$ then $\ol{AA_1} \perp \ol{A_1V}$.
+  But $\ol{A_1V} \perp \ol{BC}$ by definition,
+  which would imply $\ol{AA_1} \parallel \ol{BC}$, which is absurd.
+\end{proof}
+
+\begin{claim*}
+  Given the condition the points $B_1$, $I$, $C_1$ are collinear
+  (hence with $M$).
+\end{claim*}
+\begin{proof}
+  By Pappus theorem on $\ol{I_B A I_C}$ and $\ol{BA_1C}$
+  after the previous claim.
+\end{proof}
+
+To finish, since $\ol{DMA}$ was tangent to the circumcircle of
+$\triangle AB_1C_1$, we have $MD^2 = MA^2 = MC_1 \cdot MB_1$,
+implying the required tangency.
+
+
+\begin{remark*}
+The triangles satisfying the problem hypothesis
+are exactly the ones satisfying $r_A = 2R$,
+where $R$ and $r_A$ denote the circumradius and $A$-exradius.
+\end{remark*}
+
+\begin{remark*}
+  If $P$ is the foot of the $A$-altitude
+  then this should also imply $AB_1PC_1$ is harmonic.
+\end{remark*}
+
+\paragraph{Second solution by inversion and mixtilinears (Anant Mudgal).}
+As in the end of the preceding solution, we have
+$\angle AB_1A_1=\angle AC_1A_1=90^{\circ}
+\quad\text{and}\quad I \in \ol{B_1 C_1}$.
+Let $M$ be the midpoint of minor arc $BC$
+and $N$ be the midpoint of arc $\widehat{BAC}$.
+Let $L$ be the intouch point on $\ol{BC}$.
+Let $O$ be the circumcenter of $\triangle ABC$.
+Let $K=\ol{AI} \cap \ol{BC}$.
+
+\begin{center}
+\begin{asy}
+ /* Geogebra to Asymptote conversion, documentation at aops.com/Wiki, go to User:Azjps/geogebra */
+import graph; size(12cm);
+real labelscalefactor = 0.5; /* changes label-to-point distance */
+pen dps = linewidth(0.7) + fontsize(10); defaultpen(dps); /* default pen style */
+pen dotstyle = black; /* point style */
+real xmin = -4., xmax = 6., ymin = -3., ymax = 4.;  /* image dimensions */
+
+ /* draw figures */
+draw(circle((2.7,0.6), 2.7658633371878665), linewidth(0.4));
+draw((1.892579421398536,1.2)--(3.5074205786014643,0.), linewidth(0.4) + dotted);
+draw((1.445226775603362,3.064861893765504)--(-3.109814760356735,0.), linewidth(0.4));
+draw((-3.109814760356735,0.)--(2.7,-2.1658633371878664), linewidth(0.4));
+draw((0.8894305730917524,2.690894150918487)--(3.9547732243966385,-1.864861893765504), linewidth(0.4) + linetype("2 2"));
+draw((1.445226775603362,3.064861893765504)--(0.,0.), linewidth(0.4));
+draw((1.445226775603362,3.064861893765504)--(5.4,0.), linewidth(0.4));
+draw((5.4,0.)--(-3.109814760356735,0.), linewidth(0.4));
+draw((-3.5571674061519136,1.864861893765503)--(2.7,3.3658633371878666), linewidth(0.4));
+draw((1.445226775603362,3.064861893765504)--(2.7,-2.1658633371878664), linewidth(0.4));
+draw((-3.5571674061519136,1.864861893765503)--(-3.109814760356735,0.), linewidth(0.4));
+draw((-3.109814760356735,0.)--(1.892579421398536,1.2), linewidth(0.4));
+draw((1.892579421398536,1.2)--(1.892579421398536,0.), linewidth(0.4) + dotted);
+draw((2.7,3.3658633371878666)--(2.7,-2.1658633371878664), linewidth(0.4));
+draw((0.8894305730917524,2.690894150918487)--(0.8894305730917507,-1.4908941509184854), linewidth(0.4) + linetype("2 2"));
+draw((2.7,3.3658633371878666)--(0.8894305730917507,-1.4908941509184854), linewidth(0.4) + linetype("2 2"));
+draw((-3.5571674061519136,1.864861893765503)--(4.217574445111032,0.9163536869921585), linewidth(0.4));
+draw((1.445226775603362,3.064861893765504)--(0.8894305730917507,-1.4908941509184854), linewidth(0.4) + linetype("2 2"));
+draw((3.5074205786014643,0.)--(4.217574445111032,0.9163536869921585), linewidth(0.4) + dotted);
+draw((0.6380284948350587,1.353053551156462)--(3.5074205786014643,0.), linewidth(0.4) + dotted);
+draw((0.8894305730917524,2.690894150918487)--(2.7,-2.1658633371878664), linewidth(0.4) + linetype("2 2"));
+ /* dots and labels */
+dot((0.,0.),linewidth(4.pt) + dotstyle);
+label("$B$", (-0.32,-0.42), NE * labelscalefactor);
+dot((2.7,0.6),linewidth(4.pt) + dotstyle);
+label("$O$", (2.78,0.76), NE * labelscalefactor);
+dot((2.7,-2.1658633371878664),linewidth(4.pt) + dotstyle);
+label("$M$", (2.78,-2.), NE * labelscalefactor);
+dot((1.892579421398536,1.2),linewidth(4.pt) + dotstyle);
+label("$I$", (1.5,1.32), NE * labelscalefactor);
+dot((1.445226775603362,3.064861893765504),linewidth(4.pt) + dotstyle);
+label("$A$", (1.52,3.22), NE * labelscalefactor);
+dot((-3.109814760356735,0.),linewidth(4.pt) + dotstyle);
+label("$D$", (-3.22,-0.46), NE * labelscalefactor);
+dot((1.892579421398536,0.),linewidth(4.pt) + dotstyle);
+label("$L$", (1.72,-0.42), NE * labelscalefactor);
+dot((4.217574445111032,0.9163536869921585),linewidth(4.pt) + dotstyle);
+label("$B_1$", (4.3,1.08), NE * labelscalefactor);
+dot((0.6380284948350587,1.353053551156462),linewidth(4.pt) + dotstyle);
+label("$C_1$", (0.2,1.02), NE * labelscalefactor);
+dot((-3.5571674061519136,1.864861893765503),linewidth(4.pt) + dotstyle);
+label("$G$", (-3.48,2.02), NE * labelscalefactor);
+dot((3.5074205786014643,0.),linewidth(4.pt) + dotstyle);
+label("$V$", (3.38,-0.4), NE * labelscalefactor);
+dot((2.7,3.3658633371878666),linewidth(4.pt) + dotstyle);
+label("$N$", (2.78,3.52), NE * labelscalefactor);
+dot((0.8894305730917524,2.690894150918487),linewidth(4.pt) + dotstyle);
+label("$Z$", (0.36,2.5), NE * labelscalefactor);
+dot((0.8894305730917507,-1.4908941509184854),linewidth(4.pt) + dotstyle);
+label("$T$", (0.46,-1.78), NE * labelscalefactor);
+dot((3.9547732243966385,-1.864861893765504),linewidth(4.pt) + dotstyle);
+label("$A'$", (4.04,-1.7), NE * labelscalefactor);
+dot((-0.8322939923766871,1.5324309468827513),linewidth(4.pt) + dotstyle);
+label("$X$", (-0.98,1.74), NE * labelscalefactor);
+dot((5.4,0.),linewidth(4.pt) + dotstyle);
+label("$C$", (5.38,-0.36), NE * labelscalefactor);
+dot((2.1804415825316923,0.),linewidth(4.pt) + dotstyle);
+label("$K$", (2.2,-0.4), NE * labelscalefactor);
+clip((xmin,ymin)--(xmin,ymax)--(xmax,ymax)--(xmax,ymin)--cycle);
+ /* end of picture */
+\end{asy}
+\end{center}
+
+\begin{claim*}
+We have $\angle (\ol{AI}, \ol{B_1C_1})=\angle IAD$.
+\end{claim*}
+
+\begin{proof} Let $Z$ lie on $(ABC)$ with $\angle AZI=90^{\circ}$. By radical axis theorem on $(AIZ), (BIC),$ and $(ABC)$, we conclude that $D$ lies on $\ol{AZ}$. Let $\ol{NI}$ meet $(ABC)$ again at $T \neq N$.
+
+Inversion in $(BIC)$ maps $\ol{AI}$ to $\ol{KI}$ and $(ABC)$ to $\ol{BC}$. Thus, $Z$ maps to $L$, so $Z, L, M$ are collinear. Since $BL=CV$ and $OI=OV$, we see that $MLIN$ is a trapezoid with $\ol{IL} \parallel \ol{MN}$. Thus, $\ol{ZT} \parallel \ol{MN}$.
+
+It is known that $\ol{AT}$ and $\ol{AA_1}$ are isogonal in angle $BAC$. Since $\ol{AV}$ is a circumdiameter in $(AB_1C_1)$, so  $\ol{AT} \perp \ol{B_1C_1}$. So $\dang ZAI=\dang NMT=90^{\circ}-\dang TAI=\dang (\ol{AI}, \ol{B_1C_1})$.
+\end{proof}
+
+Let $X$ be the midpoint of $\ol{AD}$ and $G$ be the reflection of $I$ in $X$. Since $AIDG$ is a rectangle, we have $\dang AIG=\dang ZAI=\dang (\ol{AI}, \ol{B_1C_1})$, by the previous claim. So $\ol{IG}$ coincides with $\ol{B_1C_1}$. Now $\ol{AI}$ bisects $\angle B_1AC_1$ and $\angle IAG=90^{\circ}$, so $(\ol{IG}; \ol{B_1C_1})=-1$.
+
+Since $\angle IDG=90^{\circ}$, we see that $\ol{DI}$ and $\ol{DG}$ are bisectors of angle $B_1DC_1$. Now $\angle XDI=\angle XID \implies \angle XDC_1=\angle XID-\angle IDB_1=\angle DB_1C_1$, so $\ol{XD}$ is tangent to $(DB_1C_1)$.

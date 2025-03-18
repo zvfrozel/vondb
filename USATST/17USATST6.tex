@@ -1,0 +1,48 @@
+desc: $p^5$ divides $(a+b)^p - a^p - b^p$
+source: USA TST 2017/6
+tags: [2017-01, polynomial, criticalclaim, magic, smallcases, good, wishful, primes, yod]
+author: Noam Elkies
+hardness: 35
+url: https://aops.com/community/p7732203
+
+---
+
+Prove that there are infinitely many triples $(a,b,p)$ of integers,
+with $p$ prime and $0 < a \le b < p$,
+for which $p^5$ divides $(a+b)^p - a^p - b^p$.
+
+---
+
+The key claim is that if $p \equiv 1 \pmod 3$,
+then
+\[ p(x^2+xy+y^2)^2 \text{ divides } (x+y)^p - x^p - y^p \]
+as polynomials in $x$ and $y$.
+Since it's known that one can select $a$ and $b$ such that
+$p^2 \mid a^2 + ab + b^2$, the conclusion follows.
+(The theory of quadratic forms tells us we can do it with $p^2 = a^2+ab+b^2$;
+Thue's lemma lets us do it by solving $x^2+x+1 \equiv 0 \pmod{p^2}$.)
+
+To prove this, it is the same to show that
+\[ (x^2+x+1)^2 \text{ divides } F(x) \coloneqq (x+1)^p - x^p - 1. \]
+since the binomial coefficients $\binom pk$ are clearly divisible by $p$.
+Let $\zeta$ be a third root of unity.
+Then $F(\zeta) = (1+\zeta)^p - \zeta^p - 1 = -\zeta^2 - \zeta - 1 = 0$.
+Moreover, $F'(x) = p(x+1)^{p-1} -  px^{p-1}$,
+so $F'(\zeta) = p - p = 0$.
+Hence $\zeta$ is a double root of $F$ as needed.
+
+(Incidentally, $p = 2017$ works!)
+
+\begin{remark*}
+One possible motivation for this solution is the case $p = 7$.
+It is nontrivial even to prove that $p^2$ can divide the expression
+if we exclude the situation $a+b=p$ (which provably never achieves $p^3$).
+As $p = 3, 5$ fails considering the $p = 7$ polynomial gives
+\[ (x+1)^7 - x^7 - 1 = 7x(x+1) \left( x^4 + 2x^3 + 3x^2 + 2x + 1 \right). \]
+The key is now to notice that the last factor is $(x^2+x+1)^2$,
+which suggests the entire solution.
+
+In fact, even if $p \equiv 2 \pmod 3$,
+the polynomial $x^2+x+1$ still divides $(x+1)^p-x^p-1$.
+So even the $p = 5$ case can motivate the main idea.
+\end{remark*}

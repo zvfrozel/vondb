@@ -1,0 +1,88 @@
+author: Ray Li
+desc: Red/blue query in the plane
+source: TSTST 2022/5
+url: https://aops.com/community/p25517063
+tags: [2023-08, process, find, bestpossible, todo]
+
+---
+
+Let $A_1$, \dots, $A_{2022}$ be the vertices of a regular $2022$-gon in the plane.
+Alice and Bob play a game.
+Alice secretly chooses a line and colors all points in the plane
+on one side of the line blue, and all points on the other side of the line red.
+Points on the line are colored blue,
+so every point in the plane is either red or blue.
+(Bob cannot see the colors of the points.)
+
+In each round, Bob chooses a point in the
+plane (not necessarily among $A_1$, \dots, $A_{2022}$)
+and Alice responds truthfully with the color of that point.
+What is the smallest number $Q$ for which Bob has a strategy to
+always determine the colors of points $A_1$, \dots, $A_{2022}$ in $Q$ rounds?
+
+---
+
+The answer is $22$.
+To prove the lower bound, note that there are
+$2022\cdot 2021 + 2 > 2^{21}$ possible colorings.
+If Bob makes less than $22$ queries,
+then he can only output $2^{21}$ possible colorings,
+which means he is wrong on some coloring.
+
+Now we show Bob can always win in $22$ queries.
+A key observation is that the set of red points is convex,
+as is the set of blue points, so if a set of points is all the same color,
+then their convex hull is all the same color.
+\begin{lemma*}
+  Let $B_0$, \dots, $B_{k+1}$ be equally spaced points on a circular arc
+  such that colors of $B_0$ and $B_{k+1}$ differ and are known.
+  Then it is possible to determine the colors of $B_1$, \dots, $B_k$
+	in $\left\lceil \log_2k \right\rceil$ queries.
+\end{lemma*}
+\begin{proof}
+  There exists some $0\le i\le k$ such that $B_0$, \dots, $B_{i}$
+  are the same color and $B_{i+1}$, \dots, $B_{k+1}$ are the same color.
+  (If $i<j$ and $B_0$ and $B_j$ were red and $B_i$ and $B_{k+1}$ were blue,
+  then segment $B_0B_j$ is red and segment $B_iB_{k+1}$ is blue,
+  but they intersect).
+  Therefore we can binary search.
+\end{proof}
+\begin{lemma*}
+  Let $B_0$, \dots, $B_{k+1}$ be equally spaced points on a circular arc
+  such that colors of $B_0$, $B_{\left\lceil k/2 \right\rceil}$, $B_{k+1}$
+  are both red and are known.
+  Then at least one of the following holds:
+  all of $B_1$ ,\dots, $B_{\left\lceil k/2 \right\rceil}$ are red
+  or all of $B_{\left\lceil k/2 \right\rceil}$,\dots,$B_k$ are red.
+  Furthermore, in one query we can determine which one of the cases holds.
+\end{lemma*}
+\begin{proof}
+  The existence part holds for similar reason to previous lemma.
+  To figure out which case, choose a point $P$ such that
+  all of $B_0$, \dots, $B_{k+1}$
+  lie between rays $PB_0$ and $PB_{\left\lceil k/2 \right\rceil}$,
+  and such that $B_1$, \dots, $B_{\left\lceil k/2 \right\rceil-1}$ lie inside
+  triangle $PB_0B_{\left\lceil k/2 \right\rceil}$ and such that
+  $B_{\left\lceil k/2 \right\rceil+1}$, \dots, $B_{k+1}$ lie outside
+  (this point should always exist by looking around the intersections of lines $B_0B_1$ and
+  $B_{\left\lceil k/2 \right\rceil-1}B_{\left\lceil k/2 \right\rceil}$).
+  Then if $P$ is red, all the inside points are red
+	because they lie in the convex hull of red points $P$, $B_0$, $B_{\left\lceil k/2 \right\rceil}$.
+  If $P$ is blue, then all the outside points are red:
+  if $B_i$ were blue for $i > \left\lceil k/2 \right\rceil$,
+  then the segment $PB_i$ is blue and intersect the segment
+  $B_0B_{\left\lceil k/2 \right\rceil}$, which is red, contradiction.
+\end{proof}
+Now the strategy is: Bob picks $A_1$. WLOG it is red.
+Now suppose Bob does not know the colors of $\le 2^k-1$ points
+$A_i$, \dots, $A_j$ with $j-i+1\le 2^k-1$ and knows the rest are red.
+I claim Bob can win in $2k-1$ queries.
+First, if $k=1$, there is one point and he wins by querying the point,
+so the base case holds, so assume $k>1$.
+Bob queries $A_{i+\left\lceil (j-i+1)/2 \right\rceil}$.
+If it is blue, he finishes in $2\log_2{\left\lceil (j-i+1)/2 \right\rceil} \le 2(k-1)$
+queries by the first lemma, for a total of $2k-1$ queries.
+If it is red, he can query one more point and learn some half
+of $A_i$, \dots, $A_j$ that are red by the second lemma,
+and then he has reduced it to the case with $\le 2^{k-1}-1$ points
+in two queries, at which point we induct.

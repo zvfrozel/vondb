@@ -1,0 +1,156 @@
+desc:  Geometry of numbers
+source:  IMO 2016/3
+tags:  [nice, criticalclaim, meta, vp, inversion, induct, stronger, yod]
+author: Aleksandr Gaifullin (RUS)
+hardness: 40
+url: https://aops.com/community/p6637660
+
+---
+
+Let $P=A_1A_2\dots A_k$ be a convex polygon in the plane.
+The vertices $A_1$, $A_2$, \dots, $A_k$ have integral coordinates
+and lie on a circle. Let $S$ be the area of $P$.
+An odd positive integer $n$ is given such that
+the squares of the side lengths of $P$ are integers divisible by $n$.
+Prove that $2S$ is an integer divisible by $n$.
+
+---
+
+Solution by Jeck Lim:
+We will prove the result just for $n = p^e$
+where $p$ is an odd prime and $e \ge 1$.
+The case $k=3$ is resolved by Heron's formula directly:
+we have $S = \frac14\sqrt{2(a^2b^2 + b^2c^2 + c^2a^2) - a^4-b^4-c^4}$,
+so if $p^e \mid \gcd(a^2,b^2,c^2)$ then $p^{2e} \mid S^2$.
+
+Now we show we can pick a diagonal and induct down on $k$ by using inversion.
+
+Let the polygon be $A_1 A_2 \dots A_{k+1}$
+and suppose for contradiction that all sides are divisible by $p^e$
+but no diagonals are.
+Let $O = A_{k+1}$ for notational convenience.
+By applying inversion around $O$ with radius $1$,
+we get the ``generalized Ptolemy theorem''
+\[
+  \frac{A_1A_2}{OA_1 \cdot OA_2}
+  + \frac{A_2A_3}{OA_2 \cdot OA_3}
+  + \dots
+  + \frac{A_{k-1} A_k}{OA_{k-1} \cdot OA_k}
+  = \frac{A_1 A_k}{OA_1 \cdot OA_k}
+\]
+or, making use of square roots,
+\[
+  \sqrt{\frac{A_1A_2^2}{OA_1^2 \cdot OA_2^2}}
+  + \sqrt{\frac{A_2A_3^2}{OA_2^2 \cdot OA_3^2}}
+  + \dots
+  + \sqrt{\frac{A_{k-1} A_k^2}{OA_{k-1}^2 \cdot OA_k^2}}
+  = \sqrt{\frac{A_1 A_k^2}{OA_1^2 \cdot OA_k^2}}
+\]
+Suppose $\nu_p$ of all diagonals is strictly less than $e$.
+Then the relation becomes
+\[ \sqrt{q_1} + \dots + \sqrt{q_{k-1}} = \sqrt q \]
+where $q_i$ are positive rational numbers.
+Since there are no nontrivial relations between square roots
+(see \href{https://qchu.wordpress.com/2009/07/02/square-roots-have-no-unexpected-linear-relationships/}{this link})
+there is a positive rational number $b$
+such that $r_i = \sqrt{q_i/b}$ and $r = \sqrt{q/b}$
+are all rational numbers.
+Then
+\[ \sum r_i = r. \]
+However, the condition implies that $\nu_p(q_i^2) > \nu_p(q^2)$ for all $i$
+(check this for $i=1$, $i=k-1$ and $2 \le i \le k-2$),
+and hence $\nu_p(r_i) > \nu_p(r)$.
+This is absurd.
+
+\begin{remark*}
+  I think you basically have to use some Ptolemy-like geometric property,
+  and also all correct solutions I know of for $n = p^e$
+  depend on finding a diagonal and inducting down.
+  (Actually, the case $k=4$ is pretty motivating;
+  Ptolemy implies one can cut in two.)
+\end{remark*}
+
+---
+
+Warm-ups:
+\begin{walk}
+  \ii Show that it's sufficient to prove
+  the result for odd prime powers.
+  \ii Prove the result for $k = 3$ by using Heron's formula.
+  \ii Optionally: prove the result for $k = 4$ by using Brahmagupta's formula.
+  \ii Optionally: prove the result for $k = 4$ by using Ptolemy's theorem
+  to show that one of the diagonals has square length divisible by $p^e$.
+  Thus we can dissect the polygon and apply (b).
+\end{walk}
+Unfortunately, the formulas for $k \ge 5$ are not tractable
+to my knowledge, so the approach in (c)
+does not work for higher values.
+However, the approach in (d) \emph{does} extend. Why?
+Well, Ptolemy's theorem is what happens when you invert
+a cyclic quadrilateral $ABCD$ around $D$ with radius $1$,
+then assert $A^\ast B^\ast + B^\ast C^\ast = A^\ast C^\ast$.
+\begin{walk}[resume]
+  \ii Prove Ptolemy's theorem in the way described.
+  \ii Now let $P = A_1 \dots A_{k+1}$ and fix $O = A_{k+1}$.
+  Perform an inversion at $O$ with radius $1$ and deduce that
+  \[
+    \frac{A_1A_2}{OA_1 \cdot OA_2}
+    + \frac{A_2A_3}{OA_2 \cdot OA_3}
+    + \dots
+    + \frac{A_{k-1} A_k}{OA_{k-1} \cdot OA_k}
+    = \frac{A_1 A_k}{OA_1 \cdot OA_k}.
+  \]
+\end{walk}
+The numbers here are square roots of integers,
+say \[ \sqrt{q_1} + \dots + \sqrt{q_{k-1}} = \sqrt q. \]
+You can take for granted there exists a rational number $b$
+such that $\sqrt{q_i/b} = r_i$ is rational for every $i$
+(and $\sqrt{q/b} = r$ is rational too).
+This follows from the fact that ``there are no nontrivial dependencies
+between $\sqrt{-}$'', see
+\url{https://qchu.wordpress.com/2009/07/02/square-roots-have-no-unexpected-linear-relationships/}
+for example.
+Then $\sum r_i = r$ and
+we are free to do $v_p$ analysis in the usual way.
+
+Now assume for contradiction that no diagonals are divisible by $p^e$
+but all sides are.
+\begin{walk}[resume]
+  \ii Prove that $\nu_p(r_i) > \nu_p(r)$ for all $i$.
+  (Be a little careful here, the edge cases $i=1,k-1$
+  need to be treated separately.)
+  \ii Conclude.
+\end{walk}
+
+---
+
+Right, so let me write up what I have for the case where $n = p$ a prime.
+I don't know how to extend it to prime powers,
+and I suspect that it's not easy.
+
+First, the circumcenter $O$ has rational coordinates,
+so by scaling and translation assume its the origin.
+Let $A_i = (x_i, y_i)$ and $R$ the circumradius.
+From the fact that $n$ divides $(x_i-y_i)^2 + (x_{i+1}-y_{i+1})^2$ we derive
+\[ R^2 \equiv x_i^2 + y_i^2
+  \equiv x_i x_{i+1} + y_i y_{i+1} \pmod p \qquad \forall i. \]
+
+For convenience, call a pair $(x,y)$ nonzero if $x \neq 0$ or $y \neq 0$.
+
+Now, we consider two cases.
+First $R^2 \not\equiv 0 \pmod p$.
+Suppose $(a,b)$ and $(x,y)$ are adjacent vertices.
+We claim they're equal mod $p$.
+Check that \[ a^2R^2 \equiv (R^2-by)^2 + a^2y^2 \implies R^2(y-b)^2 \equiv 0; \]
+hence $y \equiv b$ and similarly $x \equiv a$.
+Thus all vertices coincide modulo $p$ in this case and we're done.
+
+If $R^2 \equiv 0 \pmod p$,
+we can assume $p \equiv 1 \pmod 4$ since otherwise all vertices are zero.
+So assert $p \equiv 1 \pmod 4$ and fix $c = \sqrt{-1} \pmod p$.
+Then every nonzero vertex has $x = \pm cy$,
+so call it positive or negative for signs $+$ and $-$ respectively.
+It's easy to see adjacent nonzero vertices are either both positive or both negative.
+Thus the original polygon can be triangulated into triangles
+such that no triangle has both positive and negative vertices;
+in each case the area of the triangle vanishes modulo $p$.

@@ -1,0 +1,116 @@
+author: Holden Mui
+desc: Holes in unit square, may the world burn
+source: TSTST 2022/1
+url: https://aops.com/community/p25516960
+tags: [2023-08, find, bestpossible, zayin]
+
+---
+
+Let $n$ be a positive integer. Find the smallest positive integer $k$ such
+that for any set $S$ of $n$ points in the interior of the unit square, there
+exists a set of $k$ rectangles such that the following hold:
+\begin{itemize}
+  \item The sides of each rectangle are parallel to the sides of the unit square.
+  \item Each point in $S$ is \emph{not} in the interior of any rectangle.
+  \item Each point in the interior of the unit square but \emph{not} in $S$
+    is in the interior of at least one of the $k$ rectangles.
+\end{itemize}
+(The interior of a polygon does not contain its boundary.)
+
+---
+
+We give the author's solution.
+In terms of $n$, we wish find the smallest integer $k$ for which
+$(0, 1)^2 \setminus S$ is always a union of $k$ open rectangles
+for every set $S \subset (0, 1)^2$ of size $n$.
+
+We claim the answer is $k = \boxed{2n+2}$.
+
+The lower bound is given by picking
+\[ S = \{(s_1, s_1), (s_2, s_2), \dots, (s_n, s_n)\}\]
+for some real numbers $0 < s_1 < s_2 < \dots < s_n < 1$.
+Consider the $4n$ points
+\[S' = S + \{(\varepsilon, 0), (0, \varepsilon), (-\varepsilon, 0), (0, -\varepsilon)\} \subset (0, 1)^2\]
+for some sufficiently small $\varepsilon > 0$.
+The four rectangles covering each of
+\[(s_1 - \varepsilon, s_1), (s_1, s_1 - \varepsilon), (s_n + \varepsilon, s_n), (s_n, s_n + \varepsilon)\]
+cannot cover any other points in $S'$;
+all other rectangles can only cover at most 2 points in $S'$,
+giving a bound of
+\[ k \geq 4 + \frac{\lvert S' \rvert - 4}{2} = 2n+2.\]
+
+\begin{center}
+\begin{asy}
+draw(unitsquare);
+size(8cm);
+int n = 7;
+real eps = 0.05;
+for (int i = 1; i <= n; ++i) {
+dot((i/(n+1), i/(n+1)));
+dot((i/(n+1), i/(n+1)+eps), red);
+dot((i/(n+1)+eps, i/(n+1)), red);
+}
+dot((1/(n+1), 1/(n+1)-eps), red);
+dot((1/(n+1)-eps, 1/(n+1)), red);
+\end{asy}
+\end{center}
+
+To prove that $2n+2$ rectangles are sufficient,
+assume that the number of distinct $y$-coordinates
+is at least the number of distinct $x$-coordinates.
+Let
+\[ 0 = x_0 < x_1 < \dots < x_m < x_{m+1} = 1, \]
+where $x_1$, \dots, $x_m$ are the distinct $x$-coordinates of points in $S$,
+and let $Y_i$ be the set of $y$-coordinates of points with $x$-coordinate $x_i$.
+For each $1 \leq i \leq m$, include the $|Y_i| + 1$ rectangles
+\[ (x_{i-1}, x_{i+1}) \times ((0, 1) \setminus Y_i) \]
+in the union, and also include $(0, x_1) \times (0, 1)$ and $(x_m, 1) \times (0, 1)$;
+this uses $m+n+2$ rectangles.
+\begin{center}
+\begin{asy}
+size(8cm);
+draw(scale(5)*unitsquare);
+dot((1, 3));
+dot((1, 1));
+dot((2, 1));
+dot((3, 2));
+dot((3, 4));
+dot((4, 1));
+
+real eps = 0.1;
+void rect(real l, real r, real b, real t, pen p) {
+l += eps;
+r -= eps;
+b += eps;
+t -= eps;
+filldraw((l, b) -- (l, t) -- (r, t) -- (r, b) -- cycle, p + opacity(0.5));
+}
+void dottedrect(real l, real r, real b, real t) {
+l += eps;
+r -= eps;
+b += eps;
+t -= eps;
+draw((l, b) -- (l, t) -- (r, t) -- (r, b) -- cycle, dashed);
+}
+rect(0, 2, 0, 1-eps, red);
+rect(0, 2, 1, 3, red);
+rect(0, 2, 3, 5, red);
+rect(1, 3, eps, 1, green);
+rect(1, 3, 1+eps, 5-eps, green);
+rect(2, 4, 0, 2, orange);
+rect(2, 4, 2, 4, orange);
+rect(2, 4, 4, 5, orange);
+rect(3, 5, 0+eps, 1, cyan);
+rect(3, 5, 1, 5-eps, cyan);
+dottedrect(eps, 1, eps, 5-eps);
+dottedrect(4, 5-eps, 0, 5);
+\end{asy}
+\end{center}
+All remaining uncovered points are between pairs of points
+with the same $y$-coordinate and adjacent $x$-coordinates $\{x_i, x_{i+1}\}$.
+There are at most $n-m$ such pairs by the initial assumption,
+so covering the points between each pair with
+\[ (x_i, x_{i+1}) \times (y - \varepsilon, y + \varepsilon)\]
+for some sufficiently small $\varepsilon > 0$ gives a total of
+\[(m+n+2) + (n-m) = 2n+2\]
+rectangles.

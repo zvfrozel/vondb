@@ -1,0 +1,70 @@
+author: Vincent Huang
+desc: Tree with $k$ leaves
+hardness: 20
+source: TSTST 2021/5
+tags: [2021-12, graph, dalet]
+url: https://aops.com/community/p23864182
+
+---
+
+Let $T$ be a tree on $n$ vertices with exactly $k$ leaves.
+Suppose that there exists a subset of
+at least $\frac{n+k-1}{2}$ vertices of $T$,
+no two of which are adjacent.
+Show that the longest path in $T$ contains
+an even number of edges.
+
+---
+
+The longest path in $T$ must go between two leaves. The solutions presented here
+will solve the problem by showing that in the unique $2$-coloring of $T$, all
+leaves are the same color.
+
+\paragraph{Solution 1 (Ankan Bhattacharya, Jeffery Li).}
+\begin{lemma*}
+  If $S$ is an independent set of $T$, then
+  \[\sum_{v\in S}\deg(v)\leq n-1.\]
+  Equality holds if and only if $S$ is one of the two components of the unique
+  $2$-coloring of $T$.
+\end{lemma*}
+
+\begin{proof}
+  Each edge of $T$ is incident to at most one vertex of $S$, so we obtain the
+  inequality by counting how many vertices of $S$ each edge is incident to. For
+  equality to hold, each edge is incident to exactly one vertex of $S$, which
+  implies the $2$-coloring.
+\end{proof}
+
+We are given that there exists an independent set of at least $\frac{n+k-1}{2}$
+vertices. By greedily choosing vertices of smallest degree, the sum of the
+degrees of these vertices is at least
+\[k+2\cdot\frac{n-k-1}{2}=n-1.\]
+Thus equality holds everywhere, which implies that the independent set contains
+every leaf and is one of the components of the $2$-coloring.
+
+\paragraph{Solution 2 (Andrew Gu).}
+
+\begin{lemma*}
+  The vertices of $T$ can be partitioned into $k-1$ paths (i.e. the induced
+  subgraph on each set of vertices is a path) such that all edges of $T$
+  which are not part of a path are incident to an endpoint of a path.
+\end{lemma*}
+
+\begin{proof}
+  Repeatedly trim the tree by taking a leaf and removing the longest path
+  containing that leaf such that the remaining graph is still a tree.
+\end{proof}
+
+Now given a path of $a$ vertices, at most $\frac{a+1}{2}$ of those vertices can
+be in an independent set of $T$. By the lemma, $T$ can be partitioned into $k-1$
+paths of $a_1, \dots, a_{k-1}$ vertices, so the maximum size of an independent
+set of $T$ is
+\[\sum \frac{a_i+1}{2}=\frac{n+k-1}{2}.\]
+For equality to hold, each path in the partition must have an odd number of
+vertices, and has a unique $2$-coloring in red and blue where the endpoints are
+red. The unique independent set of $T$ of size $\frac{n+k-1}{2}$ is then the set of red
+vertices. By the lemma, the edges of $T$ which are not part of a path connect an
+endpoint of a path (which is colored red) to another vertex (which must be blue,
+because the red vertices are independent). Thus the coloring of the paths
+extends to the unique $2$-coloring of $T$. The leaves of $T$ are endpoints of
+paths, so they are all red.

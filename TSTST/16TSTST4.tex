@@ -1,0 +1,97 @@
+desc:  Iterated phi
+author: Linus Hamilton
+source:  TSTST 2016/4
+tags:  [rigid, understand, smallcases, scouting, instructive, adhoc, invariant, reliable, favorite, 2016-07, well, dalet]
+hardness: 20
+url: https://aops.com/community/p6580534
+
+---
+
+Prove that if $n$ and $k$ are positive integers
+satisfying $\varphi^k(n) = 1$, then $n \le 3^k$.
+(Here $\varphi^k$ denotes $k$ applications of the Euler phi function.)
+
+---
+
+The main observation is that the exponent of $2$ decreases
+by at most $1$ with each application of $\varphi$.
+This will give us the desired estimate.
+
+Define the \emph{weight} function $w$ on positive integers as follows:
+it satisfies
+\begin{align*}
+  w(ab) &= w(a)+w(b); \\
+  w(2) &= 1; \quad\text{and} \\
+  w(p) &= w(p-1) \quad \text{for any prime $p > 2$}.
+\end{align*}
+By induction, we see that $w(n)$ counts the powers of $2$
+that are produced as $\varphi$ is repeatedly applied to $n$.
+In particular, $k \ge w(n)$.
+
+From $w(2) = 1$,
+it suffices to prove that $w(p) \ge \log_3 p$ for every $p > 2$.
+We use strong induction and note that
+\[
+ w(p) = w(2) + w\left( \frac{p-1}{2} \right)
+ \ge 1 + \log_3(p-1) - \log_3 2 \ge \log_3 p
+\]
+for any $p > 2$.
+This solves the problem.
+
+\begin{remark*}
+One can motivate this solution through small cases $2^x 3^y$
+like $2^x 17^w$, $2^x 3^y 7^z$, $2^x 11^t$.
+
+Moreover, the stronger bound \[ n \le 2 \cdot 3^{k-1} \]
+is true and best possible.
+\end{remark*}
+
+---
+
+Let $a$, $b$, $c$, \dots, denote positive integers.
+\begin{walk}
+  \ii For positive integers $a$, $b$,
+  show that $n = 2^a \cdot 3^b$ takes $a+b$ steps.
+  \ii How many steps does each of $n = 2^a 5^b$,
+  $n = 2^a 17^b$, $2^a 3^b 7^c$, $2^a 11^b$ take?
+  \ii Show that $2^a 2017^b$ takes $a+9b$ steps.
+  \ii Define the function $w \colon \NN \to \ZZ_{\ge 0}$
+  by $w(ab) = w(a) + w(b)$, $w(2)=1$,
+  and $w(p) = w(p-1)$ for odd primes $p$.
+  Figure out the connection between the values of $w(p)$
+  and the answer to your answer in (b).
+  \ii By looking at $\nu_2$ prove the conjecture in (d).
+  \ii Show that $w(n)$ is the number of steps required for $n$,
+  if $n$ is even. What if $n$ is odd?
+  \ii Show that $w(n) \ge \log_3 n$ by induction on $n \ge 1$.
+  (The case where $n$ is composite is immediate,
+  so the only work is when $n$ is prime.)
+  \ii In fact, prove that the stronger
+  estimate $n \le 2 \cdot 3^{k-1}$ holds (and is best possible).
+\end{walk}
+As a rigid problem, this is a chief example:
+the point of the problem is to determine the function $w$,
+and the ``extraction'' of comparing to $\log_3$ occurs at the end.
+It's important to realize that $w$ is ``God-given'';
+we were not permitted any decisions in deriving it.
+
+It might be tempting to try and prove $\varphi(n) \ge n/3$
+or similar statements, but this is false,
+and in any case not representative of small cases.
+However, I think trying the ``small cases'':
+which in this situation are those $n$ with relatively
+few prime factors --- suggests that this is the wrong approach.
+
+
+---
+
+Alternatively, fix $n$ and ask for the largest possible $k$.
+That makes this problem easier: in fact $n \le 2 \cdot 3^{k-1}$,
+But the original said $k \ge \log_3 n$,
+so it became $n \le 3^k$ during copy edits.
+
+---
+
+Here $\varphi(n)$ denotes Euler's totient function,
+i.e.\ $\varphi(n)$ denotes the number of elements of $\{1, \dots, n\}$
+which are relatively prime to $n$. In particular, $\varphi(1) = 1$.

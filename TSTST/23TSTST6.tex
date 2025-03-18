@@ -1,0 +1,285 @@
+author: Holden Mui
+desc: Euler line complex problem
+hardness: 25
+source: TSTST 2023/6
+url: https://aops.com/community/p28015708
+tags: [2023-06, complex, dalet]
+
+---
+
+Let $ABC$ be a scalene triangle
+and let $P$ and $Q$ be two distinct points in its interior.
+Suppose that the angle bisectors of $\angle PAQ$, $\angle PBQ$,
+and $\angle PCQ$ are the altitudes of triangle $ABC$.
+Prove that the midpoint of $\ol{PQ}$ lies on the Euler line of $ABC$.
+
+---
+
+We present three approaches.
+
+\paragraph{Solution 1 (Ankit Bisain).}
+Let $H$ be the orthocenter of $ABC$, and construct $P'$ using the following claim.
+
+\begin{claim*}
+    There is a point $P'$ for which \[\measuredangle APH + \measuredangle AP'H = \measuredangle BPH + \measuredangle BP'H = \measuredangle CPH + \measuredangle CP'H = 0.\]
+\end{claim*}
+
+\begin{proof}
+    After inversion at $H$, this is equivalent to the fact that $P$'s image has an isogonal conjugate in $ABC$'s image.
+\end{proof}
+
+Now, let $X$, $Y$, and $Z$ be the reflections of $P$ over $\ol{AH}$, $\ol{BH}$, and $\ol{CH}$ respectively. Additionally, let $Q'$ be the image of $Q$ under inversion about $(PXYZ)$.
+
+\begin{center}
+  \begin{asy}
+    size(10cm);
+    pair A = dir(110);
+    pair B = dir(210);
+    pair C = dir(330);
+
+    triangle t = triangle(A, B, C);
+    pair H = orthocentercenter(t);
+
+    pair O = (0, 0);
+
+    real r = -3.8;
+    pair Pp = r * H;
+
+    pair OB = circumcenter(triangle(B, H, Pp));
+    pair OC = circumcenter(triangle(C, H, Pp));
+    pair OBp = (reflect(line(B, H))*OB);
+    pair OCp = (reflect(line(C, H))*OC);
+    pair P = reflect(line(OBp, OCp))*H;
+
+    pair X = reflect(altitude(t.BC))*P;
+    pair Y = reflect(altitude(t.AC))*P;
+    pair Z = reflect(altitude(t.AB))*P;
+
+    pair QA = extension(B, Y, C, Z);
+    pair QB = extension(A, X, C, Z);
+    pair QC = extension(A, X, B, Y);
+
+    pair Q = (QA+QB+QC)/3;
+    pair Qp = H + (Q-H) * (abs(P-H)/abs(Q-H))^2;
+
+    pair M = (P+Q)/2;
+
+    draw(A -- B -- C -- cycle);
+    draw(A -- H ^^ B -- H ^^ C -- H, dashed);
+
+    draw(P -- A -- Q ^^ P -- B -- Q ^^ P -- C -- Q ^^ A -- X ^^ B -- Y ^^ C -- Z, heavygreen);
+
+    draw(Qp -- X ^^ H -- X ^^ H -- P ^^ H -- Pp -- A, blue);
+    draw(H -- Qp, dotted);
+
+    draw(circumcircle(triangle(X, Y, Z)));
+
+    real rad = 10;
+    markangle(radius = rad, A, Pp, H, red);
+    markangle(radius = rad, H, P, A, red);
+    markangle(radius = rad, A, X, H, red);
+    markangle(radius = rad, H, Qp, X, red);
+
+    dot("$A$", A, dir(A));
+    dot("$B$", B, dir(B));
+    dot("$C$", C, dir(C));
+
+    dot("$X$", X, dir(0));
+    dot("$Y$", Y, dir(190));
+    dot("$Z$", Z, dir(Z-H));
+
+    dot("$H$", H, dir(270));
+
+    dot("$P$", P, dir(260));
+    dot("$Q$", Q, dir(10));
+    dot("$Q'$", Qp, dir(0));
+
+    dot("$P'$", Pp, dir(Pp));
+  \end{asy}
+\end{center}
+
+\begin{claim*}
+  $ABCP' \stackrel{-}{\sim} XYZQ'$.
+\end{claim*}
+
+\begin{proof}
+    Since
+    \[\measuredangle YXZ = \measuredangle YPZ = \measuredangle(\ol{BH},
+    \ol{CH}) = -\measuredangle BAC\]
+    and cyclic variants, triangles $ABC$ and $XYZ$ are similar. Additionally,
+    \[\measuredangle HQ'X = -\measuredangle HXQ = -\measuredangle HXA =
+    \measuredangle HPA = -\measuredangle HP'A\]
+    and cyclic variants, so summing in pairs gives $\measuredangle YQ'Z =
+    -\measuredangle BP'C$ and cyclic variants; this implies the similarity.
+\end{proof}
+
+\begin{claim*}
+    $Q'$ lies on the Euler line of triangle $XYZ$.
+\end{claim*}
+
+\begin{proof}
+  Let $O$ be the circumcenter of $ABC$ so that $ABCOP' \stackrel{-}{\sim} XYZHQ'$. Then
+    $\measuredangle HP'A = -\measuredangle HQ'X = \measuredangle OP'A$, so $P'$ lies on
+    $\ol{OH}$. By the similarity, $Q'$ must lie on the Euler line of $XYZ$.
+\end{proof}
+
+To finish the problem, let $G_1$ be the centroid of $ABC$ and $G_2$ be the
+centroid of $XYZ$. Then with signed areas,
+\begin{align*}
+    [G_1HP] + [G_1HQ] &= \frac{[AHP] + [BHP] + [CHP]}{3} + \frac{[AHQ] + [BHQ] + [CHQ]}{3} \\
+    &= \frac{[AHQ] - [AHX] + [BHQ] - [BHY] + [CHQ] - [CHZ]}{3} \\
+    &= \frac{[HQX] + [HQY] + [HQZ]}{3} \\
+    &= [QG_2H] \\
+    &= 0
+\end{align*}
+where the last line follows from the last claim. Therefore $\ol{G_1H}$
+bisects $\ol{PQ}$, as desired.
+
+\begin{remark*}
+  This solution characterizes the set of all points $P$ for which such a point
+  $Q$ exists. It is the image of the Euler line under the mapping described in
+  the first claim.
+\end{remark*}
+
+\paragraph{Solution 2 using complex numbers (Carl Schildkraut and Milan Haiman).}
+Let $(ABC)$ be the unit circle in the complex plane, and let $A=a$, $B=b$, $C=c$
+such that $|a|=|b|=|c|=1$. Let $P=p$ and $Q=q$, and $O=0$ and $H=h=a+b+c$ be the
+circumcenter and orthocenter of $ABC$ respectively.
+
+The first step is to translate the given geometric conditions into a single
+usable equation:
+\begin{claim*}
+  We have the equation
+  \begin{equation}
+    (p+q)\sum_{\text{cyc}}a^3(b^2-c^2)
+    = (\ol p+\ol q)abc\sum_{\text{cyc}}(bc(b^2-c^2)).
+    \label{eq:tstst2023p6main}
+  \end{equation}
+\end{claim*}
+\begin{proof}
+  The condition that the altitude $\ol{AH}$ bisects $\angle PAQ$ is equivalent to
+  \begin{align*}
+    & \frac{(p-a)(q-a)}{(h-a)^2} = \frac{(p-a)(q-a)}{(b+c)^2}\in\RR \\
+    \implies &\frac{(p-a)(q-a)}{(b+c)^2} = \ol{\left(\frac{(p-a)(q-a)}{(b+c)^2}\right)}
+    = \frac{(a\ol p-1)(a\ol q-1)b^2c^2}{(b+c)^2a^2} \\
+    \implies & a^2(p-a)(q-a) = b^2c^2(a\ol p-1)(a\ol q-1) \\
+    \implies & a^2pq-a^2b^2c^2\ol p\ol q+(a^4-b^2c^2)
+      = a^3(p+q)-ab^2c^2(\ol p+\ol q).
+    \end{align*}
+  Writing the symmetric conditions that $\ol{BH}$ and $\ol{CH}$
+  bisect $\angle PBQ$ and $\angle PCQ$ gives three equations:
+  \begin{align*}
+    a^2pq - a^2b^2c^2\ol p\ol q + (a^4-b^2c^2)
+      &= a^3(p+q) - ab^2c^2(\ol p+\ol q) \\
+    b^2pq - a^2b^2c^2\ol p\ol q + (b^4-c^2a^2)
+      &= b^3(p+q) - bc^2a^2(\ol p+\ol q) \\
+    c^2pq - a^2b^2c^2\ol p\ol q + (c^4-a^2b^2)
+      &=c^3(p+q) - ca^2b^2(\ol p+\ol q).
+  \end{align*}
+  Now, sum $(b^2-c^2)$ times the first equation,
+  $(c^2-a^2)$ times the second equation, and $(a^2-b^2)$ times the third equation.
+  On the left side, the coefficients of $pq$ and $\ol p\ol q$ are $0$.
+  Additionally, the coefficient of $1$
+  (the parenthesized terms on the left sides of each equation) sum to $0$, since
+  \[ \sum_{\text{cyc}}(a^4-b^2c^2)(b^2-c^2)
+    = \sum_{\text{cyc}}(a^4b^2-b^4c^2-a^4c^2+c^4b^2). \]
+  This gives \eqref{eq:tstst2023p6main} as desired.
+\end{proof}
+
+We can then factor \eqref{eq:tstst2023p6main}:
+\begin{claim*}
+  The left-hand side of \eqref{eq:tstst2023p6main} factors as
+  \[ -(p+q)(a-b)(b-c)(c-a)(ab+bc+ca) \]
+  while the right-hand side factors as
+  \[ -(\ol p + \ol q)(a-b)(b-c)(c-a)(a+b+c). \]
+\end{claim*}
+\begin{proof}
+  This can of course be verified by direct expansion, but here is a slightly
+  more economic indirect proof.
+
+  Consider the cyclic sum on the left as a polynomial in $a$, $b$, and $c$.
+  If $a=b$, then it simplifies as $a^3(a^2-c^2)+a^3(c^2-a^2)+c^3(a^2-a^2)=0$,
+  so $a-b$ divides this polynomial.
+  Similarly, $a-c$ and $b-c$ divide it, so it can be written as
+  $f(a,b,c)(a-b)(b-c)(c-a)$ for some symmetric quadratic polynomial $f$,
+  and thus it is some linear combination of $a^2+b^2+c^2$ and $ab+bc+ca$.
+  When $a=0$, the whole expression is $b^2c^2(b-c)$, so $f(0,b,c)=-bc$, which
+  implies that $f(a,b,c)=-(ab+bc+ca)$.
+
+  Similarly, consider the cyclic sum on the right as a polynomial in $a$, $b$, and $c$.
+  If $a=b$, then it simplifies as $ac(a^2-c^2)+ca(c^2-a^2)+a^2(a^2-a^2)=0$,
+  so $a-b$ divides this polynomial.
+  Similarly, $a-c$ and $b-c$ divide it, so it can be written as
+  $g(a,b,c)(a-b)(b-c)(c-a)$ where $g$ is a symmetric linear polynomial;
+  hence, it is a scalar multiple of $a+b+c$.
+  When $a=0$, the whole expression is $bc(b^2-c^2)$, so $g(0,b,c)=-b-c$,
+  which implies that $g(a,b,c)=-(a+b+c)$.
+\end{proof}
+
+Since $A$, $B$, and $C$ are distinct,
+we may divide by $(a-b)(b-c)(c-a)$ to obtain
+\[
+  (p+q)(ab+bc+ca)=(\ol p+\ol q)abc(a+b+c) \implies
+  (p+q)\ol h=(\ol p+\ol q)h.
+\]
+This implies that $\frac{\frac{p+q}2-0}{h-0}$ is real,
+so the midpoint of $\ol{PQ}$ lies on line $\ol{OH}$.
+
+\paragraph{Solution 3 also using complex numbers (Michael Ren).}
+We use complex numbers as in the previous solution.
+The angle conditions imply that
+$\frac{(a-p)(a-q)}{(b-c)^2}$, $\frac{(b-p)(b-q)}{(c-a)^2}$,
+and $\frac{(c-p)(c-q)}{(a-b)^2}$ are real numbers.
+Take a linear combination of these with real coefficients
+$X$, $Y$, and $Z$ to be determined; after expansion, we obtain
+\begin{align*}
+  &\left[\frac{X}{(b-c)^2}+\frac{Y}{(c-a)^2}+\frac{Z}{(a-b)^2}\right]pq \\
+  - &\left[\frac{aX}{(b-c)^2}+\frac{bY}{(c-a)^2}+\frac{cZ}{(a-b)^2}\right](p+q)
+  \\
+  + &\left[\frac{a^2X}{(b-c)^2}+\frac{b^2Y}{(c-a)^2}+\frac{c^2Z}{(a-b)^2}\right]
+\end{align*}
+which is a real number. To get something about the midpoint of $PQ$, the $pq$
+coefficient should be zero, which motivates the following lemma.
+
+\begin{lemma*}
+  There exist real $X$, $Y$, $Z$ for which
+  \begin{align*}
+    \frac{X}{(b-c)^2}+\frac{Y}{(c-a)^2}+\frac{Z}{(a-b)^2} &= 0 \text{ and } \\
+    \frac{aX}{(b-c)^2}+\frac{bY}{(c-a)^2}+\frac{cZ}{(a-b)^2} &\neq 0.
+  \end{align*}
+\end{lemma*}
+
+\begin{proof}
+  Since $\CC$ is a $2$-dimensional vector space over $\RR$, there
+  exist real $X, Y, Z$ such that $(X, Y, Z)\neq (0, 0, 0)$ and the first
+  condition holds. Suppose for the sake of contradiction that
+  $\frac{aX}{(b-c)^2}+\frac{bY}{(c-a)^2}+\frac{cZ}{(a-b)^2}=0$. Then
+  \begin{align*}
+    & \frac{(b-a)Y}{(c-a)^2}+\frac{(c-a)Z}{(a-b)^2}\\
+    =& \frac{aX}{(b-c)^2}+\frac{bY}{(c-a)^2}+\frac{cZ}{(a-b)^2} -
+    a\left(\frac{X}{(b-c)^2}+\frac{Y}{(c-a)^2}+\frac{Z}{(a-b)^2}\right) \\
+    =& 0.
+  \end{align*}
+  We can easily check that $(Y, Z) = (0, 0)$ is impossible, therefore
+  $\frac{(b-a)^3}{(c-a)^3} = -\frac{Z}{Y}$ is real.
+  This means $\angle BAC = 60^{\circ}$ or $120^{\circ}$.
+  By symmetry, the same is true of $\angle CBA$ and $\angle ACB$.
+  This is impossible because $ABC$ is scalene.
+\end{proof}
+
+With the choice of $X$, $Y$, $Z$ as in the lemma, there exist complex numbers
+$\alpha$ and $\beta$, depending only on $a$, $b$, and $c$, such that $\alpha\neq
+0$ and $\alpha(p+q)+\beta$ is real. Therefore the midpoint of $PQ$, which
+corresponds to $\frac{p+q}{2}$, lies on a fixed line. It remains to show that
+this line is the Euler line. First, choose $P=Q$ to be the orthocenter to show
+that the orthocenter lies on the line. Secondly, choose $P$ and $Q$ to be the
+foci of the Steiner circumellipse to show that the centroid lies on the line.
+(By some ellipse properties, the external angle bisector of $\angle PAQ$ is the
+tangent to the circumellipse at $A$, which is the line through $A$ parallel to
+$BC$. Therefore these points are valid.) Therefore the fixed line of the
+midpoint is the Euler line.
+
+\begin{remark*}
+  This solution does not require fixing the origin of the complex plane or
+  setting $(ABC)$ to be the unit circle.
+\end{remark*}

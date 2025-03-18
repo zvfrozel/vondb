@@ -1,0 +1,55 @@
+desc: $(g(n)+m)(g(m)+n)$ is square
+author: Gabriel Carroll (USA)
+source: IMO 2010/3
+tags: [FE, 2016-08, good, magic, primes, vp, wishful, zayin]
+hardness: 40
+url: https://aops.com/community/p1935854
+
+---
+
+Find all functions $g \colon \ZZ_{>0} \to \ZZ_{>0}$ such that
+\[ \left( g(m)+n \right)\left( g(n)+m \right) \]
+is always a perfect square.
+
+---
+
+For $c \ge 0$, the function $g(n) = n+c$ works;
+we prove this is the only possibility.
+
+First, the main point of the problem is that
+\begin{claim*}
+  We have
+  $g(n) \equiv g(n') \pmod p \implies n \equiv n' \pmod p$.
+\end{claim*}
+\begin{proof}
+  Pick a large integer $M$ such that
+  \[ \nu_p(M+g(n)), \quad \nu_p(M+g(n')) \quad
+    \text{are both odd}. \]
+  (It's not hard to see this is always possible.)
+  Now, since each of
+  \begin{align*}
+    \left( M + g(n) \right)&\left( n + g(M)  \right) \\
+    \left( M + g(n') \right)&\left( n' + g(M)  \right)
+  \end{align*}
+  is a square, we get $g(n) \equiv g(n') \equiv -M \pmod p$.
+\end{proof}
+
+This claim implies that
+\begin{itemize}
+  \ii The numbers $g(n)$ and $g(n+1)$ differ by $\pm 1$ for any $n$, and
+  \ii The function $g$ is injective.
+\end{itemize}
+It follows $g$ is a linear function with slope $\pm 1$, hence done.
+
+---
+
+\begin{walk}
+  \ii Find all linear solutions.
+  \ii Show that if $g(a) \equiv g(b) \pmod p$
+  for some prime $p$ then $a \equiv b \pmod p$.
+  (This is the most involved step.)
+  \ii Conclude that $|g(n)-g(n+1)| = 1$ for all $n$.
+  \ii Rule out the case where $g(k) = g(k+2)$ for any $k$.
+  \ii Show that the functions you found in (a)
+  are the only ones.
+\end{walk}

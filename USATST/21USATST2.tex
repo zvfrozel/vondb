@@ -1,0 +1,310 @@
+desc: Power of $K$ to $XCD$ is constant
+author: Andrew Gu, Frank Han
+source: USA TST 2021/2
+tags: [2021-02, pop, nice, anglechase, zayin]
+hardness: 45
+url: https://aops.com/community/p20672623
+
+---
+
+Points $A$, $V_1$, $V_2$, $B$, $U_2$, $U_1$
+lie fixed on a circle $\Gamma$, in that order,
+and such that $BU_2 > AU_1 > BV_2 > AV_1$.
+
+Let $X$ be a variable point on the arc $V_1 V_2$ of $\Gamma$
+not containing $A$ or $B$.
+Line $XA$ meets line $U_1 V_1$ at $C$,
+while line $XB$ meets line $U_2 V_2$ at $D$.
+
+Prove there exists a fixed point $K$, independent of $X$,
+such that the power of $K$ to the circumcircle
+of $\triangle XCD$ is constant.
+
+---
+
+For brevity, we let $\ell_i$ denote line $U_iV_i$ for $i=1,2$.
+
+We first give an explicit description of the fixed point $K$.
+Let $E$ and $F$ be points on $\Gamma$ such that $\ol{AE} \parallel \ell_1$
+and $\ol{BF} \parallel \ell_2$.
+The problem conditions imply that $E$ lies between $U_1$ and $A$
+while $F$ lies between $U_2$ and $B$.
+Then we let \[ K = \ol{AF} \cap \ol{BE}. \]
+This point exists because $AEFB$ are the vertices
+of a convex quadrilateral.
+
+\begin{remark*}
+  [How to identify the fixed point]
+  If we drop the condition that $X$ lies on the arc,
+  then the choice above is motivated by choosing $X \in \{E,F\}$.
+  Essentially, when one chooses $X \to E$,
+  the point $C$ approaches an infinity point.
+  So in this degenerate case, the only points whose
+  power is finite to $(XCD)$ are bounded are those on line $BE$.
+  The same logic shows that $K$ must lie on line $AF$.
+  Therefore, if the problem is going to work,
+  the fixed point must be exactly $\ol{AF} \cap \ol{BE}$.
+\end{remark*}
+
+We give two possible approaches for proving the power
+of $K$ with respect to $(XCD)$ is fixed.
+
+\paragraph{First approach by Vincent Huang.}
+We need the following claim:
+\begin{claim*}
+  Suppose distinct lines $AC$ and $BD$ meet at $X$.
+  Then for any point $K$
+  \[ \opname{pow}(K, XAB) + \opname{pow}(K, XCD)
+    = \opname{pow}(K, XAD) + \opname{pow}(K, XBC). \]
+\end{claim*}
+\begin{proof}
+  The difference between the left-hand side and right-hand
+  side is a linear function in $K$,
+  which vanishes at all of $A$, $B$, $C$, $D$.
+\end{proof}
+
+Construct the points $P = \ell_1 \cap \ol{BE}$
+and $Q = \ell_2 \cap \ol{AF}$, which do not depend on $X$.
+\begin{claim*}
+  Quadrilaterals $BPCX$ and $AQDX$ are cyclic.
+\end{claim*}
+\begin{proof}
+  By Reim's theorem: $\dang CPB = \dang AEB = \dang AXB = \dang CXB$, etc.
+\end{proof}
+
+\begin{center}
+\begin{asy}
+pair A = dir(190);
+pair B = -conj(A);
+pair U_1 = dir(125);
+pair V_1 = dir(220);
+pair U_2 = dir(80);
+pair V_2 = dir(310);
+filldraw(unitcircle, opacity(0.1)+lightcyan, blue);
+draw(A--B, blue);
+draw(U_1--V_1, deepgreen);
+draw(U_2--V_2, deepgreen);
+
+pair E = V_1*U_1/A;
+pair F = V_2*U_2/B;
+
+pair X = dir(265);
+pair C = extension(A, X, U_1, V_1);
+pair D = extension(B, X, U_2, V_2);
+draw(A--X--B, lightred);
+draw(A--E, deepcyan);
+draw(B--F, deepcyan);
+pair K = extension(A, F, B, E);
+draw(A--F, blue);
+draw(B--E, blue);
+
+pair P = extension(B, E, U_1, V_1);
+pair Q = extension(A, F, U_2, V_2);
+
+filldraw(circumcircle(X, C, B), opacity(0.05)+yellow, dotted+orange);
+filldraw(circumcircle(X, A, D), opacity(0.05)+yellow, dotted+orange);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$U_1$", U_1, dir(U_1));
+dot("$V_1$", V_1, dir(V_1));
+dot("$U_2$", U_2, dir(U_2));
+dot("$V_2$", V_2, dir(V_2));
+dot("$E$", E, dir(E));
+dot("$F$", F, dir(F));
+dot("$X$", X, dir(X));
+dot("$C$", C, dir(C));
+dot("$D$", D, dir(D));
+dot("$K$", K, dir(270));
+dot("$P$", P, dir(290));
+dot("$Q$", Q, dir(240));
+
+/* TSQ Source:
+
+A = dir 190
+B = -conj(A)
+U_1 = dir 125
+V_1 = dir 220
+U_2 = dir 80
+V_2 = dir 310
+unitcircle 0.1 lightcyan / blue
+A--B blue
+U_1--V_1 deepgreen
+U_2--V_2 deepgreen
+
+E = V_1*U_1/A
+F = V_2*U_2/B
+
+X = dir 265
+C = extension A X U_1 V_1
+D = extension B X U_2 V_2
+A--X--B lightred
+A--E deepcyan
+B--F deepcyan
+K = extension A F B E R270
+A--F blue
+B--E blue
+
+P = extension B E U_1 V_1 R290
+Q = extension A F U_2 V_2 R240
+
+circumcircle X C B 0.05 yellow / dotted orange
+circumcircle X A D 0.05 yellow / dotted orange
+
+*/
+\end{asy}
+\end{center}
+
+Now, for the particular $K$ we choose, we have
+\begin{align*}
+  \opname{pow}(K, XCD) &=
+  \opname{pow}(K, XAD) + \opname{pow}(K, XBC) - \opname{pow}(K, XAB) \\
+  &= KA \cdot KQ + KB \cdot KP - \opname{pow}(K, \Gamma).
+\end{align*}
+This is fixed, so the proof is completed.
+
+\paragraph{Second approach by authors.}
+Let $Y$ be the second intersection of $(XCD)$ with $\Gamma$.
+Let $S = \ol{EY} \cap \ell_1$ and $T = \ol{FY} \cap \ell_2$.
+\begin{claim*}
+  Points $S$ and $T$ lies on $(XCD)$ as well.
+\end{claim*}
+\begin{proof}
+  By Reim's theorem: $\dang CSY = \dang AEY = \dang AXY = \dang CXY$, etc.
+\end{proof}
+
+Now let $X'$ be any other choice of $X$,
+and define $C'$ and $D'$ in the obvious way.
+We are going to show that $K$ lies on the radical axis
+of $(XCD)$ and $(X'C'D')$.
+
+\begin{center}
+\begin{asy}
+pair A = dir(190);
+pair B = -conj(A);
+pair U_1 = dir(125);
+pair V_1 = dir(220);
+pair U_2 = dir(80);
+pair V_2 = dir(310);
+filldraw(unitcircle, opacity(0.1)+lightcyan, blue);
+draw(A--B, blue);
+draw(U_1--V_1, deepgreen);
+draw(U_2--V_2, deepgreen);
+
+pair E = V_1*U_1/A;
+pair F = V_2*U_2/B;
+
+pair X = dir(265);
+pair C = extension(A, X, U_1, V_1);
+pair D = extension(B, X, U_2, V_2);
+draw(A--X--B, lightred);
+draw(A--E, deepcyan);
+draw(B--F, deepcyan);
+pair K = extension(A, F, B, E);
+draw(A--F, blue);
+draw(B--E, blue);
+
+pair Y = -X+2*foot(X, origin, circumcenter(X, C, D));
+
+draw(circumcircle(X, C, D), red);
+pair S = extension(Y, E, U_1, V_1);
+pair T = extension(Y, F, U_2, V_2);
+draw(E--Y--F, brown);
+
+pair Xp = dir(300);
+pair Cp = extension(Xp, A, U_1, V_1);
+pair Dp = extension(Xp, B, U_2, V_2);
+draw(A--Xp--B, orange);
+
+pair L = extension(S, Y, Cp, Xp);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$U_1$", U_1, dir(U_1));
+dot("$V_1$", V_1, dir(V_1));
+dot("$U_2$", U_2, dir(U_2));
+dot("$V_2$", V_2, dir(V_2));
+dot("$E$", E, dir(E));
+dot("$F$", F, dir(F));
+dot("$X$", X, dir(X));
+dot("$C$", C, dir(C));
+dot("$D$", D, dir(D));
+dot("$K$", K, dir(270));
+dot("$Y$", Y, dir(Y));
+dot("$S$", S, dir(S));
+dot("$T$", T, dir(T));
+dot("$X'$", Xp, dir(Xp));
+dot("$C'$", Cp, dir(170));
+dot("$D'$", Dp, dir(10));
+dot("$L$", L, dir(L));
+
+/* TSQ Source:
+
+A = dir 190
+B = -conj(A)
+U_1 = dir 125
+V_1 = dir 220
+U_2 = dir 80
+V_2 = dir 310
+unitcircle 0.1 lightcyan / blue
+A--B blue
+U_1--V_1 deepgreen
+U_2--V_2 deepgreen
+
+E = V_1*U_1/A
+F = V_2*U_2/B
+
+X = dir 265
+C = extension A X U_1 V_1
+D = extension B X U_2 V_2
+A--X--B lightred
+A--E deepcyan
+B--F deepcyan
+K = extension A F B E R270
+A--F blue
+B--E blue
+
+Y = -X+2*foot X origin circumcenter X C D
+
+circumcircle X C D red
+S = extension Y E U_1 V_1
+T = extension Y F U_2 V_2
+E--Y--F brown
+
+X' = dir 300
+C' = extension Xp A U_1 V_1 R170
+D' = extension Xp B U_2 V_2 R10
+A--Xp--B orange
+
+L = extension S Y Cp Xp
+
+*/
+\end{asy}
+\end{center}
+
+The main idea is as follows:
+\begin{claim*}
+  The point $L = \ol{EY} \cap \ol{AX'}$ lies on the radical axis.
+  By symmetry, so does the point $M = \ol{FY} \cap \ol{BX'}$ (not pictured).
+\end{claim*}
+\begin{proof}
+  Again by Reim's theorem, $SC'YX'$ is cyclic.
+  Hence we have
+  \[ \opname{pow}(L, X'C'D') = LC' \cdot LX'
+    = LS \cdot LY = \opname{pow}(L, XCD). \qedhere \]
+\end{proof}
+
+To conclude, note that by Pascal theorem on
+\[ EYFAX'B \]
+it follows $K$, $L$, $M$ are collinear,
+as needed.
+
+\begin{remark*}
+  All the conditions about $U_1$, $V_1$, $U_2$, $V_2$
+  at the beginning are there to eliminate configuration issues,
+  making the problem less obnoxious to the contestant.
+
+  In particular, without the various assumptions,
+  there exist configurations in which the point $K$ is at infinity.
+  In these cases, the center of $XCD$ moves along a fixed line.
+\end{remark*}

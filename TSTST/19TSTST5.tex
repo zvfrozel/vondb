@@ -1,0 +1,757 @@
+author: Gunmay Handa
+desc: Line $HK$ and perpendicular from $D$ to $BC$
+source: TSTST 2019/5
+tags: [2019-07, rich, nice, gimel]
+hardness: 25
+url: https://aops.com/community/p12608496
+
+---
+
+Let $ABC$ be an acute triangle with orthocenter $H$ and circumcircle $\Gamma$.
+A line through $H$ intersects segments $AB$ and $AC$ at $E$ and $F$, respectively.
+Let $K$ be the circumcenter of $\triangle AEF$,
+and suppose line $AK$ intersects $\Gamma$ again at a point $D$.
+Prove that line $HK$ and the line through $D$
+perpendicular to $\ol{BC}$ meet on $\Gamma$.
+
+---
+
+We present several solutions.
+(There are more in the official packet; some are omitted here,
+which explains the numbering.)
+
+\paragraph{First solution (Andrew Gu).}
+We begin with the following two observations.
+\begin{claim*}
+  Point $K$ lies on the radical axis of $(BEH)$ and $(CFH)$.
+\end{claim*}
+\begin{proof}
+  Actually we claim $\ol{KE}$ and $\ol{KF}$ are tangents.
+  Indeed,
+  \[ \dang HEK = 90\dg - \dang EAF = 90\dg - \dang BAC = \dang HBE \]
+  implying the result.
+  Since $KE = KF$, this implies the result.
+\end{proof}
+
+\begin{claim*}
+  The second intersection $M$ of $(BEH)$ and $(CFH)$ lies on $\Gamma$.
+\end{claim*}
+\begin{proof}
+  By Miquel's theorem on $\triangle AEF$ with $H \in \ol{EF}$,
+  $B \in \ol{AE}$, $C \in \ol{AF}$.
+\end{proof}
+
+\begin{center}
+\begin{asy}
+pair A = dir(130);
+pair B = dir(210);
+pair C = dir(330);
+pair H = orthocenter(A, B, C);
+pair T = dir(285);
+pair D = B*C/T;
+pair X = -T;
+pair E = extension(A, B, H, foot(H, A, T));
+pair F = extension(E, H, A, C);
+draw(A--B--C--cycle, deepcyan);
+filldraw(unitcircle, opacity(0.1)+lightcyan, deepcyan);
+draw(E--F, lightblue);
+draw(A--D, lightblue);
+draw(D--X, lightred);
+
+draw(circumcircle(B, E, H), deepgreen);
+draw(circumcircle(C, F, H), deepgreen);
+pair M = foot(T, X, H);
+pair K = circumcenter(A, E, F);
+draw(E--K--F, deepgreen);
+draw(M--X, orange+dashed);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$H$", H, dir(270));
+dot("$D$", D, dir(D));
+dot("$X$", X, dir(X));
+dot("$E$", E, dir(E));
+dot("$F$", F, dir(F));
+dot("$M$", M, dir(M));
+dot("$K$", K, dir(K));
+
+/* TSQ Source:
+
+A = dir 130
+B = dir 210
+C = dir 330
+H = orthocenter A B C R270
+T := dir 285
+D = B*C/T
+X = -T
+E = extension A B H foot H A T
+F = extension E H A C
+A--B--C--cycle deepcyan
+unitcircle 0.1 lightcyan / deepcyan
+E--F lightblue
+A--D lightblue
+D--X lightred
+
+circumcircle B E H deepgreen
+circumcircle C F H deepgreen
+M = foot T X H
+K = circumcenter A E F
+E--K--F deepgreen
+M--X orange dashed
+
+*/
+\end{asy}
+\end{center}
+
+In particular, $M$, $H$, $K$ are collinear.
+Let $X$ be on $\Gamma$ with $\ol{DX} \perp \ol{BC}$;
+we then wish to show $X$ lies on the line $MHK$ we found.
+This is angle chasing: compute
+\begin{align*}
+  \dang XMB &= \dang XDB = 90\dg - \dang DBC = 90\dg - \dang DAC  \\
+  &= 90\dg - \dang KAF = \dang FEA = \dang HEB = \dang HMB
+\end{align*}
+as needed.
+
+\paragraph{Second solution (Ankan Bhattacharya).}
+We let $D'$ be the second intersection of $\ol{EF}$
+with $(BHC)$ and redefine $D$ as the reflection of $D'$ across $\ol{BC}$.
+We will first prove that this point $D$ coincides with the point $D$
+given in the problem statement.
+The idea is that:
+\begin{claim*}
+  $A$ is the $D$-excenter of $\triangle DEF$.
+\end{claim*}
+\begin{proof}
+  We contend $BED'D$ is cyclic.
+  This follows by angle chasing:
+  \begin{align*}
+    \dang D'DB &= \dang BD'D
+    = \dang D'BC + 90\dg = \dang D'HC + 90\dg \\
+    &= \dang D'HC + \dang(HC,AB) = \dang(D'H, AB) = \dang D'EB.
+  \end{align*}
+  Now as $BD = BD'$, we obtain $\ol{BEA}$ externally
+  bisects $\angle DED' \cong \angle DEF$.
+  Likewise $\ol{FA}$ externally bisects $\angle DFE$,
+  so $A$ is the $D$-excenter of $\triangle DEF$.
+\end{proof}
+Hence, by the so-called ``Fact 5'', point $K$ lies on $\ol{DA}$,
+so this point $D$ is the one given in the problem statement.
+
+\begin{center}
+\begin{asy}
+  unitsize(100);
+  pair A = dir(110), B = dir(210), C = dir(330), D = dir(280);
+  pair H = orthocenter(A, B, C), Dp = reflect(B, C) * D,
+  E = extension(A, B, H, Dp), F = extension(A, C, H, Dp),
+  K = circumcenter(A, E, F),
+  X = A + Dp - H;
+
+  draw(B--D--C--Dp--cycle, lightgreen);
+  draw(E--F, cyan);
+  draw(A--H, lightred);
+  draw(D--X, lightred);
+  draw(D--E^^D--F);
+  draw(D--K);
+  draw(A--X, cyan);
+  draw(K--A^^K--E^^K--F, purple);
+  draw(H--X, dashed);
+  draw(A--B--C--cycle);
+  draw(circumcircle(B, D, Dp)^^circumcircle(C, D, Dp), dotted);
+
+  draw(unitcircle);
+
+  dot("$A$", A, dir(A));
+  dot("$B$", B, dir(B));
+  dot("$C$", C, dir(C));
+  dot("$D$", D, dir(D));
+  dot("$D'$", Dp, dir(130));
+  dot("$H$", H, dir(130));
+  dot("$E$", E, dir(H-C));
+  dot("$F$", F, dir(H-B));
+  dot("$K$", K, dir(160));
+  dot("$X$", X, dir(X));
+\end{asy}
+\end{center}
+
+
+Now choose point $X$ on $(ABC)$ satisfying $\ol{DX} \perp \ol{BC}$.
+\begin{claim*}
+  Point $K$ lies on line $HX$.
+\end{claim*}
+\begin{proof}
+  Clearly $AHD'X$ is a parallelogram.
+  By Ptolemy on $DEKF$,
+  \[\frac{KD}{KA} = \frac{KD}{KE} = \frac{DE + DF}{EF}.\]
+  On the other hand,
+  if we let $r_D$ denote the $D$-exradius of $\triangle DEF$ then
+  \[\frac{XD}{XD'}
+    = \frac{[DEX] + [DFX]}{[XEF]}
+    = \frac{[DEX] + [DFX]}{[AEF]}
+    = \frac{DE \cdot r_D + DF \cdot r_D}{EF \cdot r_D}
+  = \frac{DE + DF}{EF}. \]
+  Thus
+  \[[AKX] = \frac{KA}{KD} \cdot [DKX]
+    = \frac{KA}{KD} \cdot \frac{XD}{XD'} \cdot [KD'X]
+    = [D'KX].\]
+  This is sufficient to prove $K$ lies on $\ol{HX}$.
+\end{proof}
+The solution is complete: $X$ is the desired concurrency point.
+
+\paragraph{Fourth solution, complex numbers with spiral similarity (Evan Chen).}
+First if $\ol{AD} \perp \ol{BC}$ there is nothing to prove,
+so we assume this is not the case.
+%Also, if $D = B$ then $D = E = B$ and $F$ is the foot of the $D$-altitude,
+%meaning $K$ is the midpoint of $\ol{AB}$,
+%and so the concurrency point is the antipode of $C$.
+%Thus we will assume none of these are the case.
+Let $W$ be the antipode of $D$.
+Let $S$ denote the second intersection of $(AEF)$ and $(ABC)$.
+Consider the spiral similarity sending $\triangle SEF$ to $\triangle SBC$:
+\begin{itemize}
+  \ii It maps $H$ to a point $G$ on line $BC$,
+  \ii It maps $K$ to $O$.
+  \ii It maps the $A$-antipode of $\triangle AEF$ to $D$.
+  \ii Hence (by previous two observations) it maps $A$ to $W$.
+  \ii Also, the image of line $AD$ is line $WO$,
+  which does not coincide with line $BC$
+  (as $O$ does not lie on line $BC$).
+\end{itemize}
+Therefore, $K$ is the \emph{unique} point on line $\ol{AD}$
+for one can get a direct similarity
+\[ \triangle AKH \sim \triangle WOG \qquad(\heartsuit) \]
+for some point $G$ lying on line $\ol{BC}$.
+
+\begin{center}
+\begin{asy}
+pair A = dir(130);
+pair B = dir(210);
+pair C = dir(330);
+pair D = dir(265);
+pair H = orthocenter(A, B, C);
+pair X = -B*C/D;
+pair K = extension(A, D, H, X);
+pair O = origin;
+pair E = extension(A, B, H, foot(H, A, -X));
+pair F = extension(E, H, A, C);
+draw(A--B--C--cycle, orange);
+filldraw(unitcircle, opacity(0.1)+yellow, orange);
+
+draw(A--D, red);
+draw(D--X, red);
+draw(E--F, orange);
+pair S = (B*F-E*C)/(B+F-E-C);
+filldraw(circumcircle(A, E, F), opacity(0.1)+lightcyan, lightblue);
+draw(H--X, lightblue);
+pair W = -D;
+pair G = S+(H-S)*(C-S)/(F-S);
+
+filldraw(S--A--K--H--cycle, opacity(0.1)+blue, blue+0.8);
+filldraw(S--W--O--G--cycle, opacity(0.1)+orange, red+0.8);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$D$", D, dir(D));
+dot("$H$", H, dir(270));
+dot("$X$", X, dir(X));
+dot("$K$", K, dir(170));
+dot("$O$", O, dir(315));
+dot("$E$", E, dir(E));
+dot("$F$", F, dir(F));
+dot("$S$", S, dir(S));
+dot("$W$", W, dir(W));
+dot("$G$", G, dir(G));
+
+/* TSQ Source:
+
+A = dir 130
+B = dir 210
+C = dir 330
+D = dir 265
+H = orthocenter A B C R270
+X = -B*C/D
+K = extension A D H X R170
+O = origin R315
+E = extension A B H foot H A -X
+F = extension E H A C
+A--B--C--cycle orange
+unitcircle 0.1 yellow / orange
+
+A--D red
+D--X red
+E--F orange
+S = (B*F-E*C)/(B+F-E-C)
+circumcircle A E F 0.1 lightcyan / lightblue
+H--X lightblue
+W = -D
+G = S+(H-S)*(C-S)/(F-S)
+
+S--A--K--H--cycle 0.1 blue / blue+0.8
+S--W--O--G--cycle 0.1 orange / red+0.8
+
+*/
+\end{asy}
+\end{center}
+
+On the other hand, let us re-define $K$ as $\ol{XH} \cap \ol{AD}$.
+We will show that the corresponding $G$ making $(\heartsuit)$ true
+lies on line $BC$.
+
+We apply complex numbers with $\Gamma$ the unit circle,
+with $a$, $b$, $c$, $d$ taking their usual meanings,
+$H = a+b+c$, $X = -bc/d$, and $W = -d$.
+Then point $K$ is supposed to satisfy
+\begin{align*}
+  k + ad \ol k &= a+d \\
+  \frac{k+\frac{bc}{d}}{a+b+c+\frac{bc}{d}}
+    &= \frac{\ol k + \frac{d}{bc}}{\frac1a+\frac1b+\frac1c+\frac{d}{bc}} \\
+  \iff \frac{\frac1a+\frac1b+\frac1c+\frac{d}{bc}}{a+b+c+\frac{bc}{d}}
+    \left( k + \frac{bc}{d} \right)
+  &= \ol k + \frac{d}{bc}
+\end{align*}
+Adding $ad$ times the last line to the first line and cancelling $ad \ol k$ now gives
+\[
+  \left( ad \cdot \frac{\frac1a+\frac1b+\frac1c+\frac{d}{bc}}%
+    {a+b+c+\frac{bc}{d}} + 1 \right) k
+  = a + d + \frac{ad^2}{bc} - abc \cdot
+  \frac{\frac1a+\frac1b+\frac1c+\frac{d}{bc}}{a+b+c+\frac{bc}{d}}
+\]
+or
+\begin{align*}
+  \left( ad \left( \frac1a+\frac1b+\frac1c+\frac{d}{bc} \right)
+    + a+b+c+\frac{bc}{d} \right) k
+  &= \left( a+b+c+\frac{bc}{d}  \right)
+  \left( a + d + \frac{ad^2}{bc} \right) \\
+  &- abc \cdot \left( \frac1a+\frac1b+\frac1c+\frac{d}{bc} \right).
+\end{align*}
+We begin by simplifying the coefficient of $k$:
+\begin{align*}
+  ad \left( \frac1a+\frac1b+\frac1c+\frac{d}{bc} \right)
+    + a+b+c+\frac{bc}{d}
+  &= a+b+c+d + \frac{bc}{d}+\frac{ad}{b}+\frac{ad}{c} + \frac{ad^2}{bc} \\
+  &= a + \frac{bc}{d} + \left( 1 + \frac{ad}{bc} \right)(b+c+d) \\
+  &= \frac{ad+bc}{bcd} \left[ bc + d(b+c+d) \right] \\
+  &= \frac{(ad+bc)(d+b)(d+c)}{bcd}.
+\end{align*}
+Meanwhile, the right-hand side expands to
+\begin{align*}
+  \text{RHS} &=
+  \left( a+b+c+\frac{bc}{d}  \right)
+  \left( a + d + \frac{ad^2}{bc} \right)
+  - abc \cdot \left( \frac1a+\frac1b+\frac1c+\frac{d}{bc} \right) \\
+  &= \left( a^2+ab+ac+\frac{abc}{d} \right)
+  + \left( da+db+dc+bc \right) \\
+  &\quad+ \left( \frac{a^2d^2}{bc} + \frac{ad^2}{c} + \frac{ad^2}{b} + ad \right)
+  - \left( ab+bc+ca+ad \right) \\
+  &= a^2 + d(a+b+c) + \frac{abc}{d} + \frac{a^2d^2}{bc}
+  + \frac{ad^2}{b} + \frac{ad^2}{c} \\
+  &= a^2 + \frac{abc}{d} + d(a+b+c) \cdot \frac{ad+bc}{bc} \\
+  &= \frac{ad+bc}{bcd} \left[ abc+d^2(a+b+c) \right].
+\end{align*}
+Therefore, we get
+\[ k = \frac{abc+d^2(a+b+c)}{(d+b)(d+c)}. \]
+In particular,
+\begin{align*}
+  k-a &= \frac{abc+d^2(a+b+c)-a(d+b)(d+c)}{(d+b)(d+c)} \\
+  &= \frac{d^2(b+c)-da(b+c)}{(d+b)(d+c)}
+  = \frac{d(b+c)(d-a)}{(d+b)(d+c)}.
+\end{align*}
+Now the corresponding point $G$ obeying $(\heartsuit)$ satisfies
+\begin{align*}
+  \frac{g-(-d)}{0-(-d)} &= \frac{(a+b+c)-a}{k-a} \\
+  \implies g &= -d + \frac{d(b+c)}{k-a} \\
+  &= -d + \frac{(d+b)(d+c)}{d-a} = \frac{db+dc+bc+ad}{d-a}. \\
+  \implies bc \ol g &= \frac{bc \cdot \frac{ac+ab+ad+bc}{abcd}}{\frac{a-d}{ad}}
+  = -\frac{ab+ac+ad+bc}{d-a}. \\
+  \implies g + bc \ol g &= \frac{(d-a)(b+c)}{d-a} = b+c.
+\end{align*}
+Hence $G$ lies on $BC$ and this completes the proof.
+
+
+\paragraph{Seventh solution using moving points (Zack Chroman).}
+We state the converse of the problem as follows:
+
+\begin{quote}
+Take a point $D$ on $\Gamma$,
+and let $G\in \Gamma$ such that $\ol{DG} \perp \ol{BC}$.
+Then define $K$ to lie on $\ol{GH}, \ol{AD}$,
+and take $L \in \ol{AD}$ such that $K$ is the midpoint of $\ol{AL}$.
+Then if we define $E$ and $F$ as the projections of $L$ onto $\ol{AB}$ and $\ol{AC}$
+we want to show that $E$, $H$, $F$ are collinear.
+\end{quote}
+%\begin{center}
+%    \includegraphics[scale=0.5]{DiagramNo}
+%\end{center}
+
+It's clear that solving this problem will solve the original.
+In fact we will show later that each line $EF$ through $H$
+corresponds bijectively to the point $D$.
+
+We animate $D$ projectively on $\Gamma$
+(hence $\deg D = 2$).
+Since $D \mapsto G$ is a projective map $\Gamma \to \Gamma$,
+it follows $\deg G = 2$.
+By Zack's lemma, $\deg(\ol{AD}) \le 0 + 2 - 1 = 1$
+(since $D$ can coincide with $A$),
+and $\deg(\ol{HG}) \le 0 + 2 - 0 = 2$.
+So again by Zack's lemma, $\deg K \le 1 + 2 - 1 = 2$,
+since lines $AD$ and $GH$ can coincide once if $D$ is the reflection
+of $H$ over $\ol{BC}$.
+It follows $\deg L = 2$,
+since it is obtained by dilating $K$ by a factor of $2$
+across the fixed point $A$.
+
+Let $\infty_C$ be the point at infinity
+on the line perpendicular to $AC$, and similarly $\infty_B$.
+Then \[ F = \ol{AC} \cap \ol{\infty_C L},
+  \quad E = \ol{AB} \cap \ol{\infty_B L}. \]
+We want to use Zack's lemma again on line $\ol{\infty_B L}$.
+Consider the case $G = B$;
+we get $\ol{HG} \parallel \ol{AD}$,
+so $ADGH$ is a parallelogram,
+and then $K = L = \infty_B$.
+Thus there is at least one $t$ where $L = \infty_B$
+and by Zack's lemma we get
+$\deg\left( \ol{\infty_B L} \right) \le 0 + 2 - 1 = 1$.
+Again by Zack's lemma,
+we conclude $\deg E \le 0 + 1 - 0 = 1$.
+Similarly, $\deg F \le 1$.
+
+We were aiming to show $E$, $F$, $H$ collinear
+which is a condition of degree at most $1 + 1 + 0 = 2$.
+So it suffices to verify the problem for three distinct choices of $D$.
+\begin{itemize}
+\item If $D=A$, then line $GH$ is line $AH$,
+  and $L = \ol{AD} \cap \ol{AH} = A$.
+  So $E=F=A$ and the statement is true.
+\item If $D=B$, $G$ is the antipode of $C$ on $\Gamma$.
+  Then $K = \ol{HG} \cap \ol{AD}$ is the midpoint of $\ol{AB}$, so $L=B$.
+  Then $E=B$ and $F$ is the projection of $B$ onto $AC$,
+  so $E$, $H$, $F$ collinear.
+\ii We finish similarly when $D=C$.
+\end{itemize}
+This completes the proof.
+
+\begin{remark*}
+  Less careful approaches are possible
+  which give a worse bound on the degrees,
+  requiring to check (say) five choices of $D$ instead.
+  We present the most careful one showing $\deg D = 2$
+  for instructional reasons, but the others may be easier to find.
+\end{remark*}
+
+---
+
+%%fakesection THE WALKTHROUGH
+We present a solution using moving points and Zack's lemma.
+We will first prove the problem in the following from.
+\begin{quote}
+Take a point $D$ on $\Gamma$,
+and let $G\in \Gamma$ such that $\ol{DG} \perp \ol{BC}$.
+Then define $K$ to lie on $\ol{GH}, \ol{AD}$,
+and take $L \in \ol{AD}$ such that $K$ is the midpoint of $\ol{AL}$.
+Then if we define $E$ and $F$ as the projections of $L$ onto $\ol{AB}$ and $\ol{AC}$
+we want to show that $E$, $H$, $F$ are collinear.
+\end{quote}
+This converse will be more suitable.
+
+We will let $D$ be a moving point tethered to $(ABC)$,
+moving projectively (so that $\deg D = 2$).
+Thus the points $G$, $K$, $L$, $E$, $F$ move with it.
+\begin{walk}
+  \ii Compute $\deg G$.
+  \ii Use Zack's lemma to show $\deg(\ol{AD}) \le 1$.
+  (Note that $D$ can coincide with $A$.)
+  \ii Use Zack's lemma to show $\deg(\ol{GH}) \le 2$.
+  \ii Use Zack's lemma to show $\deg K \le 2$.
+  \ii Estimate $\deg L$.
+  \ii Let $\infty$ be the point at infinity perpendicular to $\ol{AC}$.
+  Use Zack's lemma to show moving line $\deg(\ol{\infty L}) \le 1$.
+  (Possible hint:
+  consider the situation where $ADGH$ is a parallelogram.)
+  \ii Use Zack's lemma to show $\deg F \le 1$,
+  by viewing $F = \ol{AC} \cap \ol{L\infty}$.
+  \ii By similar logic, show $\deg E \le 1$.
+\end{walk}
+The point $H$ is fixed of degree $0$.
+Since the collinearity of $E$, $F$, $H$ has
+degree at most $\deg E + \deg F + \deg H \le 1 + 1 + 0 = 2$
+it suffices to check it for only three choices of $D$.
+
+\begin{walk}[resume]
+  \ii Prove the result when $D \in \{A, B, C\}$.
+  This shows $E$, $F$, $H$ collinear.
+\end{walk}
+It is possible to skip certain parts of the solution
+at the cost of worsening the bound on the degrees.
+However, since the problem is easily checkable
+for many other points $D$,
+this is not a big issue.
+
+---
+
+%%fakesection GRAVEYARD
+\paragraph{Third solution (Nikolai Beluhov, unedited).}
+We are going to prove the following:
+\begin{quote}
+Let $ABC$ be a triangle with orthocenter $H$ and circumcircle $\Gamma$. Let $D$ be any point on arc $BC$ of $\Gamma$ that does not contain $A$.
+Let $J$ lie on $\Gamma$ so that line $DJ$ is perpendicular to $BC$. Let lines $AD$ and $HJ$ meet at $K$.
+Let $L$ be such that $K$ is the midpoint of segment $AL$. Let $E$ and $F$ be the projections of $L$ onto lines $AB$ and $AC$, respectively. Then $H$ lies on line $EF$.
+\end{quote}
+This is the converse of the problem statement; clearly, if we prove this, then all is well.
+Let lines $BC$ and $DJ$ meet at $M$.
+\begin{claim*}
+  Point $L$ lies on $HM$.
+\end{claim*}
+\begin{proof}
+Let $G$ be the midpoint of segment $AH$, let $O$ be the circumcenter of triangle $ABC$, and let $N$ be the projection of $O$ onto line $DJ$.
+Then $N$ is the midpoint of segment $DJ$, so $K$ lies on $GN$. Also $GH$ equals the distance from $O$ to line $BC$, which equals $MN$; thus $GN$ is parallel to $HM$.
+It follows that $GK$ is parallel to both $HL$ and $HM$.
+\end{proof}
+
+Let $P$ and $Q$ be the projections of $D$ onto lines $AB$ and $AC$, respectively.
+Let $\ell$, the line through $P, M, Q$ be the Simson line of $D$ with respect to triangle $ABC$. Suppose $\ell$ meets line $AH$ at $R$.
+\begin{claim*}
+  We have $DM = HR$.
+\end{claim*}
+\begin{proof}
+  This is a known property of the Simson line $\ell$
+  (that $DMHR$ is in fact a parallelogram as $\ell$ bisects $\ol{HD}$).
+\end{proof}
+
+\begin{claim*}
+  Figures $ALEFH$ and $ADPQR$ are homothetic with center $A$.
+\end{claim*}
+\begin{proof}
+  All that we need to do to establish this is to verify that $AL : LD = AH : HR$.
+  This is true by $AL : LD= AH : DM= AH : HR$.
+\end{proof}
+By the final claim, since $R$ lies on line $PQ$,
+we get that $H$ lies on line $EF$. This completes the solution.
+
+
+\paragraph{Fifth solution by trigonometry (Ivan Borsenco, unedited).}
+Let $\angle E = B- \theta$ and $\angle F= C - \theta$.
+Denote by $H_a$ the intersection of $AH$ with  $\Gamma$
+and by $D'$ the intersection of the line passing through $D$ and perpendicular to $BC$ with $EF$.
+
+By angle-chasing, we get $\angle BAH= 90^{\circ} - B$, $\angle AHE = \angle H_aHD' = 90^{\circ}+\theta$.
+On the other hand, $\angle ADH_a= \angle ACH_a= 90^{\circ}-B+C$, $\angle AKB = 2(C+\theta)$,
+$\angle H_aAK = \angle HAK = \angle EAK - \angle EAH = 90^{\circ}-(C+\theta) - (90 ^{\circ}- B)= B-C- \theta$,
+and therefore $\angle AH_aD = 90^{\circ}+\theta$. Hence $HH_aDD'$ is an isosceles trapezoid.
+Point $D'$ is the reflection of $D$ in $BC$, which implies that quadrilateral $BHD'C$ is cyclic, because $\angle BHC = \angle BD'C =
+180^{\circ} -A$.
+
+Choose point $X$ on $\Gamma$ satisfying $DX \perp BC$.
+Note that $AH_aDX$ is an isosceles trapezoid. Hence $\angle HAX = 90^{\circ}+\theta$
+and $\angle KAX = \angle HAX -\angle HAK =90^{\circ}-(B-C-2\theta)$.
+Denote by $R$ and $R'$ the circumradii of triangles $ABC$ and $AEF$, respectively.
+It follows that $AH =2R \cos A$, $AK = R'$, $AX = DH_a= 2R \sin (B-C- \theta)$.
+
+In order to show that points $H$, $K$, and $X$ are collinear, we will show that $[HAX] = [HAK] + [KAX]$,
+which is equivalent to
+\[
+AH  \cdot AX \cdot \sin (\angle HAX) = AK \left [AH \cdot \sin (\angle HAK) + AX \cdot \sin (\angle KAX)\right].
+\]
+
+Using the Law of Sines in triangles $AEH$ and $AFH$, we get
+\[
+EF = EH + HF =  AH \cdot \frac{\cos B}{\sin (B -\theta) }+AH \cdot \frac{\cos C}{\sin (C +\theta)}.
+\]
+yielding
+\begin{align*}
+2R' \sin A &= \frac{2R \cos A}{\sin (B -\theta) \sin (C+\theta)} \left (\cos B \sin (C +\theta) + \cos C \sin (B-\theta)\right)\\
+&=  \frac{2R \cos A}{\sin (B -\theta) \sin (C+\theta)} \cdot \cos \theta \cdot \sin (B+C).
+\end{align*}
+Using the fact that $2\sin (B -\theta) \sin (C+\theta) = \cos ((B -\theta)-(C+\theta))  - \cos ((B -\theta)+(C+\theta))$,
+we conclude that
+\[
+R' = 2R\cdot \frac{\cos A \cos \theta }{ \cos (B -C-2\theta) + \cos A}.
+\]
+Denote by $\varphi  = B -C-2\theta$, then
+\[
+AH =  2R \cos A, \quad AK=  2R\cdot \frac{\cos A \cos \theta }{ \cos \varphi + \cos A}, \quad  AX = 2R \sin (\varphi+ \theta),
+\]
+and
+\[\angle HAK = \varphi+ \theta, \quad \angle KAX = 90^{\circ}-\varphi, \quad \angle HAX = 90^{\circ}+\theta.
+\]
+Returning back to proving the identity for areas, we have to show that
+\[
+\cos A  \cdot \sin (\varphi + \theta) \cdot \cos \theta   = \cdot \frac{\cos A \cos \theta }{ \cos \varphi + \cos A} \cdot
+\left [ \cos A \cdot \sin (\varphi+ \theta) + \sin (\varphi+ \theta) \cdot \cos \varphi\right ],
+\]
+which is clearly true.
+
+
+\paragraph{Sixth solution by moving points (Anant Mudgal, unedited).}
+The meat of this solution is the following claim.
+\begin{claim*}
+In triangle $AEF$, with circumcenter $K$ point $H$ lies on $\ol{EF}$, points $B$ and $C$ lie on lines $\ol{AE}$ and $\ol{AF}$ respectively, such that $\ol{BH} \perp \ol{AF}$ and $\ol{CH} \perp \ol{AE}$. Line $\ol{AK}$ meets $\odot(KEF)$ again at point $D$. Then $ABCD$ is cyclic and reflection of $D$ in $\ol{BC}$ lies on $\ol{EF}$.
+\end{claim*}
+
+\begin{proof}
+  Move $H$ along $\ol{EF}$ and note that $B \mapsto H$ and $H \mapsto C$
+  are linear maps, hence $B \mapsto C$ is also linear.
+  Suppose $\odot(DAB)$ meets line $\ol{AF}$ at $C'$.
+  Then we need to show that $C=C'$.
+  Since, by spiral similarity, $B \mapsto C'$ is linear;
+  we need to check this for two choices of $H$.
+  \begin{itemize}
+    \item $H=E$. Then $B=E$ and we need to show that if $\odot(AED)$ meets $\ol{AF}$ at $F'$, then $\angle AEF'=90^{\circ}$.
+    Apply inversion at $A$ of radius $\sqrt{AE \cdot AF}$ followed by reflection in the bisector of angle $EAF$. Suppose $X \mapsto X^{*}$ under this transformation. Then $E^{*}=F, F^{*}=E$ and $D^{*}$ is the orthocenter of $\triangle AEF$, so $(F')^{*}=\ol{FD^{*}} \cap \ol{AE}$ hence $\angle A(F')^{*}F=90^{\circ}$ so $\angle AEF'=90^{\circ}$, and we're done.
+    \item $H=F$. Same proof as above works.
+  \end{itemize}
+  Finally, moving $H$, since $\triangle DBC$ has fixed shape,
+  so the locus of the reflection of $D$ in $\ol{BC}$ is a line.
+  \begin{itemize}
+    \item For $H=E$, we need to show that $\angle AED=180^{\circ}-\angle AEF$ since $\angle FEF'=90^{\circ}-\angle AEF$; this follows since $\angle AED=\angle AD^{*}F$ and $D^{*}$ is the orthocenter of $\triangle AEF$.
+    \item Similarly, $H=F$ case holds.
+  \end{itemize}
+  The lemma is proved.
+\end{proof}
+
+Now we go back to the original problem. Let $L$ be the reflection of $A$ in $K$ and $N=\ol{EF} \cap \ol{AK}$, then, by our lemma, we have $(AL; ND)=-1$.
+
+Suppose $P$ lies on $\ol{EF}$ such that $\ol{DP} \perp \ol{BC}$ and $\ol{DP}$ meets $\ol{BC}$ at $S$ and $\Gamma$ again at $Q$. Reflect $Q$ in $S$ to get $R$. By the lemma, $S$ is the midpoint of $\ol{DP}$. Let $S'=\ol{HL} \cap \ol{DP}$ and $Q'=\ol{HK} \cap \ol{DP}$.
+
+Observe that $-1=(AL; ND) \overset{H}{=} (\infty s', PD)$, so clearly, $\ol{HL}$ bisects $\ol{DP}$, so $H, L, S$ are collinear. Finally, since $\ol{AK} \parallel \ol{RH}$ so $-1=(AL; K \infty) \overset{H}{=} (\infty S; Q'R)$ so $\ol{HK}$ passes through $Q$, as desired.
+
+\paragraph{Eighth solution by author using circumhyperbolas (Gunmay Handa, unedited).}
+Let $P$ be an arbitrary point on $\odot(ABC)$
+with $N$ as the midpoint of $\ol{HP}$,
+and define $\mathcal{H}_P = ABCHP$ as the rectangular circumhyperbola
+with center $N$ passing through the aforementioned points.
+Moreover, define $D' \in \odot(ABC)$
+with $\ol{PD'} \perp \ol{BC}$ and $P \neq D'$;
+observe that the line $\ell_P$ through $O$ perpendicular to $\ol{AD'}$
+is the isogonal conjugate of $\mathcal{H}_P$ with respect to $\odot(ABC)$,
+and so if we define $U$ and $V$ as the intersections of $\ell_P$ with $\ol{AB}$ and $\ol{AC}$, respectively,
+then $N$ belongs to the pedal circles $\omega_U$ and $\omega_V$ of $U$ and $V$ with respect to $\triangle ABC$.
+
+Let $\triangle RST$ be the orthic triangle of $\triangle ABC$
+and $M$ be the midpoint of $\ol{AH}$;
+angle chasing establishes that if $\{Q, N\} \equiv \omega_U \cap \omega_V$,
+then $Q \in \odot(ABC)$,
+and moreover $H \in \ol{QN}$ since it has equal power with respect to these circles.
+Suppose the line through $H$ parallel to $\ol{AP}$ intersects $\ol{AB}$ and $\ol{AC}$ at $E'$ and $F'$, respectively,
+and observe that $\ol{E'F'}$ is antiparallel to $\ol{UV}$ in $\angle A$.
+If $K'$ is the orthocenter of $\triangle AUV$, then $K' \in \ol{QN}$ by radical axes,
+and moreover $K' \in \odot(UD'V)$ since $D'$ is the reflection of $A$ across $\ol{UV}$.\
+Further angle chasing establishes $Q \in \odot(UD'V)$; we now claim that $E', F' \in \odot(UD'V)$ as well.
+Suppose the line through $N$ parallel to $\ol{AP}$ intersects $\ol{AB}$ at $W$,
+so that since $\triangle AST \cup \ol{MW} \sim \triangle ABC \cup \ol{OV}$,
+we have that $AK' \cdot AD'/2 = AW \cdot AU = AE'/2 \cdot AU$, and so $E', F' \in \odot(UD'V)$ as well.
+Finally, since $\angle EUK = \angle FVK = 90^\circ - \angle A$,
+we know that $\ol{DK}$ bisects $\angle EDF$,
+which implies that $K'$ is the circumcenter of $\odot(AE'F')$
+since $\ol{AK'} \perp \ol{UV}$
+and lines $E'F'$ and $UV$ are isogonal in $\angle A$, which finishes the problem.
+
+
+\paragraph{Seventh solution using moving points (Zack Chroman).}
+We state the converse of the problem as follows:
+
+\begin{quote}
+Take a point $D$ on $\Gamma$,
+and let $G\in \Gamma$ such that $\ol{DG} \perp \ol{BC}$.
+Then define $K$ to lie on $\ol{GH}, \ol{AD}$,
+and take $L \in \ol{AD}$ such that $K$ is the midpoint of $\ol{AL}$.
+Then if we define $E$ and $F$ as the projections of $L$ onto $\ol{AB}$ and $\ol{AC}$
+we want to show that $E$, $H$, $F$ are collinear.
+\end{quote}
+%\begin{center}
+%    \includegraphics[scale=0.5]{DiagramNo}
+%\end{center}
+
+It's clear that solving this problem will solve the original.
+In fact we will show later that each line $EF$ through $H$
+corresponds bijectively to the point $D$.
+
+We work in the real projective plane $\mathbb{RP}^2$,
+and animate $D$ on $\Gamma$.
+The point $D$ has projective coordinates
+which are each quadratic polynomials in a real parameter $t$,
+and moves projectively on $(ABC)$.
+We will state and prove some quick facts about animation.
+First, define the \emph{degree} of a moving point $(P(t):Q(t):R(t))$
+to be the max degree of $P$, $Q$, $R$.
+Similarly we define the degree
+of a moving line $P(t)x+Q(t)y+R(t)z=0$ in the same way.
+
+\begin{lemma*}[Zack's lemma]
+  Suppose points $A$, $B$ have degree $d_1$, $d_2$,
+  and there are $k$ values of $t$ for which $A=B$.
+  Then line $AB$ has degree at most $d_1+d_2-k$.
+  Similarly, if lines $\ell_1$, $\ell_2$ have degrees $d_1$, $d_2$,
+  and there are $k$ values of $t$ for which $\ell_1=\ell_2$,
+  then the intersection $\ell_1 \cap \ell_2$ has degree at most $d_1+d_2-k$.
+\end{lemma*}
+\begin{proof}
+  We show the first statement;
+  the second follows from point-line duality.
+  Note that the line through the points
+  $A=(P_1(t):Q_1(t):R_1(t))$ and $B=(P_2(t):Q_2(t):R_2(t))$
+  is given by cross product $A \times B$; that is, the line
+  \[(Q_1 R_2-Q_2 R_1)x  + (R_1 P_2-R_2 P_1) y + (P_1 Q_2-P_2 Q_1)z = 0.\]
+  Clearly $A$ and $B$ lie on this line, so it is line $AB$.
+  Then for every value $t_0$ for which $A=B$,
+  $(t-t_0)$ factors out of each term.
+  So the degree of the line is at most $d_1+d_2-k$.
+\end{proof}
+
+Now, note that $G$ is projective in $D$
+since it's a projection through the point at infinity on line $AH$.
+Now by the lemma, line $HG$ has degree at most $2$,
+and line $AD$ has degree at most $1$.
+
+So by the lemma again, the point $K$ has degree at most $3$.
+However, note that when $D$ lies on line $AH$,
+we have $G=A$, so lines $HG$ and $AD$ are the same.
+It follows that the point $K$ actually has degree at most $2$,
+thus so does $L$.
+
+Let $\infty_C$ be the point at infinity
+on the line perpendicular to $AC$, and similarly $\infty_B$.
+Then \[ F = \ol{AC} \cap \ol{\infty_C L},
+  \quad E = \ol{AB} \cap \ol{\infty_B L},\]
+so $E$ and $F$ have degree at most $2$,
+since lines $AB$ and $AC$ are fixed and $\deg(\infty_B L) \leq \deg(\infty_B)+\deg(L)=2$.
+%\begin{figure}
+%   \centering
+%    \includegraphics[scale=0.5]{Degenerate}
+%    %\caption{When $G=C, L=\infty_B$}
+%\end{figure}
+In fact, note that if we can show that $\infty_B$, $\infty_C$ lie on the locus of $L$,
+we'll show that $E$ and $F$ move with degree 1 (i.e.\ projectively) by the lemma again. To show that, we consider the case where $L$ and $K$ lie at infinity;
+that is, $\ol{HG} \parallel \ol{AD}$.
+In this case, $ADGH$ is a parallelogram as $AH \parallel DG$.
+Clearly $G=B$ and $G=C$ work;
+when $G=B$, $D$ is the antipode of $C$ in $\Gamma$.
+
+Then, when $G=B$, we have $K=L$ is the point at
+infinity on line $\ol{GH} \equiv \ol{BH}$.
+This point is $\infty_C$, so we get that $E$, $F$ are projective.
+
+So it suffices to verify the problem for three distinct choices of $D$.
+\begin{itemize}
+\item If $D=A$, then line $GH$ is line $AH$,
+  and $L = \ol{AD} \cap \ol{AH} = A$.
+  So $E=F=A$ and the statement is true.
+\item If $D=B$, $G$ is the antipode of $C$ on $\Gamma$.
+  Then $K = \ol{HG} \cap \ol{AD}$ is the midpoint of $\ol{AB}$, so $L=B$.
+  Then $E=B$ and $F$ is the projection of $B$ onto $AC$,
+  so $E$, $H$, $F$ collinear.
+\ii We finish similarly when $D=C$.
+\end{itemize}
+Thus since the maps $D \mapsto E$ and $D \mapsto F$ are collinear,
+the map $E \mapsto F$ is projective as well.
+Since $E$, $H$, $F$ are collinear for three values of $E$,
+they are in general.
+Moreover, since $D \to E$ is bijective,
+any line through $H$ will correspond to some $D$,
+so we've solved the original problem as well.
+
+
+---

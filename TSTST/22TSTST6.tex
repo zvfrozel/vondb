@@ -1,0 +1,226 @@
+author: Hongzhou Lin
+desc: Triple $K_A K_B K_C$ construction passes through $O$
+source: TSTST 2022/6
+url: https://aops.com/community/p25516957
+tags: [2023-08, todo]
+
+---
+
+Let $O$ and $H$ be the circumcenter and orthocenter,
+respectively, of an acute scalene triangle $ABC$.
+The perpendicular bisector of $\ol{AH}$ intersects
+$\ol{AB}$ and $\ol{AC}$ at $X_A$ and $Y_A$ respectively.
+Let $K_A$ denote the intersection of
+the circumcircles of triangles $OX_AY_A$ and $BOC$ other than $O$.
+
+Define $K_B$ and $K_C$ analogously by repeating this construction two more times.
+Prove that $K_A$, $K_B$, $K_C$, and $O$ are concyclic.
+
+---
+
+We present several approaches.
+
+\paragraph{First solution, by author.}
+Let $\odot OX_AY_A$ intersects $AB$, $AC$ again at $U$, $V$.
+Then by Reim's theorem $UVCB$ are concyclic.
+Hence the radical axis of $\odot OX_AY_A$, $\odot OBC$ and $\odot (UVCB)$
+are concurrent, i.e.\ $OK_A$, $BC$,  $UV$ are concurrent,
+Denote the intersection as $K_A^\ast$,
+which is indeed the inversion of $K_A$ with respect to $\odot O$.
+(The inversion sends $\odot OBC$ to the line $BC$).
+
+Let $P_A$, $P_B$, $P_C$ be the circumcenters of $\triangle OBC$,
+$\triangle OCA$, $\triangle OAB$ respectively.
+
+\begin{claim*}
+  $K_A^\ast$ coincides with the intersection of $P_BP_C$ and $BC$.
+\end{claim*}
+\begin{proof}
+  Note that $d(O, BC) = 1/2 AH = d(A,X_AY_A)$.
+  This means the midpoint $M_C$ of $AB$ is equal distance
+  to $X_AY_A$ and the line through $O$ parallel to $BC$.
+  Together with $OM_C \perp AB$ implies that $\angle M_CX_AO = \angle B$.
+  Hence $\angle UVO = \angle B = \angle AVU$.
+  Similarly $\angle VUO = \angle AUV$,
+  hence $\triangle AUV \simeq \triangle OUV$.
+  In other words, $UV$ is the perpendicular bisector of $AO$,
+  which pass through $P_B$, $P_C$.
+  Hence $K_A^\ast$ is indeed $P_BP_C \cap BC$.
+\end{proof}
+
+Finally by Desargue's theorem,
+it suffices to show that $AP_A$, $BP_B$, $CP_C$ are concurrent.
+Note that
+\begin{align*}
+  d(P_A, AB) &= P_AB \sin (90\dg + \angle C - \angle A), \\
+  d(P_A, AC) &= P_AC \sin (90\dg + \angle B - \angle A).
+\end{align*}
+Hence the symmetric product and trig Ceva finishes the proof.
+
+\begin{center}
+\begin{asy}
+size(12cm);
+pair A = dir(50);
+pair B = dir(220);
+pair C = dir(320);
+filldraw(A--B--C--cycle, opacity(0.1)+lightcyan, blue);
+pair O = origin;
+draw(O--A, lightblue);
+draw(O--B, lightblue);
+draw(O--C, lightblue);
+
+pair P_A = circumcenter(O, B, C);
+pair P_B = circumcenter(O, C, A);
+pair P_C = circumcenter(O, A, B);
+pair H = orthocenter(A, B, C);
+pair M = midpoint(A--H);
+pair X_A = extension(A, B, M, B-C+M);
+pair Y_A = extension(A, C, M, B-C+M);
+pair X = X_A;
+pair Y = Y_A;
+
+draw(A--H, blue);
+pair K_A = -O+2*foot(O, circumcenter(O, B, C), circumcenter(O, X_A, Y_A));
+pair K_As = extension(P_B, P_C, B, C);
+draw(circumcircle(O, B, C), grey);
+draw(circumcircle(O, X_A, Y_A), grey);
+
+draw(O--K_As, deepgreen);
+draw(K_As--B, blue);
+
+pair U_1 = -X+2*foot(circumcenter(O, X_A, Y_A), A, B);
+pair U_2 = -Y+2*foot(circumcenter(O, X_A, Y_A), A, C);
+draw(U_1--K_As, deepgreen);
+pair M_C = midpoint(A--B);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$O$", O, 1.4*dir(250));
+dot("$P_A$", P_A, dir(P_A));
+dot("$H$", H, dir(225));
+dot(M);
+dot("$X_A$", X_A, dir(115));
+dot("$Y_A$", Y_A, dir(40));
+dot("$K_A$", K_A, 1.4*dir(90));
+dot("$K_A^\ast$", K_As, dir(K_As));
+dot("$U_1$", U_1, dir(130));
+dot("$U_2$", U_2, dir(0));
+dot("$M_C$", M_C, dir(M_C));
+
+/* TSQ Source:
+
+A = dir 50
+B = dir 220
+C = dir 320
+A--B--C--cycle 0.1 lightcyan / blue
+O = origin 1.4R250
+O--A lightblue
+O--B lightblue
+O--C lightblue
+
+P_A = circumcenter O B C
+P_B := circumcenter O C A
+P_C := circumcenter O A B
+H = orthocenter A B C R225
+M .= midpoint A--H
+X_A = extension A B M B-C+M R115
+Y_A = extension A C M B-C+M R40
+X := X_A
+Y := Y_A
+
+A--H blue
+K_A = -O+2*foot O circumcenter O B C circumcenter O X_A Y_A 1.4R90
+K_A* = extension P_B P_C B C
+circumcircle O B C grey
+circumcircle O X_A Y_A grey
+
+O--K_As deepgreen
+K_As--B blue
+
+U_1 = -X+2*foot circumcenter O X_A Y_A A B R130
+U_2 = -Y+2*foot circumcenter O X_A Y_A A C R0
+U_1--K_As deepgreen
+M_C = midpoint A--B
+
+*/
+\end{asy}
+\end{center}
+
+\paragraph{Second solution, from Jeffrey Kwan.}
+Let $O_A$ be the circumcenter of $\triangle AX_AY_A$.
+The key claim is that:
+
+\begin{claim*}
+$O_AX_AY_AO$ is cyclic.
+\end{claim*}
+
+\begin{proof}
+Let $DEF$ be the orthic triangle;
+we will show that $\triangle OX_AY_A\sim \triangle DEF$.
+Indeed, since $AO$ and $AD$ are isogonal, it suffices to note that
+\[ \frac{AX_A}{AB} = \frac{AH/2}{AD} = \frac{R\cos A}{AD}, \]
+and so
+\[ \frac{AO}{AD} = R\cdot \frac{AX_A}{AB\cdot R\cos A}
+  = \frac{AX_A}{AE} = \frac{AY_A}{AF}. \]
+Hence $\angle X_AOY_A = 180\dg - 2\angle A = 180\dg - \angle X_AO_AY_A$,
+which proves the claim.
+\end{proof}
+
+Let $P_A$ be the circumcenter of $\triangle OBC$,
+and define $P_B$, $P_C$ similarly.
+By the claim, $A$ is the exsimilicenter of $(OX_AY_A)$ and $(OBC)$,
+so $AP_A$ is the line between their two centers.
+In particular, $AP_A$ is the perpendicular bisector of $OK_A$.
+
+
+\begin{center}
+\begin{asy}
+defaultpen(fontsize(10pt));
+size(13cm);
+pair A, B, C, O, H, N, D, OA, PA, PB, PC, X1, X2, KA;
+A = dir(110);
+B = dir(220);
+C = dir(320);
+O = (0,0);
+H = orthocenter(A, B, C);
+N = (A+H)/2;
+X1 = extension(N, rotate(90, N)*A, A, B);
+X2 = extension(N, rotate(90, N)*A, A, C);
+KA = -O+2*foot(O, circumcenter(O, X1, X2), circumcenter(B, O, C));
+OA = circumcenter(A, X1, X2);
+PA = circumcenter(O, B, C);
+PB = circumcenter(O, C, A);
+PC = circumcenter(O, A, B);
+draw(A--B--C--cycle, orange);
+draw(circumcircle(A, B, C), red);
+draw(A--foot(A, B, C)^^B--foot(B, C, A)^^C--foot(C, A, B), heavygreen+dotted);
+draw(X1--X2, dashed+lightblue);
+draw(circumcircle(O, B, C), heavycyan);
+draw(circumcircle(O, X1, X2), lightblue);
+draw(A--PA, magenta);
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$C$", C, dir(C));
+dot("$O$", O, dir(270));
+dot("$H$", H, dir(300));
+dot("$X_A$", X1, dir(160));
+dot("$Y_A$", X2, dir(45));
+dot("$K_A$", KA, dir(270));
+dot("$O_A$", OA, dir(90));
+dot("$P_A$", PA, dir(270));
+\end{asy}
+\end{center}
+
+\begin{claim*}
+$AP_A$, $BP_B$, $CP_C$ concur at $T$.
+\end{claim*}
+
+\begin{proof}
+The key observation is that $O$ is the incenter of $\triangle P_AP_BP_C$,
+and that $A$, $B$, $C$ are the reflections of $O$ across the sides of $\triangle P_AP_BP_C$.
+Hence $P_AA$, $P_BB$, $P_CC$ concur by Jacobi.
+\end{proof}
+
+Now $T$ lies on the perpendicular bisectors of $OK_A$, $OK_B$, and $OK_C$.
+Hence $OK_AK_BK_C$ is cyclic with center $T$, as desired.

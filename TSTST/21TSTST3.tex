@@ -1,0 +1,83 @@
+author: Merlijn Staps
+desc: Binomial coefficient
+source: TSTST 2021/3
+tags: [2021-11, vp, good, find, mods, manip, gimel]
+url: https://aops.com/community/p23586679
+
+---
+
+Find all positive integers $k > 1$ for which there exists a positive integer
+$n$ such that $\binom{n}{k}$ is divisible by $n$, and $\binom{n}{m}$ is not
+divisible by $n$ for $2\leq m < k$.
+
+---
+
+Such an $n$ exists for any $k$.
+
+First,  suppose $k$ is prime.  We choose $n=(k-1)!$. For
+$m<k$,  it follows from $m! \mid n$ that
+\begin{align*}
+  (n-1)(n-2) \dotsm (n-m+1) &\equiv (-1)(-2) \dotsm (-m+1) \\
+  &\equiv (-1)^{m-1} (m-1)! \\
+  &\not\equiv 0 \mod m!.
+\end{align*}
+We see that $\binom{n}{m}$ is not a multiple of $m$.  For $m=k$, note that
+$\binom{n}{k} = \frac{n}{k} \binom{n-1}{k-1}$.  Because $k \nmid n$, we must
+have $k \mid \binom{n-1}{k-1}$,  and it follows that $n \mid \binom{n}{k}$.
+
+Now suppose $k$ is composite.
+We will choose $n$ to satisfy a number of congruence relations.  For each prime $p \le k$,  let
+\[t_p = \nu_p(\opname{lcm}(1,2,\dots,k-1)) = \max(\nu_p(1), \nu_p(2),\dots,\nu_p(k-1))\]
+and choose $k_p \in \{1,2,\dots,k-1\}$ as large as possible such that $\nu_p(k_p)=t_p$.  We now require
+\begin{align}
+n \equiv 0 \mod p^{t_p+1} \qquad \mbox{if $p \nmid k$}; \label{eq:cong1}\\
+\nu_p(n - k_p) = t_p+\nu_p(k) \qquad \mbox{if $p \mid k$}. \label{eq:cong2}
+\end{align}
+for all $p \le k$.  From the Chinese Remainder Theorem,  we know that an $n$ exists that satisfies \eqref{eq:cong1} and \eqref{eq:cong2} (indeed, a sufficient condition for \eqref{eq:cong2} is the congruence $n \equiv k_p + p^{t_p+\nu_p(k)} \mod p^{t_p+\nu_p(k)+1}$).  We show that this $n$ has the required property.
+
+We first will compute $\nu_p(n-i)$ for primes $p<k$ and $1 \le i < k$.
+\begin{itemize}
+\item If $p \nmid k$, then we have $\nu_p(i), \nu_p(n-i) \le t_p$ and $\nu_p(n) > t_p$, so $\nu_p(n-i) = \nu_p(i)$;
+\item If $p \mid k$ and $i \neq k_p$, then we have $\nu_p(i), \nu_p(n-i) \le t_p$ and $\nu_p(n) \ge t_p$, so again $\nu_p(n-i) = \nu_p(i)$;
+\item If $p \mid k$ and $i = k_p$, then we have $\nu_p(n-i) = \nu_p(i) + \nu_p(k)$ by \eqref{eq:cong2}.
+\end{itemize}
+We conclude that $\nu_p(n-i) = \nu_p(i)$ always holds, except when $i = k_p$, when we have $\nu_p(n-i) = \nu_p(i) + \nu_p(k)$ (this formula holds irrespective of whether $p \mid k$ or $p \nmid k$).
+
+We can now show that $\binom{n}{k}$ is divisible by $n$,  which amounts to
+showing that $k!$ divides $(n-1)(n-2) \dotsm (n-k+1)$.  Indeed,  for each prime $p \le k$ we have
+\begin{align*}
+\nu_p\left( (n-1)(n-2) \dots (n-k+1) \right) &=  \nu_p(n-k_p) + \sum_{i<k,  i \neq k_p} \nu_p(n-i) \\
+&= \nu_p(k_p) + \nu_p(k) + \sum_{i<k, i \neq k_p} \nu_p(i) \\
+&= \sum_{i=1}^k \nu_p(i) = \nu_p(k!),
+\end{align*}
+so it follows that $(n-1)(n-2) \dotsm (n-k+1)$ is a multiple of $k!$.
+
+Finally,  let $1<m<k$.  We will show that $n$ does \emph{not} divide
+$\binom{n}{m}$,  which amounts to showing that $m!$ does not divide $(n-1)(n-2)
+\dotsm (n-m+1)$.  First,  suppose that $m$ has a prime divisor $q$ that does not divide $k$.  Then we have
+\begin{align*}
+  \nu_q\left( (n-1)(n-2) \dots (n-m+1) \right) &= \sum_{i=1}^{m-1} \nu_q(n-i) \\
+  &= \sum_{i=1}^{m-1} \nu_q(i) \\
+  &= \nu_q((m-1)!) < \nu_q(m!),
+\end{align*}
+as desired. Therefore,  suppose that $m$ is only divisible by primes that divide $k$.  If there is such a prime $p$ with $\nu_p(m) > \nu_p(k)$,  then it follows that
+\begin{align*}
+  \nu_p\left( (n-1)(n-2) \dots (n-m+1) \right)
+  &= \nu_p(k) + \sum_{i=1}^{m-1} \nu_p(i) \\
+  &< \nu_p(m) + \sum_{i=1}^{m-1}
+  \nu_p(i) \\
+  &= \nu_p(m!),
+\end{align*}
+so $m!$ cannot divide $(n-1)(n-2) \dots (n-m+1)$.  On the other hand,  suppose
+that $\nu_p(m) \le \nu_p(k)$ for all $p \mid k$, which would mean that $m \mid
+k$ and hence $m \le \frac{k}{2}$.  Consider a prime $p$ dividing $m$.  We have
+$k_p \ge \frac{k}{2}$,  because otherwise $2k_p$ could have been used instead of
+$k_p$. It follows that $m \le \frac{k}{2} \le k_p$. Therefore, we obtain
+\begin{align*}
+  \nu_p\left( (n-1)(n-2) \dots (n-m+1) \right) &= \sum_{i=1}^{m-1} \nu_p(n-i) \\
+  &= \sum_{i=1}^{m-1} \nu_p(i)  \\
+  &= \nu_p((m-1)!) < \nu_p(m!),
+\end{align*}
+showing that $(n-1)(n-2) \dotsm (n-m+1)$ is not divisible by $m!$.
+This shows that $\binom{n}{m}$ is not divisible by $n$ for $m<k$,
+and hence $n$ does have the required property.

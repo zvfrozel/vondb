@@ -1,0 +1,102 @@
+desc:  Bezout's Theorem
+author: Ivan Borsenco
+source:  USA TST 2016/6
+tags:  [complex, polynomial, highermath, instructive, find, favorite, 2016-04, well, zayin]
+hardness: 40
+url: https://aops.com/community/p6368189
+
+---
+
+Let $ABC$ be an acute scalene triangle
+and let $P$ be a point in its interior.
+Let $A_1$, $B_1$, $C_1$ be projections of $P$ onto
+triangle sides $BC$, $CA$, $AB$, respectively.
+Find the locus of points $P$ such that
+$AA_1$, $BB_1$, $CC_1$ are concurrent
+and $\angle PAB + \angle PBC + \angle PCA = 90\dg$.
+
+---
+
+In complex numbers with $ABC$ the unit circle,
+it is equivalent to solving the following two cubic equations
+in $p$ and $q = \ol p$:
+\begin{align*}
+ (p-a)(p-b)(p-c) &= (abc)^2 (q -1/a)(q - 1/b)(q - 1/c) \\
+ 0 &= \prod_{\text{cyc}} (p+c-b-bcq) + \prod_{\text{cyc}} (p+b-c-bcq).
+\end{align*}
+Viewing this as two cubic curves in $(p,q) \in \CC^2$,
+by \emph{B\'ezout's Theorem} it follows there are at most nine solutions
+(unless both curves are not irreducible,
+but it's easy to check the first one cannot be factored).
+Moreover it is easy to name nine solutions (for $ABC$ scalene):
+the three vertices, the three excenters, and $I$, $O$, $H$.
+Hence the answer is just those three triangle centers $I$, $O$ and $H$.
+
+\begin{remark*}
+  On the other hand it is not easy to solve the cubics by hand;
+  I tried for an hour without success.
+  So I think this solution is only feasible
+  with knowledge of algebraic geometry.
+\end{remark*}
+\begin{remark*}
+  These two cubics have names:
+  \begin{itemize}
+    \ii The locus of $\angle PAB + \angle PBC + \angle PCA = 90\dg$
+    is the \textbf{McCay cubic},
+    which is the locus of points $P$
+    for which $P$, $P^\ast$, $O$ are collinear.
+    \ii The locus of the pedal condition
+    is the \textbf{Darboux cubic},
+    which is the locus of points $P$
+    for which $P$, $P^\ast$, $L$ are collinear,
+    $L$ denoting the de Longchamps point.
+  \end{itemize}
+  Assuming $P \neq P^\ast$,
+  this implies $P$ and $P^\ast$
+  both lie on the Euler line of $\triangle ABC$,
+  which is possible only if $P=O$ or $P=H$.
+
+  Some other synthetic solutions are posted at
+  \url{https://aops.com/community/c6h1243902p6368189}.
+\end{remark*}
+
+---
+
+We will use complex numbers with $a$, $b$, $c$ the unit circle.
+\begin{walk}
+  \ii Find three distinct examples of points $P$ that work.
+  \ii Show that the locus of $P$ ``should'' have $0$ degrees of freedom,
+  i.e.\ it should be a finite set of points.
+  (This is again dimension counting.)
+  \ii Write down an equation in $\CC$ for $p$
+  corresponding to the condition that $\angle PAB + \angle PBC + \angle PCA = 90\dg$.
+  You don't have to worry about configuration issues:
+  just ensure that the equation you have is valid
+  for all points $P$ in the interior of $ABC$.
+  \ii Write down an equation in $\CC$ for $p$
+  corresponding to $AA_1$, $BB_1$, $CC_1$ are concurrent.
+  \ii Rewrite (or redo) both equations
+  so that they are degree $3$ polynomials in $p$ and $\ol p$.
+\end{walk}
+The curves you found in (c) and (d)
+are called the \textbf{McCay cubic}
+and \textbf{Darboux cubic}, respectively.
+You can take for granted they are distinct and nondegenerate
+(proving this is surprisingly obnoxious;
+I've been putting off doing it for a few years now).
+
+Once you have this, we can view the curves
+as two equations in $\CC^2$ in two variables $p$ and $q = \ol p$.
+After this, it follows from \textbf{B\'{e}zout theorem}
+that the curves intersect in exactly $3 \cdot 3 = 9$ points,
+with multiplicity.
+\begin{walk}[resume]
+  \ii If the incenter $I$ lies on both curves,
+  what other three points must also lie on both curves?
+  \ii Find three more points which
+  satisfy the equations (algebraically;
+  the geometric interpretation won't make much sense here).
+  \ii Conclude that the nine points you found in (a), (f), (g)
+  are the only solutions,
+  and identify the ones that do lie inside $ABC$.
+\end{walk}

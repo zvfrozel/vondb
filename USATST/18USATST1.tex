@@ -1,0 +1,106 @@
+author: Ashwin Sah
+desc: nth smallest relatively prime to n is $\sigma(n)$
+source: USA TST 2018/1
+tags: [2017-11, grinding, reliable, size, manip, nice, primes, bet]
+hardness: 25
+url: https://aops.com/community/p9513094
+
+---
+
+Let $n \ge 2$ be a positive integer,
+and let $\sigma(n)$ denote the sum of the positive divisors of $n$.
+Prove that the $n$\textsuperscript{th} smallest positive integer
+relatively prime to $n$ is at least $\sigma(n)$,
+and determine for which $n$ equality holds.
+
+---
+
+The equality case is $n = p^e$ for
+$p$ prime and a positive integer $e$.
+It is easy to check that this works.
+
+\bigskip
+
+\paragraph{First solution.}
+In what follows, by $[a,b]$ we mean $\{a,a+1,\dots,b\}$.
+First, we make the following easy observation.
+\begin{claim*}
+  If $a$ and $d$ are positive integers,
+  then precisely $\varphi(d)$ elements
+  of $[a, a + d - 1]$ are relatively prime to $d$.
+\end{claim*}
+
+Let $d_1$, $d_2$, \dots, $d_k$ denote
+denote the divisors of $n$ in some order.
+Consider the intervals
+\begin{align*}
+  I_1 &= [1, d_1], \\
+  I_2 &= [d_1+1, d_1+d_2] \\
+  &\vdotswithin= \\
+  I_k &= [d_1+\dots+d_{k-1}+1, d_1+\dots+d_k].
+\end{align*}
+of length $d_1, \dots, d_k$ respectively.
+The $j$th interval will have exactly $\varphi(d_j)$ elements
+which are relatively prime $d_j$,
+hence at most $\varphi(d_j)$ which are relatively prime to $n$.
+Consequently, in $I = \bigcup_{j=1}^k I_k$
+there are at most
+\[ \sum_{j=1}^k \varphi(d_j) = \sum_{d \mid n} \varphi(d) = n \]
+integers relatively prime to $n$.
+On the other hand $I = [1,\sigma(n)]$ so this implies the inequality.
+
+We see that the equality holds for $n = p^e$.
+Assume now $p < q$ are distinct primes dividing $n$.
+Reorder the divisors $d_i$ so that $d_1 = q$.
+Then $p,q \in I_1$, and so $I_1$ should contain
+strictly fewer than $\varphi(d_1)=q-1$ elements
+relatively prime to $n$, hence the inequality is strict.
+
+\paragraph{Second solution (Ivan Borsenco and Evan Chen).}
+Let $n = p_1^{e_1} \dots p_k^{e_k}$,
+where $p_1 < p_2 < \dots$.
+We are going to assume $k \ge 2$,
+since the $k=1$ case was resolved in the very beginning,
+and prove the strict inequality.
+
+For a general $N$, the number of relatively prime integers in $[1,N]$ is
+given exactly by
+\[ f(N) = N - \sum_i \left\lfloor \frac{N}{p_i} \right\rfloor
+  + \sum_{i<j} \left\lfloor \frac{N}{p_i p_j} \right\rfloor - \dots \]
+according to the inclusion-exclusion principle.
+So, we wish to show that $f(\sigma(n)) < n$ (as $k \ge 2$).
+Discarding the error terms from the floors
+(noting that we get at most $1$ from the negative floors)
+gives
+\begin{align*}
+  f(N) &< 2^{k-1} + N - \sum_i \frac{N}{p_i}
+    + \sum_{i<j} \frac{N}{p_i p_j} - \dots \\
+  &= 2^{k-1} + N \prod_i \left( 1 - p_i\inv \right) \\
+  &= 2^{k-1} + \prod_i \left( 1 - p_i\inv \right)
+    \left( 1 + p_i + p_i^2 + \dots + p_i^{e_i} \right) \\
+  &= 2^{k-1} + \prod_i \left( p_i^{e_i} - p_i\inv \right).
+\end{align*}
+The proof is now divided into two cases.
+If $k=2$ we have
+\begin{align*}
+  f(N) &< 2 + \left( p_1^{e_1} - p_1\inv \right)\left( p_2^{e_2} -
+  p_2\inv \right) \\
+  &= 2 + n - \frac{p_2^{e_2}}{p_1} - \frac{p_1^{e_1}}{p_2}
+    + \frac{1}{p_1p_2} \\
+  &\le 2 + n - \frac{p_2}{p_1} - \frac{p_1}{p_2}
+    + \frac{1}{p_1p_2} \\
+  &= n + \frac{1-(p_1-p_2)^2}{p_1p_2} \le n.
+\end{align*}
+On the other hand if $k \ge 3$ we may now write
+\begin{align*}
+  f(N) &< 2^{k-1} + \left[ \prod_{i=2}^{k-1} \left( p_i^{e_i} \right)
+    \right] \left( p_1^{e_1} - p_1\inv \right) \\
+  &= 2^{k-1} + n - \frac{p_2^{e_2} \dots p_k^{e_k}}{p_1} \\
+  &\le 2^{k-1} + n - \frac{p_2 p_3 \dots p_k}{p_1}.
+\end{align*}
+If $p_1 = 2$, then one can show
+by induction that $p_2 p_3 \dots p_k \ge 2^{k+1}-1$,
+which implies the result.
+If $p_1 > 2$, then one can again show by induction
+$p_3 \dots p_k \ge 2^k-1$ (since $p_3 \ge 7$),
+which also implies the result.

@@ -1,0 +1,188 @@
+author: Ankan Bhattacharya
+desc: Great sequences
+source: USA TST 2019/4
+tags: [2018-10, divis, mods, good, grid, smallcases, bet]
+hardness: 10
+url: https://aops.com/community/p11625808
+
+---
+
+We say a function $f \colon \ZZ_{\ge 0} \times \ZZ_{\ge 0} \to \ZZ$
+is \emph{great} if for any nonnegative integers $m$ and $n$,
+\[ f(m+1, n+1) f(m,n) - f(m+1,n) f(m,n+1) = 1. \]
+If $A = (a_0, a_1, \dots)$ and $B = (b_0, b_1, \dots)$
+are two sequences of integers,
+we write $A \sim B$ if there exists a great function $f$
+satisfying $f(n,0) = a_n$ and $f(0,n) = b_n$
+for every nonnegative integer $n$ (in particular, $a_0=b_0$).
+
+Prove that if $A$, $B$, $C$, and $D$ are four sequences of integers
+satisfying $A \sim B$, $B \sim C$, and $C \sim D$, then $D \sim A$.
+
+---
+
+We present two solutions.
+In what follows, we say $(A, B)$ form a great pair
+if $A \sim B$.
+
+\paragraph{First solution (Nikolai Beluhov).}
+Let $k = a_0 = b_0 = c_0 = d_0$.
+We let $f$, $g$, $h$ be great functions for $(A,B)$, $(B,C)$, $(C,D)$
+and write the following infinite array:
+\[
+  \begin{bmatrix}
+    & \vdots & \vdots & {\color{blue} b_3} & \vdots & \vdots & \\[5pt]
+    \dotsb & g(2,2) & g(2,1) & {\color{blue}b_2} & f(1,2) & f(2,2) & \dotsb \\[5pt]
+    \dotsb & g(1,2) & g(1,1) & {\color{blue}b_1} & f(1,1) & f(2,1) & \dotsb \\[5pt]
+    {\color{blue}c_3} & {\color{blue}c_2} & {\color{blue}c_1} &
+      {\color{blue}k} &
+      {\color{blue}a_1} & {\color{blue}a_2} & {\color{blue}a_3} \\[5pt]
+    \dotsb & h(2,1) & h(1,1) & {\color{blue}d_1} & & & \\[5pt]
+    \dotsb & h(2,2) & h(1,2) & {\color{blue}d_2} & & & \\[5pt]
+    & \vdots & \vdots & {\color{blue}d_3} & & & \ddots \\[5pt]
+  \end{bmatrix}
+\]
+The greatness condition is then equivalent to saying
+that any $2 \times 2$ sub-grid has determinant $\pm1$
+(the sign is $+1$ in two quadrants and $-1$ in the other two),
+and we wish to fill in the lower-right quadrant.
+To this end, it suffices to prove the following.
+\begin{lemma*}
+  Suppose we have a $3 \times 3$ sub-grid
+  \[
+    \begin{bmatrix}
+      a & b & c \\
+      x & y & z \\
+      p & q &
+    \end{bmatrix}
+  \]
+  satisfying the determinant conditions.
+  Then we can fill in the ninth entry in the lower right
+  with an integer while retaining greatness.
+\end{lemma*}
+\begin{proof}
+  We consider only the case where the $3 \times 3$
+  is completely contained inside the bottom-right quadrant,
+  since the other cases are exactly the same
+  (or even by flipping the signs of the top row
+  or left column appropriately).
+
+  If $y = 0$ we have $-1 = bz = bx = xq$, hence $qz = -1$,
+  and we can fill in the entry arbitrarily.
+
+  Otherwise, we have $bx \equiv xq \equiv bz \equiv -1 \pmod{y}$.
+  This is enough to imply $qz \equiv -1 \pmod y$,
+  and so we can fill in the integer $\frac{qz+1}{y}$.
+\end{proof}
+
+\begin{remark*}
+  In this case (of all $+1$ determinants),
+  I think it turns out the bottom entry is
+  exactly equal to $qza - cyp - c - p$,
+  which is obviously an integer.
+\end{remark*}
+
+
+\paragraph{Second solution (Ankan Bhattacharya).}
+We will give an explicit classification of great sequences:
+\begin{lemma*}
+  The pair $(A,B)$ is great if and only if
+  $a_0 = b_0$, $a_0 \mid a_1b_1 + 1$, and
+  $a_n \mid a_{n-1} + a_{n+1}$ and $b_n \mid b_{n-1} + b_{n+1}$ for all $n$.
+\end{lemma*}
+\begin{proof}[Proof of necessity]
+  It is clear that $a_0 = b_0$.
+  Then $a_0f(1, 1) - a_1b_1 = 1$,
+  i.e. $a_0 \mid a_1b_1 + 1$.
+
+  Now, focus on six entries $f(x, y)$
+  with $x \in \{n-1, n, n+1\}$ and $y \in \{0, 1\}$.
+  Let $f(n-1, 1) = u$, $f(n, 1) = v$, and $f(n+1, 1) = w$, so
+  \begin{align*}
+    v a_{n-1} - u a_n & = 1,\\
+    w a_n - v a_{n+1} & = 1.
+  \end{align*}
+  Then
+  \[u + w = \frac{v(a_{n-1} + a_{n+1})}{a_n}\]
+  and from above $\gcd(v, a_n) = 1$,
+  so $a_n \mid a_{n-1} + a_{n+1}$;
+  similarly for $b_n$.
+  (If $a_n = 0$,
+  we have $va_{n-1} = 1$ and $va_{n+1} = -1$,
+  so this is OK.)
+\end{proof}
+
+\begin{proof}[Proof of sufficiency]
+  Now consider two sequences $a_0, a_1, \dots$
+  and $b_0, b_1, \dots$ satisfying our criteria.
+  We build a great function $f$ by induction on $(x, y)$.
+  More strongly, we will assume as part of the inductive hypothesis
+  that any two adjacent entries of $f$ are relatively prime
+  and that for any three consecutive entries horizontally or vertically,
+  the middle one divides the sum of the other two.
+
+  First we set $f(1, 1)$ so that $a_0 f(1, 1) = a_1 b_1 + 1$,
+  which is possible.
+
+  Consider an uninitialized $f(s, t)$;
+  without loss of generality suppose $s \ge 2$.
+  Then we know five values of $f$
+  and wish to set a sixth one $z$,
+  as in the matrix below:
+  \[
+    \begin{matrix}
+    u & x\\
+    v & y\\
+    w & {\color{gray} z} \\
+    \end{matrix}
+  \]
+  (We imagine $a$-indices to increase southwards and $b$-indices to increase eastwards.)
+  If $v \neq 0$,
+  then the choice $y \cdot \frac{u + w}{v} - x$ works
+  as $uy - vx = 1$.
+  If $v = 0$,
+  it easily follows that $\{u, w\} = \{1, -1\}$
+  and $y = w$ as $yw = 1$.
+  Then we set the uninitialized entry to anything.
+
+  Now we verify that this is compatible with the inductive hypothesis.
+  From the determinant 1 condition,
+  it easily follows that $\gcd(w, z) = \gcd(v, z) = 1$.
+  The proof that $y \mid x + z$
+  is almost identical to a step performed in the ``necessary'' part
+  of the lemma and we do not repeat it here.
+  By induction, a desired great function $f$ exists.
+\end{proof}
+
+We complete the solution.
+Let $A$, $B$, $C$, and $D$ be integer sequences
+for which $(A, B)$, $(B, C)$, and $(C, D)$ are great.
+Then $a_0 = b_0 = c_0 = d_0$,
+and each term in each sequence
+(after the zeroth term)
+divides the sum of its neighbors.
+Since $a_0$ divides all three of $a_1b_1 + 1$, $b_1c_1 + 1$, and $c_1d_1 + 1$,
+it follows $a_0$ divides $d_1a_1 + 1$,
+and thus $(D, A)$ is great as desired.
+
+\begin{remark*}
+To simplify the problem,
+we may restrict the codomain of great functions
+and elements in great pairs of sequences
+to $\ZZ_{> 0}$.
+This allows the parts of the solution dealing with zero entries to be ignored.
+\end{remark*}
+
+\begin{remark*}
+Of course, this solution also shows that any odd path
+(in the graph induced by the great relation on sequences)
+completes to an even cycle.
+If we stipulate that great functions must have $f(0, 0) = \pm 1$,
+then even paths complete to cycles as well.
+Alternatively, we could change the great functional equation to
+\[f(x + 1, y + 1) f(x, y) - f(x + 1, y) f(x, y + 1) = -1.\]
+
+A quick counterexample to transitivity of $\sim$ as is
+without the condition $f(0,0)=1$, for concreteness:
+let $a_n = c_n = 3+n$ and $b_n = 3+2n$ for $n \ge 0$.
+\end{remark*}

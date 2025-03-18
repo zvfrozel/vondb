@@ -1,0 +1,43 @@
+desc:  Cyclic sum $\frac{a}{\sqrt(a^2+8bc)}$
+source:  IMO 2001/2
+tags:  [ineq, holder, instructive, cdn, dalet]
+hardness: 20
+url: https://aops.com/community/p119168
+author: Hojoo Lee (KOR)
+
+---
+
+Let $a$, $b$, $c$ be positive reals. Prove that
+\[ \frac{a}{\sqrt{a^2+8bc}} + \frac{b}{\sqrt{b^2+8ca}} + \frac{c}{\sqrt{c^2+8ab}} \ge 1. \]
+
+---
+
+By Holder, we have
+\[
+  \left( \sum_{\text{cyc}} \frac{a}{\sqrt{a^2+8bc}} \right)^2
+  \left( \sum_{\text{cyc}} a(a^2+8bc) \right)
+  \ge (a+b+c)^3.
+\]
+So it suffices to show $(a+b+c)^3 \ge a^3+b^3+c^3+24abc$ which is clear by expanding.
+
+---
+
+There are a few ways to set up, but
+the general idea is to use H\"{o}lder in the form
+\[
+  \left( \sum_{\text{cyc}} \frac{a}{\sqrt{a^2+8bc}} \right)^p
+  \left( \sum_{\text{cyc}} {?}  \right)^q
+  \ge \left( \sum_{\text{cyc}} {?} \right)^{p+q}
+\]
+for some choice of weights $p$ and $q$ to eliminate the radicals
+and get a polynomial inequality.
+\begin{walk}
+  \ii Pick a choice of weights $p, q > 0$ eliminate the radicals.
+  \ii Decide on values to fill in the $?$ above.
+  (You probably want to eliminate the denominator,
+  i.e.\ the left sum should be some multiple of $a^2+8bc$.)
+  \ii Try to prove the resulting inequality.
+  Depending on what choices you made in (a) or (b),
+  this may be relatively easy,
+  or it may be impossible (because the inequality may not even be true.)
+\end{walk}

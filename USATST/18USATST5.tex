@@ -1,0 +1,208 @@
+desc: IMO 2014 BESTED geometry
+source: USA TST 2018/5
+tags: [2017-09, desargues, nice, mine, spiralsim, miquel, anglechase, length, rich, gimel]
+author: Evan Chen
+hardness: 30
+url: https://aops.com/community/p9735608
+
+---
+
+Let $ABCD$ be a convex cyclic quadrilateral which is not a kite,
+but whose diagonals are perpendicular and meet at $H$.
+Denote by $M$ and $N$ the midpoints of $\ol{BC}$ and $\ol{CD}$.
+Rays $MH$ and $NH$ meet $\ol{AD}$ and $\ol{AB}$ at $S$ and $T$, respectively.
+Prove there exists a point $E$, lying outside quadrilateral $ABCD$,
+such that
+\begin{itemize}
+  \ii ray $EH$ bisects both angles $\angle BES$, $\angle TED$, and
+  \ii $\angle BEN = \angle MED$.
+\end{itemize}
+
+---
+
+The main claim is that $E$ is the
+intersection of $(ABCD)$ with the circle with diameter $\ol{AH}$.
+\begin{center}
+\begin{asy}
+size(10cm);
+pair A = dir(100);
+pair B = dir(190);
+pair D = dir(-10);
+pair F = -A;
+pair H = foot(A, B, D);
+pair E = foot(A, F, H);
+pair C = -A+2*foot(origin, A, H);
+
+filldraw(unitcircle, opacity(0.1)+lightcyan, lightblue);
+draw(A--B--C--D--cycle, lightblue);
+draw(A--B--F--D--cycle, lightblue);
+draw(A--C, lightblue);
+draw(B--D, lightblue);
+pair M = midpoint(B--C);
+pair N = midpoint(D--C);
+pair S = foot(H, A, D);
+pair T = foot(H, A, B);
+draw(M--S, lightblue);
+draw(N--T, lightblue);
+
+filldraw(circumcircle(B, T, S), opacity(0.1)+yellow, orange);
+// pair Q = midpoint(A--H);
+draw(H--F, lightblue);
+pair P = midpoint(H--F);
+filldraw(B--T--S--D--cycle, opacity(0.1)+yellow, orange+1);
+// draw(P--Q, blue);
+draw(A--F, blue);
+draw(circumcircle(E, B, M), lightgreen);
+draw(circumcircle(E, D, N), lightgreen);
+draw(H--E--A, orange);
+draw(circumcircle(A, T, S), lightgreen);
+
+dot("$A$", A, dir(A));
+dot("$B$", B, dir(B));
+dot("$D$", D, dir(D));
+dot("$F$", F, dir(F));
+dot("$H$", H, dir(H));
+dot("$E$", E, dir(E));
+dot("$C$", C, dir(C));
+dot("$M$", M, dir(M));
+dot("$N$", N, dir(N));
+dot("$S$", S, dir(S));
+dot("$T$", T, dir(T));
+// dot("$Q$", Q, dir(200));
+dot("$P$", P, dir(P));
+
+/* TSQ Source:
+
+!size(10cm);
+A = dir 100
+B = dir 190
+D = dir -10
+F = -A
+H = foot A B D
+E = foot A F H
+C = -A+2*foot origin A H
+
+unitcircle 0.1 lightcyan / lightblue
+A--B--C--D--cycle lightblue
+A--B--F--D--cycle lightblue
+A--C lightblue
+B--D lightblue
+M = midpoint B--C
+N = midpoint D--C
+S = foot H A D
+T = foot H A B
+M--S lightblue
+N--T lightblue
+
+circumcircle B T S 0.1 yellow / orange
+Q = midpoint A--H R200
+H--F lightblue
+P = midpoint H--F
+B--T--S--D--cycle 0.1 yellow / orange+1
+P--Q blue
+A--F blue
+circumcircle E B M lightgreen
+circumcircle E D N lightgreen
+H--E--A orange
+circumcircle A T S lightgreen
+
+*/
+\end{asy}
+\end{center}
+
+The following observation can be quickly made
+without reference to $E$.
+\begin{lemma*}
+  We have $\angle HSA = \angle HTA = 90\dg$.
+  Consequently, quadrilateral $BTSD$ is cyclic.
+\end{lemma*}
+\begin{proof}
+  This is direct angle chasing.
+  In fact, $\ol{HM}$ passes through the circumcenter of $\triangle BHC$
+  and $\triangle HAD \sim \triangle HCB$,
+  so $\ol{HS}$ ought to be the altitude of $\triangle HAD$.
+\end{proof}
+
+From here it follows that $E$ is the Miquel point of
+cyclic quadrilateral $BTSD$.
+Define $F$ to be the point diametrically opposite $A$,
+so that $E$, $H$, $F$ are collinear, $\ol{CF} \parallel \ol{BD}$.
+By now we already have
+\[ \dang BEH = \dang BEF = \dang BAF = \dang CAD = \dang HAS = \dang HES \]
+so $\ol{EH}$ bisects $\angle BES$, and $\angle TED$.
+Hence it only remains to show $\angle BEM = \angle NED$;
+we present several proofs below.
+
+\paragraph{First proof (original solution).}
+Let $P$ be the circumcenter of $BTSD$.
+The properties of the Miquel point imply $P$ lies on
+the common bisector $\ol{EH}$ already,
+and it also lies on the perpendicular bisector of $\ol{BD}$,
+hence it must be the midpoint of $\ol{HF}$.
+
+We now contend quadrilaterals $BMPS$ and $DNPT$ are cyclic.
+Obviously $\ol{MP}$ is the external angle bisector of $\angle BMS$,
+and $PB = PS$, so $P$ is the arc midpoint of $(BMS)$.
+The proof for $DNPT$ is analogous.
+
+It remains to show $\angle BEN = \angle MED$,
+or equivalently $\angle BEM = \angle NED$.
+By properties of Miquel point we have $E \in (BMPS) \cap (TPND)$, so
+\[ \dang BEM = \dang BPM = \dang PBD = \dang BDP = \dang NPD = \dang NED \]
+as desired.
+
+\paragraph{Second proof (2011 G4).}
+By 2011 G4, the circumcircle of $\triangle EMN$
+is tangent to the circumcircle of $ABCD$.
+Hence if we extend $\ol{EM}$ and $\ol{EN}$ to meet $(ABCD)$
+again at $X$ and $Y$, we get $\ol{XY} \parallel \ol{MN} \parallel \ol{BD}$.
+Thus $\dang BEM = \dang BEX = \dang YED = \dang NED$.
+
+\paragraph{Third proof (involutions, submitted by Daniel Liu).}
+Let $G = \ol{BN} \cap \ol{MD}$ denote the centroid of $\triangle BCD$,
+and note that it lies on $\ol{EHF}$.
+
+Now consider the dual of Desargues involution theorem on complete
+quadrilateral $BMDNCG$ at point $E$.
+We get
+\[ (EB,ED), \quad (EM,EN), \quad (EC,EG) \]
+form an involutive pairing.
+
+However, the bisector of $\angle BED$, say $\ell$,
+is also the angle bisector of $\angle CEF$ (since $\ol{CF} \parallel \ol{BD}$).
+So the involution we found must coincide with reflection across $\ell$.
+This means $\angle MEN$ is bisected by $\ell$ as well, as desired.
+
+\paragraph{Authorship comments.}
+This diagram actually comes from the inverted
+picture in IMO 2014/3 (which I attended).
+I had heard for many years that one could
+solve this problem quickly by inversion at $H$ afterwards.
+But when I actually tried to do it during an OTIS class
+years later, I ended up with the picture in the TST problem,
+and couldn't see why it was true!
+In the process of trying to reconstruct this rumored solution,
+I ended up finding most of the properties
+that ended up in the January TST problem
+(but were overkill for the original IMO problem).
+
+Let us make the equivalence explicit
+by deducing the IMO problem from our work.
+
+Let rays $EM$ and $EN$ meet the circumcircles of $\triangle BHC$
+and $\triangle BNC$ again at $X$ and $Y$, with $EM < EX$ and $EN < EY$.
+As above we concluded $EM/EX = EN/EY$
+and so $\ol{MN} \parallel \ol{XY} \implies \ol{XY} \perp \ol{AHC}$.
+
+Now consider an inversion at $H$ which swaps
+$B \leftrightarrow D$ and $A \leftrightarrow C$.
+The point $E$ goes to $E^\ast$ diametrically opposite $A$.
+Points $X$ and $Y$ go to points on $X^\ast \in \ol{AD}$ and $Y^\ast \in \ol{AB}$.
+Since the reflection of $E$ across $\ol{PX}$ is supposed to lie on $(BAE)$,
+it follows that the circumcenter of $\triangle HX^\ast E^\ast$
+lies on $\ol{AD}$.
+Consequently $X^\ast$ plays the role of point ``$T$'' in the IMO problem.
+Then $Y^\ast$ plays the role of point ``$S$'' in the IMO problem.
+
+Now the fact that $(HX^\ast Y^\ast)$ is tangent to $\ol{BD}$
+is equivalent to $\ol{XY} \perp \ol{AHC}$ which we already knew.

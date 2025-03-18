@@ -1,0 +1,55 @@
+author: Carl Schildkraut
+desc: $x$ xor $ax$ injective for which $a$?
+source: USA TST 2023/4
+url: https://aops.com/community/p26896062
+tags: [2023-01, find, construct, good, aleph]
+
+---
+
+For nonnegative integers $a$ and $b$,
+denote their \emph{bitwise xor} by $a \oplus b$.
+(For example, $9 \oplus 10 = 1001_2 \oplus 1010_2 = 0011_2 = 3$.)
+
+Find all positive integers $a$ such that
+for any integers $x > y \ge 0$, we have
+\[ x \oplus ax \neq y \oplus ay.  \]
+
+---
+
+Answer: the function $x \mapsto x \oplus ax$ is injective if and only if
+$a$ is an even integer.
+
+\paragraph{Even case.}
+First, assume $\nu_2(a) = k > 0$.
+We wish to recover $x$ from $c \coloneqq x \oplus ax$.
+Notice that:
+\begin{itemize}
+  \ii The last $k$ bits of $c$ coincide with the last $k$ bits of $x$.
+  \ii Now the last $k$ bits of $x$ give us also the last $2k$ bits of $ax$,
+  so we may recover the last $2k$ bits of $x$ as well.
+  \ii Then the last $2k$ bits of $x$ give us also the last $3k$ bits of $ax$,
+  so we may recover the last $3k$ bits of $x$ as well.
+  \ii \dots and so on.
+\end{itemize}
+
+\paragraph{Odd case.}
+Conversely, suppose $a$ is odd.
+To produce the desired collision:
+\begin{claim*}
+  Let $n$ be any integer such that $2^n > a$, and define
+  \[ x = \underbrace{1\dots1}_n = 2^n-1,
+  \qquad y = 1\underbrace{0\dots0}_n1 = 2^n+1. \]
+  Then $x \oplus ax = y \oplus ay$.
+\end{claim*}
+\begin{proof}
+  Let $P$ be the binary string for $a$, zero-padded to length $n$,
+  and let $Q$ be the binary string for $a - 1$, zero-padded to length $n$,
+  Then let $R$ be the bitwise complement of $Q$.
+  (Hence all three of are binary strings of length $n$.)
+  Then
+  \begin{align*}
+    ax = \ol{QR} &\implies x \oplus ax = \ol{QQ} \\
+    ay = \ol{PP} &\implies y \oplus ay = \ol{QQ}.
+  \end{align*}
+  We're done.
+\end{proof}
