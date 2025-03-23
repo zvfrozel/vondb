@@ -4,11 +4,11 @@ Olympiad problem database that runs on Google's Project IDX.
 
 ## Usage
 
-1. **Open idx:**  
-   Visit [idx.google.com](https://idx.google.com) on your browser.
-2. **Import the Repository:**  
-   Click on **"Import a repo"**.
-3. **Enter the Repository URL:**  
+1. **Open IDX:**  
+   Visit [idx.google.com](https://idx.google.com) on your browser and log in.
+2. **Create a project:**  
+   Click on **"Import a project"** from the dashboard.
+3. **Import the repository:**  
    Paste the following URL:
    https://github.com/zvfrozel/vondb
 4. **Deploy:**  
