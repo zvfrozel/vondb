@@ -1,2 +1,4 @@
+.venv/
+
 index
-cache/
+von_tmp/
