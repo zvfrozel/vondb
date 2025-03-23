@@ -9,7 +9,7 @@ name: "Abel George Mathew"
 # REQUIRED: Path to folder where you want to store your VON database
 # You can include "~" which gets expanded to your home directory
 # Make sure this folder exists!
-base_path: "~/vondb/"
+base_path: "~/vondb/vondb/"
 
 # REQUIRED: A list of sort tags
 # These particular tags are used for sorting and are highlighted differently.
