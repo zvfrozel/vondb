@@ -1,0 +1,3 @@
+[submodule "vondb/secrets"]
+	path = vondb/secrets
+	url = https://github.com/zvfrozel/vondb-secrets.git
