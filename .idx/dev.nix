@@ -14,11 +14,14 @@
 
   idx = {
     workspace = {
-      onStart = {
-        create-venv-and-install-vondb = ''
+      onCreate = {
+        create-tmp-dir = ''
           # Create TMP directory if it doesn't exist
           mkdir -p /home/user/vondb/tmp
-
+        '';
+      };
+      onStart = {
+        create-venv-and-install-vondb = ''
           # Create the virtual environment if it doesn't exist and install vondb
           if [ ! -d .venv ]; then
             python -m venv .venv
