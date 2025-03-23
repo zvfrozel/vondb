@@ -72,7 +72,7 @@ tag_hint_text: "# Some hints for tags:
 
 # path to store temporary files (von cache, TeX previewer, posted output files)
 # Defaults to the output of Python's tempfile.gettempdir()
-von_tmp_path: "von_tmp/"
+von_tmp_path: "/home/user/vondb/von_tmp/"
 # Because expanduser hasn't been added yet
 
 # Name of text editor to invoke
