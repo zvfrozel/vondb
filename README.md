@@ -12,4 +12,4 @@ Olympiad problem database that runs on Google's Project IDX.
    Paste the following URL:
    https://github.com/zvfrozel/vondb
 4. **Deploy:**  
-   Check out https://pypi.org/project/vondb/ for details on how to use von I guess.
+   Check out [pypi.org/project/vondb](https://pypi.org/project/vondb) for details on how to use von I guess.
