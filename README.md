@@ -2,7 +2,7 @@
 
 Olympiad problem database that runs on Google's Project IDX.
 
-## Usage
+## Installation
 
 1. **Open IDX:**  
    Visit [idx.google.com](https://idx.google.com) on your browser and log in.
@@ -11,5 +11,7 @@ Olympiad problem database that runs on Google's Project IDX.
 3. **Import the repository:**  
    Paste the following URL:
    https://github.com/zvfrozel/vondb
-4. **Deploy:**  
-   Check out [pypi.org/project/vondb](https://pypi.org/project/vondb) for details on how to use von I guess.
+
+## Usage
+* Run `von nuke` on your terminal to compile the index when using for the first time.
+* Check out [pypi.org/project/vondb](https://pypi.org/project/vondb) for details on how to use von I guess.

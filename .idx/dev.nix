@@ -4,6 +4,7 @@
 
   packages = [
     pkgs.python311
+    pkgs.texlive.combined.scheme-medium
   ];
 
   env = {
